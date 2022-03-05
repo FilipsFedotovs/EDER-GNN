@@ -65,7 +65,7 @@ print(bcolors.HEADER+"######################     Initialising EDER-TSU Evaluatio
 print(bcolors.HEADER+"#########################              Written by Filips Fedotovs              #########################"+bcolors.ENDC)
 print(bcolors.HEADER+"#########################                 PhD Student at UCL                   #########################"+bcolors.ENDC)
 print(bcolors.HEADER+"########################################################################################################"+bcolors.ENDC)
-print(UF.TimeStamp(), bcolors.OKGREEN+"Modules Have been imported successfully..."+bcolors.ENDC)
+#print(UF.TimeStamp(), bcolors.OKGREEN+"Modules Have been imported successfully..."+bcolors.ENDC)
 input_rec_file_location=args.f
     #input_eval_file_location=args.ef
 #print(UF.TimeStamp(), 'Evaluating FEDRA track reconstruction performance')
@@ -74,6 +74,7 @@ print(data)
     # #eval_data=eval_data.drop(eval_data.index[eval_data['MC_Mother_Track_ID'] != '113862-1260'])
     #
     # eval_data.drop_duplicates(keep='first',inplace=True)
+    #
     #
     # rec_data=pd.read_csv(input_rec_file_location,header=0)
     # rec_data=pd.merge(rec_data, eval_data, how="inner", on=['FEDRA_Seg_ID'])

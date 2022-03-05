@@ -69,7 +69,7 @@ print(bcolors.HEADER+"##########################################################
 input_rec_file_location=args.f
     #input_eval_file_location=args.ef
 #print(UF.TimeStamp(), 'Evaluating FEDRA track reconstruction performance')
-data=pd.read_csv(input_eval_file_location,header=0)
+data=pd.read_csv(input_rec_file_location,header=0)
 print(data)
     # #eval_data=eval_data.drop(eval_data.index[eval_data['MC_Mother_Track_ID'] != '113862-1260'])
     #

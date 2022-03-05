@@ -71,6 +71,14 @@ input_rec_file_location=args.f
 #print(UF.TimeStamp(), 'Evaluating FEDRA track reconstruction performance')
 data=pd.read_csv(input_rec_file_location,header=0)
 print(data)
+data['MC_Track_ID'] = data['MCEvent'] + '-' + data['MCTrack']
+data['quarter'] = data['quarter'].astype(int)
+data['quarter'] = data['quarter'].astype(str)
+data['FEDRATrackID'] = data['FEDRATrackID'].astype(int)
+data['FEDRATrackID'] = data['FEDRATrackID'].astype(str)
+data['FEDRA_Track_ID'] = data['quarter'] + '-' + data['FEDRATrackID']
+data=data.drop(['MCEvent','MCTrack','VertexS','PID','MotherID','FEDRATrackID','quarter'],axis=1,inplace=True)
+print(data)
     # #eval_data=eval_data.drop(eval_data.index[eval_data['MC_Mother_Track_ID'] != '113862-1260'])
     #
     # eval_data.drop_duplicates(keep='first',inplace=True)

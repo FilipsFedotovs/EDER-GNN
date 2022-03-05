@@ -45,7 +45,8 @@ class bcolors:   #We use it for the interface
 #Setting the parser - this script is usually not run directly, but is used by a Master version Counterpart that passes the required arguments
 parser = argparse.ArgumentParser(description='This script compares the ouput of the previous step with the output of EDER-VIANN reconstructed data to calculate reconstruction performance.')
 #parser.add_argument('--Acceptance',help="What is the mininimum acceptance", default='0.5')
-parser.add_argument('--f',help="Please choose the input file", default=EOS_DIR+'/EDER-TSU/Data/REC_SET/R4_E4_CNN_FIT_TRACK_SEGMENTS.csv')
+#parser.add_argument('--f',help="Please choose the input file", default=EOS_DIR+'/EDER-TSU/Data/REC_SET/R4_E4_CNN_FIT_TRACK_SEGMENTS.csv')
+parser.add_argument('--f',help="Please choose the input file", default='R4_E4_CNN_FIT_TRACK_SEGMENTS.csv')
 #parser.add_argument('--of',help="Please choose the evaluation file (has to match the same geometrical domain and type of the track as the subject", default=EOS_DIR+'/EDER-TSU/Data/TEST_SET/E3_TRUTH_TRACKS.csv')
 #parser.add_argument('--TypeOfAnalysis',help="What type of analysis? Test CNN: 'CNN'. Test FEDRA Track Reconstruction quality: 'TRACKING'. All: 'ALL'", default='CNN')
 #parser.add_argument('--rf',help="Please choose the input file", default=EOS_DIR+'/EDER-TSU/Data/REC_SET/R1_TRACK_SEGMENTS.csv')

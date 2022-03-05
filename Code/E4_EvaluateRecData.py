@@ -81,7 +81,7 @@ data['MC_Track_ID'] = data['MCEvent'] + '-' + data['MCTrack']
 #data['FEDRATrackID'] = data['FEDRATrackID'].astype(int)
 #data['FEDRATrackID'] = data['FEDRATrackID'].astype(str)
 #data['FEDRA_Track_ID'] = data['quarter'] + '-' + data['FEDRATrackID']
-#data=data.drop(['MCEvent','MCTrack','VertexS','PID','MotherID'],axis=1,inplace=True)
+data=data.drop(['MCEvent','MCTrack'],axis=1,inplace=True)
 print(data)
     # #eval_data=eval_data.drop(eval_data.index[eval_data['MC_Mother_Track_ID'] != '113862-1260'])
     #

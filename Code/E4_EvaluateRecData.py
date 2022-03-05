@@ -71,6 +71,10 @@ input_rec_file_location=args.f
 #print(UF.TimeStamp(), 'Evaluating FEDRA track reconstruction performance')
 data=pd.read_csv(input_rec_file_location,header=0)
 print(data)
+data['MCEvent'] = data['MCEvent'].astype(int)
+data['MCEvent'] = data['MCEvent'].astype(str)
+data['MCTrack'] = data['MCTrack'].astype(int)
+data['MCTrack'] = data['MCTrack'].astype(str)
 data['MC_Track_ID'] = data['MCEvent'] + '-' + data['MCTrack']
 data['quarter'] = data['quarter'].astype(int)
 data['quarter'] = data['quarter'].astype(str)

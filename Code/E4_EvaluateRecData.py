@@ -73,15 +73,13 @@ test_data = pd.read_csv(test_file_location, header=0,
 test_data['Track_No']=test_data[args.Track]
 test_data=test_data.groupby([args.Track],as_index=False).count()
 test_data = test_data[test_data.Track_No >= PM.MinHitsTrack]
+test_data['Track_No']=test_data[args.Track]
 N_particles_TR=len(eval_data['MC_Mother_Track_ID'].drop_duplicates(keep='first').axes[0])
 N_particles_RR=len(test_data[args.Track].drop_duplicates(keep='first').axes[0])
-print(N_particles_TR)
-print(N_particles_RR)
 matched_data=pd.merge(test_data, eval_data, how="inner", on=['Hit_ID'])
 N_particles_RRM=len(matched_data[args.Track].drop_duplicates(keep='first').axes[0])
 N_particles_TRM=len(matched_data['MC_Mother_Track_ID'].drop_duplicates(keep='first').axes[0])
-print(N_particles_RRM)
-print(N_particles_TRM)
+print(matched_data)
 exit()
 #     seg_data['FEDRA_Seg_No']=seg_data['FEDRA_Seg_ID']
 #     seg_data=seg_data.groupby(by=['MC_Mother_Track_ID','FEDRA_Seg_ID'])['FEDRA_Seg_No'].count().reset_index()

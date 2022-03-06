@@ -70,11 +70,13 @@ if os.path.isfile(test_file_location)!=True:
         print(UF.TimeStamp(), bcolors.FAIL+"Critical fail: file",test_file_location,'is missing, please restart the reconstruction sequence scripts'+bcolors.ENDC)
 test_data = pd.read_csv(test_file_location, header=0,
                                 usecols=['Hit_ID', args.Track])
-N_particles_SR=len(eval_data['MC_Mother_Track_ID'].drop_duplicates(keep='first').axes[0])
-print(N_particles_SR)
+test_data_no=data.groupby([args.Track],as_index=False).count()
+print(test_data_no)
 exit()
-# rec_data=pd.read_csv(input_rec_file_location,header=0)
-# rec_data=pd.merge(rec_data, eval_data, how="inner", on=['FEDRA_Seg_ID'])
+N_particles_TR=len(eval_data['MC_Mother_Track_ID'].drop_duplicates(keep='first').axes[0])
+N_particles_RR=len(eval_data['MC_Mother_Track_ID'].drop_duplicates(keep='first').axes[0])
+print(N_particles_TR)
+matched_data=pd.merge(rec_data, eval_data, how="inner", on=['FEDRA_Seg_ID'])
 #     seg_data=rec_data.drop(['x','y','z'],axis=1)
 #     seg_data['FEDRA_Seg_No']=seg_data['FEDRA_Seg_ID']
 #     seg_data=seg_data.groupby(by=['MC_Mother_Track_ID','FEDRA_Seg_ID'])['FEDRA_Seg_No'].count().reset_index()

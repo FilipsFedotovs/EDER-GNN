@@ -88,6 +88,8 @@ except:
     purity=0
 r_matched_data=matched_data[args.Track].drop_duplicates(keep='first')
 e_matched_data=matched_data['MC_Mother_Track_ID'].drop_duplicates(keep='first')
+print(r_matched_data)
+print(e_matched_data)
 rec_matched_data=pd.merge(r_matched_data, test_data, how="inner", on=[args.Track])
 eval_matched_data=pd.merge(e_matched_data, eval_data, how="inner", on=['MC_Mother_Track_ID'])
 avg_track_purity=len(matched_data.axes[0])/len(rec_matched_data.axes[0])

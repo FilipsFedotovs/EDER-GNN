@@ -88,7 +88,10 @@ try:
   purity=round((float(N_particles_RRM)/float(N_particles_RR))*100,2)
 except:
     purity=0
-r_matched_data=matched_data.drop_duplicates(subset=args.Track,keep='first')
+print(test_data)
+print(eval_data)
+print(matched_data)
+r_matched_data=matched_data.drop_duplicates(subset=[args.Track],keep='first')
 e_matched_data=matched_data.drop_duplicates(subset=['MC_Mother_Track_ID'],keep='first')
 rec_matched_data=pd.merge(r_matched_data, test_data, how="inner", on=[args.Track])
 eval_matched_data=pd.merge(e_matched_data, eval_data, how="inner", on=['MC_Mother_Track_ID'])

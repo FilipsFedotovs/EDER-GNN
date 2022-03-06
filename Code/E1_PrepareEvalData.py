@@ -74,10 +74,10 @@ print(UF.TimeStamp(),'Removing tracks which have less than',PM.MinHitsTrack,'hit
 track_no_data=data.groupby(['MC_Mother_Track_ID'],as_index=False).count()
 track_no_data=track_no_data.drop([PM.y,PM.z,PM.tx,PM.ty,PM.Hit_ID],axis=1)
 track_no_data=track_no_data.rename(columns={PM.x: "MC_Track_No"})
-print(track_no_data)
+new_combined_data=pd.merge(data, track_no_data, how="left", on=['MC_Mother_Track_ID'])
+new_combined_data = new_combined_data[new_combined_data.MC_Track_No >= PM.MinHitsTrack]
+print(new_combined_data)
 exit()
-new_combined_data=pd.merge(data, track_no_data, how="left", on=['FEDRA_Seg_ID','MC_Mother_Track_ID'])
-new_combined_data = new_combined_data[new_combined_data.FEDRA_Seg_No >= PM.MinHitsTrack]
 new_combined_data = new_combined_data.drop(["FEDRA_Seg_No"],axis=1)
 new_combined_data=new_combined_data.sort_values(['FEDRA_Seg_ID',PM.x],ascending=[1,1])
 grand_final_rows=len(new_combined_data.axes[0])

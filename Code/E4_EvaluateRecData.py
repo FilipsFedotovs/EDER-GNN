@@ -84,6 +84,7 @@ matched_data=matched_data.groupby([args.Track,'MC_Mother_Track_ID'],as_index=Fal
 matched_data = matched_data[matched_data['Hit_ID'] >= PM.MinHitsTrack]
 matched_data=matched_data.sort_values(['MC_Mother_Track_ID','Hit_ID'],ascending=[1,0])
 matched_data=matched_data.drop_duplicates(subset=['MC_Mother_Track_ID'],keep='first')
+matched_data=matched_data.drop(['Hit_ID'],axis=1)
 print(matched_data)
 exit()
 N_particles_RRM=len(matched_data[args.Track].drop_duplicates(keep='first').axes[0])

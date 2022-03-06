@@ -70,7 +70,7 @@ if os.path.isfile(test_file_location)!=True:
         print(UF.TimeStamp(), bcolors.FAIL+"Critical fail: file",test_file_location,'is missing, please restart the reconstruction sequence scripts'+bcolors.ENDC)
 test_data = pd.read_csv(test_file_location, header=0,
                                 usecols=['Hit_ID', args.Track])
-test_data['Track_No']=test[args.Track]
+test_data['Track_No']=test_data[args.Track]
 print(test_data)
 exit()
 track_no_data=data.groupby(['MC_Mother_Track_ID'],as_index=False).count()

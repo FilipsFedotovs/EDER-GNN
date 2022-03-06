@@ -70,7 +70,7 @@ if os.path.isfile(test_file_location)!=True:
         print(UF.TimeStamp(), bcolors.FAIL+"Critical fail: file",test_file_location,'is missing, please restart the reconstruction sequence scripts'+bcolors.ENDC)
 test_data = pd.read_csv(test_file_location, header=0,
                                 usecols=['Hit_ID', args.Track])
-N_particles_SR=len(eval_data.drop_duplicates(keep='first').axes[0])
+N_particles_SR=len(eval_data['MC_Mother_Track_ID'].drop_duplicates(keep='first').axes[0])
 print(N_particles_SR)
 exit()
 # rec_data=pd.read_csv(input_rec_file_location,header=0)

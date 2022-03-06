@@ -63,51 +63,43 @@ print(UF.TimeStamp(),'Analysing evaluation data... ',bcolors.ENDC)
 input_GNN_eval_file_location=args.of
 if os.path.isfile(input_CNN_eval_file_location)!=True:
                      print(UF.TimeStamp(), bcolors.FAIL+"Critical fail: file",input_eval_file_location,'is missing, please restart the evaluation sequence scripts'+bcolors.ENDC)
-eval_data=pd.read_csv(input_GNN_eval_file_location,header=0,usecols=['ID'TX,TY,MC_Mother_Track_ID])
-    eval_data["Track_ID"]= ['-'.join(sorted(tup)) for tup in zip(eval_data['Segment_1'], eval_data['Segment_2'])]
-    eval_data.drop_duplicates(subset="Track_ID",keep='first',inplace=True)
-    eval_data.drop(eval_data.index[eval_data['Segment_1'] == eval_data['Segment_2']], inplace = True)
-    eval_data.drop(["Segment_1"],axis=1,inplace=True)
-    eval_data.drop(["Segment_2"],axis=1,inplace=True)
-    TotalMCTracks=len(eval_data.axes[0])
-    TotalGluedTracks=0
-    MatchedTracks=0
-    FakeTracks=0
-    print(UF.TimeStamp(),'Evaluating reconstructed set ',bcolors.ENDC)
-    test_file_location=args.sf
-    if os.path.isfile(test_file_location)!=True:
+eval_data=pd.read_csv(input_GNN_eval_file_location,header=0,usecols=['Hit_ID','MC_Mother_Track_ID'])
+print(UF.TimeStamp(),'Evaluating reconstructed set ',bcolors.ENDC)
+test_file_location=args.sf
+if os.path.isfile(test_file_location)!=True:
         print(UF.TimeStamp(), bcolors.FAIL+"Critical fail: file",test_file_location,'is missing, please restart the reconstruction sequence scripts'+bcolors.ENDC)
-        exit()
-    test_data = pd.read_csv(test_file_location, header=0,
-                                usecols=['Segment_1', 'Segment_2', 'Track_CNN_Fit'])
-    test_data["Track_ID"]= ['-'.join(sorted(tup)) for tup in zip(test_data['Segment_1'], test_data['Segment_2'])]
-    test_data.drop_duplicates(subset="Track_ID",keep='first',inplace=True)
-    test_data.drop(test_data.index[test_data['Segment_1'] == test_data['Segment_2']], inplace = True)
-    test_data.drop(["Segment_1"],axis=1,inplace=True)
-    test_data.drop(["Segment_2"],axis=1,inplace=True)
-    test_data.drop(test_data.index[test_data['Track_CNN_Fit']<acceptance], inplace = True)
-    test_data.drop(["Track_CNN_Fit"],axis=1,inplace=True)
-    CurrentRecTracks=len(test_data.axes[0])
-    TotalGluedTracks+=CurrentRecTracks
-    test_data=pd.merge(test_data, eval_data, how="inner", on=["Track_ID"])
-    RemainingRecTracks=len(test_data.axes[0])
-    MatchedTracks+=RemainingRecTracks
-    FakeTracks+=(CurrentRecTracks-RemainingRecTracks)
-    Recall=round((float(MatchedTracks)/float(TotalMCTracks))*100,2)
-    Precision=round((float(MatchedTracks)/float(TotalGluedTracks))*100,2)
-    if (Recall+Precision)==0:
+test_data = pd.read_csv(test_file_location, header=0,
+                                usecols=['Hit_ID', args.Track])
+print(test_data)
+exit()
+test_data["Track_ID"]= ['-'.join(sorted(tup)) for tup in zip(test_data['Segment_1'], test_data['Segment_2'])]
+test_data.drop_duplicates(subset="Track_ID",keep='first',inplace=True)
+test_data.drop(test_data.index[test_data['Segment_1'] == test_data['Segment_2']], inplace = True)
+test_data.drop(["Segment_1"],axis=1,inplace=True)
+test_data.drop(["Segment_2"],axis=1,inplace=True)
+test_data.drop(test_data.index[test_data['Track_CNN_Fit']<acceptance], inplace = True)
+test_data.drop(["Track_CNN_Fit"],axis=1,inplace=True)
+CurrentRecTracks=len(test_data.axes[0])
+TotalGluedTracks+=CurrentRecTracks
+test_data=pd.merge(test_data, eval_data, how="inner", on=["Track_ID"])
+RemainingRecTracks=len(test_data.axes[0])
+MatchedTracks+=RemainingRecTracks
+FakeTracks+=(CurrentRecTracks-RemainingRecTracks)
+Recall=round((float(MatchedTracks)/float(TotalMCTracks))*100,2)
+Precision=round((float(MatchedTracks)/float(TotalGluedTracks))*100,2)
+if (Recall+Precision)==0:
         F1_Score=0
-    else:
+else:
         F1_Score=round(2*((Recall*Precision)/(Recall+Precision)),2)
-    print(UF.TimeStamp(), bcolors.OKGREEN+'Evaluation has been finished'+bcolors.ENDC)
+print(UF.TimeStamp(), bcolors.OKGREEN+'Evaluation has been finished'+bcolors.ENDC)
 
-    print(bcolors.HEADER+"#########################################  Results  #########################################"+bcolors.ENDC)
-    print('Total 2-segment combinations are expected according to Monte Carlo:',TotalMCTracks)
-    print('Total 2-segment combinations were linked by EDER-TSU:',TotalGluedTracks)
-    print('EDER-TSU correct combinations:',MatchedTracks)
-    print('Therefore the recall of the current model is',bcolors.BOLD+str(Recall), '%'+bcolors.ENDC)
-    print('And the precision of the current model is',bcolors.BOLD+str(Precision), '%'+bcolors.ENDC)
-    print('The F1 score of the current model is',bcolors.BOLD+str(F1_Score), '%'+bcolors.ENDC)
+print(bcolors.HEADER+"#########################################  Results  #########################################"+bcolors.ENDC)
+print('Total 2-segment combinations are expected according to Monte Carlo:',TotalMCTracks)
+print('Total 2-segment combinations were linked by EDER-TSU:',TotalGluedTracks)
+print('EDER-TSU correct combinations:',MatchedTracks)
+print('Therefore the recall of the current model is',bcolors.BOLD+str(Recall), '%'+bcolors.ENDC)
+print('And the precision of the current model is',bcolors.BOLD+str(Precision), '%'+bcolors.ENDC)
+print('The F1 score of the current model is',bcolors.BOLD+str(F1_Score), '%'+bcolors.ENDC)
 
 if args.TypeOfAnalysis == 'ALL' or args.TypeOfAnalysis == 'TRACKING':
     input_rec_file_location=args.rf

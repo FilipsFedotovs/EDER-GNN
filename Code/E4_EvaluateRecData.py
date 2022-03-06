@@ -86,10 +86,10 @@ try:
   purity=N_particles_RRM/N_particles_RR
 except:
     purity=0
-print(efficiency,purity)
-print(matched_data)
-rec_matched_data=pd.merge(matched_data, test_data, how="inner", on=['Hit_ID'])
-eval_matched_data=pd.merge(matched_data, test_data, how="inner", on=['Hit_ID'])
+r_matched_data=matched_data[args.Track].drop_duplicates(keep='first')
+e_matched_data=matched_data['MC_Mother_Track_ID'].drop_duplicates(keep='first')
+rec_matched_data=pd.merge(r_matched_data, test_data, how="inner", on=[args.Track])
+eval_matched_data=pd.merge(e_matched_data, eval_data, how="inner", on=['MC_Mother_Track_ID'])
 avg_track_purity=len(matched_data.axes[0])/len(rec_matched_data.axes[0])
 avg_track_efficiency=len(matched_data.axes[0])/len(eval_matched_data.axes[0])
 #     seg_data['FEDRA_Seg_No']=seg_data['FEDRA_Seg_ID']

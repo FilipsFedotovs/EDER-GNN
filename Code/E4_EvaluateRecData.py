@@ -78,11 +78,12 @@ N_particles_TR=len(eval_data['MC_Mother_Track_ID'].drop_duplicates(keep='first')
 N_particles_RR=len(test_data[args.Track].drop_duplicates(keep='first').axes[0])
 matched_data=pd.merge(test_data, eval_data, how="inner", on=['Hit_ID'])
 N_particles_RRM=len(matched_data[args.Track].drop_duplicates(keep='first').axes[0])
-N_particles_TRM=len(matched_data['MC_Mother_Track_ID'].drop_duplicates(keep='first').axes[0])
 matched_data=matched_data.groupby([args.Track,'MC_Mother_Track_ID'],as_index=False).count()
-print(matched_data)
 matched_data = matched_data[matched_data.Track_No >= PM.MinHitsTrack]
-print(matched_data)
+N_particles_RRM=len(matched_data[args.Track].drop_duplicates(keep='first').axes[0])
+efficiency=N_particles_RRM/N_particles_TR
+purity=N_particles_RRM/N_particles_RR
+print(efficiency,purity)
 exit()
 #     seg_data['FEDRA_Seg_No']=seg_data['FEDRA_Seg_ID']
 #     seg_data=seg_data.groupby(by=['MC_Mother_Track_ID','FEDRA_Seg_ID'])['FEDRA_Seg_No'].count().reset_index()

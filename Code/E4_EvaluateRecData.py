@@ -97,6 +97,8 @@ rec_matched_data=pd.merge(r_matched_data, test_data, how="inner", on=[args.Track
 eval_matched_data=pd.merge(e_matched_data, eval_data, how="inner", on=['MC_Mother_Track_ID'])
 print(rec_matched_data)
 print(eval_matched_data)
+rec_matched_data=rec_matched_data.drop_duplicates(subset=[args.Track],keep='first')
+eval_matched_data=eval_matched_data.drop_duplicates(subset=['MC_Mother_Track_ID'],keep='first')
 try:
   avg_track_purity=round((float(len(matched_data.axes[0]))/float(len(rec_matched_data.axes[0])))*100,2)
 except:

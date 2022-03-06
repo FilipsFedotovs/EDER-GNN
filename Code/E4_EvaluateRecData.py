@@ -61,7 +61,7 @@ print(bcolors.HEADER+"##########################################################
 print(UF.TimeStamp(), bcolors.OKGREEN+"Modules Have been imported successfully..."+bcolors.ENDC)
 print(UF.TimeStamp(),'Analysing evaluation data... ',bcolors.ENDC)
 input_GNN_eval_file_location=args.of
-if os.path.isfile(input_CNN_eval_file_location)!=True:
+if os.path.isfile(input_GNN_eval_file_location)!=True:
                      print(UF.TimeStamp(), bcolors.FAIL+"Critical fail: file",input_eval_file_location,'is missing, please restart the evaluation sequence scripts'+bcolors.ENDC)
 eval_data=pd.read_csv(input_GNN_eval_file_location,header=0,usecols=['Hit_ID','MC_Mother_Track_ID'])
 print(UF.TimeStamp(),'Evaluating reconstructed set ',bcolors.ENDC)

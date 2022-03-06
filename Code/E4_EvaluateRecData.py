@@ -81,7 +81,7 @@ N_particles_RR=len(test_data[args.Track].drop_duplicates(keep='first').axes[0])
 matched_data=pd.merge(test_data, eval_data, how="inner", on=['Hit_ID'])
 N_particles_RRM=len(matched_data[args.Track].drop_duplicates(keep='first').axes[0])
 matched_data=matched_data.groupby([args.Track,'MC_Mother_Track_ID'],as_index=False).count()
-matched_data = matched_data[matched_data[Hit_ID] >= PM.MinHitsTrack]
+matched_data = matched_data[matched_data['Hit_ID'] >= PM.MinHitsTrack]
 N_particles_RRM=len(matched_data[args.Track].drop_duplicates(keep='first').axes[0])
 efficiency=round((float(N_particles_RRM)/float(N_particles_TR))*100,2)
 try:

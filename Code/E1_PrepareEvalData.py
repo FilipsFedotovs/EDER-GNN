@@ -72,7 +72,7 @@ if SliceData:
 output_file_location=EOS_DIR+'/EDER-GNN/Data/TEST_SET/E1_HITS.csv'
 print(UF.TimeStamp(),'Removing tracks which have less than',PM.MinHitsTrack,'hits...')
 track_no_data=data.groupby(['MC_Mother_Track_ID'],as_index=False).count()
-track_no_data=track_no_data.drop([PM.y,PM.z,PM.tx,PM.ty,PM.ID],axis=1)
+track_no_data=track_no_data.drop([PM.y,PM.z,PM.tx,PM.ty,PM.Hit_ID],axis=1)
 track_no_data=track_no_data.rename(columns={PM.x: "MC_Track_No"})
 print(track_no_data)
 exit()

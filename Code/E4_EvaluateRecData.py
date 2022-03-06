@@ -89,7 +89,6 @@ try:
 except:
     purity=0
 test_data=test_data.drop(['Track_No'],axis=1)
-eval_data=eval_data.drop(['Hit_ID'],axis=1)
 print(test_data)
 print(eval_data)
 print(matched_data)

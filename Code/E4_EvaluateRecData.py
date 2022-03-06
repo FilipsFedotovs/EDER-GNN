@@ -71,10 +71,8 @@ if os.path.isfile(test_file_location)!=True:
 test_data = pd.read_csv(test_file_location, header=0,
                                 usecols=['Hit_ID', args.Track])
 test_data['Track_No']=test_data[args.Track]
+test_data=test_data.groupby([args.Track],as_index=False).count()
 print(test_data)
-exit()
-track_no_data=data.groupby(['MC_Mother_Track_ID'],as_index=False).count()
-print(test_data_no)
 exit()
 N_particles_TR=len(eval_data['MC_Mother_Track_ID'].drop_duplicates(keep='first').axes[0])
 N_particles_RR=len(eval_data['MC_Mother_Track_ID'].drop_duplicates(keep='first').axes[0])

@@ -94,10 +94,10 @@ avg_track_purity=round((float(len(matched_data.axes[0]))/float(len(rec_matched_d
 avg_track_efficiency=round((float(len(matched_data.axes[0]))/float(len(eval_matched_data.axes[0])))*100,2)
 print('Maximum number of particles according to MC Data that can be reconstructed:',N_particles_TR)
 print('Maximum number of particles reconstructed:',N_particles_RR)
-print('Overall track reconstruction efficiency:',efficiency)
-print('Overall track reconstruction purity:',purity)
-print('Average track reconstruction efficiency:',avg_track_efficiency)
-print('Average track reconstruction purity:',avg_track_purity)
+print('Overall track reconstruction efficiency:',bcolors.BOLD+str(efficiency), '%'+bcolors.ENDC)
+print('Overall track reconstruction purity:',bcolors.BOLD+str(purity), '%'+bcolors.ENDC)
+print('Average track reconstruction efficiency:',bcolors.BOLD+str(avg_track_efficiency), '%'+bcolors.ENDC)
+print('Average track reconstruction purity:',bcolors.BOLD+str(avg_track_purity), '%'+bcolors.ENDC)
 print(bcolors.HEADER+"############################################# End of the program ################################################"+bcolors.ENDC)
 #End of the script
 

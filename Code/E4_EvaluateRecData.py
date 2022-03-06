@@ -79,6 +79,7 @@ test_data=pd.merge(test_data, test_data_no, how="inner", on=[args.Track])
 N_particles_TR=len(eval_data['MC_Mother_Track_ID'].drop_duplicates(keep='first').axes[0])
 N_particles_RR=len(test_data[args.Track].drop_duplicates(keep='first').axes[0])
 matched_data=pd.merge(test_data, eval_data, how="inner", on=['Hit_ID'])
+print(matched_data)
 N_particles_RRM=len(matched_data[args.Track].drop_duplicates(keep='first').axes[0])
 matched_data=matched_data.groupby([args.Track,'MC_Mother_Track_ID'],as_index=False).count()
 matched_data = matched_data[matched_data['Hit_ID'] >= PM.MinHitsTrack]
@@ -90,7 +91,7 @@ except:
     purity=0
 test_data=test_data.drop(['Track_No'],axis=1)
 print(test_data)
-print(eval_data)
+print(eval_data)q
 print(matched_data)
 exit()
 matched_data=matched_data.drop(['Track_No','Hit_ID'],axis=1)

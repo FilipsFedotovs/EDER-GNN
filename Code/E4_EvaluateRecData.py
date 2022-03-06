@@ -71,9 +71,11 @@ if os.path.isfile(test_file_location)!=True:
 test_data = pd.read_csv(test_file_location, header=0,
                                 usecols=['Hit_ID', args.Track])
 test_data['Track_No']=test_data[args.Track]
-test_data=test_data.groupby([args.Track],as_index=False).count()
-test_data = test_data[test_data.Track_No >= PM.MinHitsTrack]
-test_data['Track_No']=test_data[args.Track]
+test_data_no=test_data.groupby([args.Track],as_index=False).count()
+test_data_no = test_data_no[test_data.Track_No >= PM.MinHitsTrack]
+test_data=pd.merge(test_data, test_data_no, how="inner", on=[args.Track])
+print(test_data)
+exit()
 N_particles_TR=len(eval_data['MC_Mother_Track_ID'].drop_duplicates(keep='first').axes[0])
 N_particles_RR=len(test_data[args.Track].drop_duplicates(keep='first').axes[0])
 matched_data=pd.merge(test_data, eval_data, how="inner", on=['Hit_ID'])

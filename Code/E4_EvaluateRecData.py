@@ -76,8 +76,7 @@ test_data_no['Track_No']=test_data_no[args.Track]
 test_data_no=test_data_no.groupby([args.Track],as_index=False).count()
 test_data_no = test_data_no[test_data_no.Track_No >= PM.MinHitsTrack]
 test_data=pd.merge(test_data, test_data_no, how="inner", on=[args.Track])
-print(test_data)
-exit()
+test_data=test_data.drop(['Track_No'],axis=1)
 N_particles_TR=len(eval_data['MC_Mother_Track_ID'].drop_duplicates(keep='first').axes[0])
 N_particles_RR=len(test_data[args.Track].drop_duplicates(keep='first').axes[0])
 matched_data=pd.merge(test_data, eval_data, how="inner", on=['Hit_ID'])

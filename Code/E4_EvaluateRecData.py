@@ -90,8 +90,14 @@ r_matched_data=matched_data.drop_duplicates(subset=args.Track,keep='first')
 e_matched_data=matched_data.drop_duplicates(subset=['MC_Mother_Track_ID'],keep='first')
 rec_matched_data=pd.merge(r_matched_data, test_data, how="inner", on=[args.Track])
 eval_matched_data=pd.merge(e_matched_data, eval_data, how="inner", on=['MC_Mother_Track_ID'])
-avg_track_purity=round((float(len(matched_data.axes[0]))/float(len(rec_matched_data.axes[0])))*100,2)
-avg_track_efficiency=round((float(len(matched_data.axes[0]))/float(len(eval_matched_data.axes[0])))*100,2)
+try:
+  avg_track_purity=round((float(len(matched_data.axes[0]))/float(len(rec_matched_data.axes[0])))*100,2)
+except:
+   avg_track_purity=0
+try:
+    avg_track_efficiency=round((float(len(matched_data.axes[0]))/float(len(eval_matched_data.axes[0])))*100,2)
+except:
+    avg_track_efficiency=0
 print('Maximum number of particles according to MC Data that can be reconstructed:',N_particles_TR)
 print('Maximum number of particles reconstructed:',N_particles_RR)
 print('Overall track reconstruction efficiency:',bcolors.BOLD+str(efficiency), '%'+bcolors.ENDC)

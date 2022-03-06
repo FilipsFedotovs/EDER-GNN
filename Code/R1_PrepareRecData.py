@@ -51,7 +51,7 @@ print(UF.TimeStamp(), bcolors.OKGREEN+"Modules have been imported successfully..
 print(UF.TimeStamp(),'Loading raw data from',bcolors.OKBLUE+input_file_location+bcolors.ENDC)
 
 data=pd.read_csv(input_file_location,
-            header=0),
+            header=0,
             usecols=[PM.Hit_ID,PM.x,PM.y,PM.z,PM.tx,PM.ty])
 print(data)
 exit()

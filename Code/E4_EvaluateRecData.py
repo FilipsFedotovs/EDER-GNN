@@ -92,18 +92,11 @@ try:
 except:
     purity=0
 test_data=test_data.drop(['Track_No'],axis=1)
-print(test_data)
-print(eval_data)
-print(efficiency)
-print(purity)
-exit()
-matched_data=matched_data.drop(['Track_No','Hit_ID'],axis=1)
-r_matched_data=matched_data.drop_duplicates(subset=[args.Track],keep='first')
-e_matched_data=matched_data.drop_duplicates(subset=['MC_Mother_Track_ID'],keep='first')
-rec_matched_data=pd.merge(r_matched_data, test_data, how="inner", on=[args.Track])
+rec_matched_data=pd.merge(matched_data, test_data, how="inner", on=[args.Track])
 eval_matched_data=pd.merge(e_matched_data, eval_data, how="inner", on=['MC_Mother_Track_ID'])
-rec_matched_data=rec_matched_data.drop_duplicates(subset=[args.Track],keep='first')
-eval_matched_data=eval_matched_data.drop_duplicates(subset=['MC_Mother_Track_ID'],keep='first')
+print(rec_matched_data)
+print(eval_matched_data)
+exit()
 try:
   avg_track_purity=round((float(len(matched_data.axes[0]))/float(len(rec_matched_data.axes[0])))*100,2)
 except:

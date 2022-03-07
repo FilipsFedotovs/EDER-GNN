@@ -24,16 +24,13 @@ class HitCluster:
         return ('-'.join(str(self.ClusterID))) == ('-'.join(str(other.ClusterID)))
       def __hash__(self):
         return hash(('-'.join(str(self.ClusterID))))
-      # def DecorateHits(self,RawHits): #Decorate hit information
-      #     self.SegmentHits=[]
-      #     for s in range(len(self.SegmentHeader)):
-      #         self.SegmentHits.append([])
-      #         for t in RawHits:
-      #              if self.SegmentHeader[s]==t[3]:
-      #                 self.SegmentHits[s].append(t[:3])
-      #     for Hit in range(0, len(self.SegmentHits)):
-      #        self.SegmentHits[Hit]=sorted(self.SegmentHits[Hit],key=lambda x: float(x[2]),reverse=False)
-
+      def LoadClusterHits(self,RawHits): #Decorate hit information
+           self.ClusterHits=[]
+           for s in RawHits:
+               if s[1]>=ClusterID[0]*Step[0] and s[1]<((ClusterID[0]+1)*Step[0]):
+                   if s[2]>=ClusterID[1]*Step[1] and s[2]<((ClusterID[1]+1)*Step[1]):
+                       if s[3]>=ClusterID[2]*Step[2] and s[3]<((ClusterID[2]+1)*Step[2])
+                          self.ClusterHits.append(s)
 class Track:
       def __init__(self,segments):
           self.SegmentHeader=sorted(segments, key=str.lower)

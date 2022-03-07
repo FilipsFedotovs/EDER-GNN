@@ -94,8 +94,10 @@ except:
 test_data=test_data.drop(['Track_No'],axis=1)
 rec_matched_data=pd.merge(matched_data, test_data, how="inner", on=[args.Track])
 eval_matched_data=pd.merge(matched_data, eval_data, how="inner", on=['MC_Mother_Track_ID'])
+combined_hits=pd.merge(rec_matched_data, eval_matched_data, how="inner", on=['Hit_ID'])
 print(rec_matched_data)
 print(eval_matched_data)
+print(combined_hits)
 exit()
 try:
   avg_track_purity=round((float(len(matched_data.axes[0]))/float(len(rec_matched_data.axes[0])))*100,2)

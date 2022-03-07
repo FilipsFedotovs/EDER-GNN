@@ -29,7 +29,7 @@ class HitCluster:
            for s in RawHits:
                if s[1]>=ClusterID[0]*Step[0] and s[1]<((ClusterID[0]+1)*Step[0]):
                    if s[2]>=ClusterID[1]*Step[1] and s[2]<((ClusterID[1]+1)*Step[1]):
-                       if s[3]>=ClusterID[2]*Step[2] and s[3]<((ClusterID[2]+1)*Step[2])
+                       if s[3]>=ClusterID[2]*Step[2] and s[3]<((ClusterID[2]+1)*Step[2]):
                           self.ClusterHits.append(s)
 class Track:
       def __init__(self,segments):

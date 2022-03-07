@@ -21,9 +21,9 @@ class HitCluster:
           self.ClusterID=ClusterID
           self.Step=Step
       def __eq__(self, other):
-        return ('-'.join(self.ClusterID)) == ('-'.join(other.ClusterID))
+        return ('-'.join(str(self.ClusterID))) == ('-'.join(str(other.ClusterID)))
       def __hash__(self):
-        return hash(('-'.join(self.ClusterID)))
+        return hash(('-'.join(str(self.ClusterID))))
       # def DecorateHits(self,RawHits): #Decorate hit information
       #     self.SegmentHits=[]
       #     for s in range(len(self.SegmentHeader)):

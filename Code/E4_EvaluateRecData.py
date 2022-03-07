@@ -96,7 +96,7 @@ rec_matched_data=pd.merge(matched_data, test_data, how="inner", on=[args.Track])
 eval_matched_data=pd.merge(matched_data, eval_data, how="inner", on=['MC_Mother_Track_ID'])
 combined_hits=pd.merge(rec_matched_data, eval_matched_data, how="inner", on=['Hit_ID'])
 try:
-  avg_track_purity=round((float(len(combined_hits))/float(len(rec_matched_data))*100,2)
+  avg_track_purity=round((float(len(combined_hits))/float(len(rec_matched_data)))*100,2)
 except:
    avg_track_purity=0
 try:

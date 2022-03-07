@@ -93,7 +93,7 @@ except:
     purity=0
 test_data=test_data.drop(['Track_No'],axis=1)
 rec_matched_data=pd.merge(matched_data, test_data, how="inner", on=[args.Track])
-eval_matched_data=pd.merge(e_matched_data, eval_data, how="inner", on=['MC_Mother_Track_ID'])
+eval_matched_data=pd.merge(matched_data, eval_data, how="inner", on=['MC_Mother_Track_ID'])
 print(rec_matched_data)
 print(eval_matched_data)
 exit()

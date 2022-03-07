@@ -107,8 +107,8 @@ print('Maximum number of particles according to MC Data that can be reconstructe
 print('Maximum number of particles reconstructed:',N_particles_RR)
 print('Overall track reconstruction efficiency:',bcolors.BOLD+str(efficiency), '%'+bcolors.ENDC)
 print('Overall track reconstruction purity:',bcolors.BOLD+str(purity), '%'+bcolors.ENDC)
-print('Average track reconstruction efficiency:',bcolors.BOLD+str(avg_track_efficiency), '%'+bcolors.ENDC)
-print('Average track reconstruction purity:',bcolors.BOLD+str(avg_track_purity), '%'+bcolors.ENDC)
+print('Track hit utilisation efficiency:',bcolors.BOLD+str(avg_track_efficiency), '%'+bcolors.ENDC)
+print('Track hit purity:',bcolors.BOLD+str(avg_track_purity), '%'+bcolors.ENDC)
 print(bcolors.HEADER+"############################################# End of the program ################################################"+bcolors.ENDC)
 #End of the script
 

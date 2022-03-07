@@ -16,6 +16,24 @@ import copy
 def TimeStamp():
  return "["+datetime.datetime.now().strftime("%D")+' '+datetime.datetime.now().strftime("%H:%M:%S")+"]"
 
+class HitCluster:
+      def __init__(self,ClusterID,Step):
+          self.ClusterID=ClusterID
+          self.Step=Step
+      def __eq__(self, other):
+        return ('-'.join(self.ClusterID)) == ('-'.join(other.ClusterID))
+      def __hash__(self):
+        return hash(('-'.join(self.ClusterID)))
+      # def DecorateHits(self,RawHits): #Decorate hit information
+      #     self.SegmentHits=[]
+      #     for s in range(len(self.SegmentHeader)):
+      #         self.SegmentHits.append([])
+      #         for t in RawHits:
+      #              if self.SegmentHeader[s]==t[3]:
+      #                 self.SegmentHits[s].append(t[:3])
+      #     for Hit in range(0, len(self.SegmentHits)):
+      #        self.SegmentHits[Hit]=sorted(self.SegmentHits[Hit],key=lambda x: float(x[2]),reverse=False)
+
 class Track:
       def __init__(self,segments):
           self.SegmentHeader=sorted(segments, key=str.lower)

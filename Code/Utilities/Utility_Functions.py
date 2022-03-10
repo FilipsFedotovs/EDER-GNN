@@ -47,15 +47,10 @@ class HitCluster:
                        if s[3]>=self.ClusterID[2]*self.Step[2] and s[3]<((self.ClusterID[2]+1)*self.Step[2]):
                           _MCClusterHits.append([s[0],s[6]])
            _l_MCHits=pd.DataFrame(_MCClusterHits, columns = ['l_HitID','MC_ID'])
-           print(_l_MCHits)
            _r_MCHits=pd.DataFrame(_MCClusterHits, columns = ['r_HitID','MC_ID'])
-           print(_r_MCHits)
            _MCHits=pd.merge(_l_MCHits, _r_MCHits, how="inner", on=['MC_ID'])
-           print(_MCHits)
            _MCHits.drop(['MC_ID'],axis=1,inplace=True)
            _MCHits.drop(_MCHits.index[_MCHits['l_HitID'] == _MCHits['r_HitID']], inplace = True)
-
-           print(_MCHits)
            _MCHitsList = _MCHits.values.tolist()
            del _MCHits
            _Edge_List_Top=[]
@@ -64,14 +59,10 @@ class HitCluster:
                _Edge_List_Top.append(self.ClusterHitIDs.index(el[0]))
                _Edge_List_Bottom.append(self.ClusterHitIDs.index(el[1]))
            _Edge_List=[_Edge_List_Top,_Edge_List_Bottom]
-           print(_Edge_List)
            import torch
            import torch_geometric
            from torch_geometric.data import Data
            self.ClusterGraph.edge_index=torch.tensor(np.array(_Edge_List))
-           print(self.ClusterGraph)
-           print(self.ClusterGraph.x)
-           print(self.ClusterGraph.edge_index)
 
 class Track:
       def __init__(self,segments):

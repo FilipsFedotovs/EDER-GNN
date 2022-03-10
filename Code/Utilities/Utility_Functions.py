@@ -65,10 +65,13 @@ class HitCluster:
                _Edge_List_Bottom.append(self.ClusterHitIDs.index(el[1]))
            _Edge_List=[_Edge_List_Top,_Edge_List_Bottom]
            print(_Edge_List)
-           # import torch
-           # import torch_geometric
-           # from torch_geometric.data import Data
-           # self.ClusterGraph=Data(x=torch.Tensor(self.ClusterHits), edge_index=None, y=None)
+           import torch
+           import torch_geometric
+           from torch_geometric.data import Data
+           self.ClusterGraph.edge_index=torch.Tensor(_Edge_List)
+           print(self.ClusterGraph)
+           print(self.ClusterGraph.x)
+           print(self.ClusterGraph.edge_index)
 
 class Track:
       def __init__(self,segments):

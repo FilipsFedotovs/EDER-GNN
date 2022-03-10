@@ -61,8 +61,8 @@ class HitCluster:
            _Edge_List_Top=[]
            _Edge_List_Bottom=[]
            for el in _MCHitsList:
-               _Edge_List_Top.append([self.ClusterHitIDs.index(el[0])])
-               _Edge_List_Bottom.append([self.ClusterHitIDs.index(el[1])])
+               _Edge_List_Top.append(self.ClusterHitIDs.index(el[0]))
+               _Edge_List_Bottom.append(self.ClusterHitIDs.index(el[1]))
            _Edge_List=[_Edge_List_Top,_Edge_List_Bottom]
            print(_Edge_List)
            # import torch

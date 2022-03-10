@@ -34,6 +34,11 @@ class HitCluster:
                           self.ClusterHits.append([(s[1]-(self.ClusterID[0]*self.Step[0])),(s[2]-(self.ClusterID[1]*self.Step[1])), (s[3]-(self.ClusterID[2]*self.Step[2])), s[4], s[5]])
                           self.ClusterHitIDs.append(s[0])
            self.ClusterSize=len(self.ClusterHits)
+           import torch
+           import torch_geometric
+           from torch_geometric.data import Data
+           self.ClusterGraph=Data(x=torch.Tensor(self.ClusterHits), edge_index=None, y=None)
+
 class Track:
       def __init__(self,segments):
           self.SegmentHeader=sorted(segments, key=str.lower)
@@ -44,6 +49,7 @@ class Track:
         return hash(('-'.join(self.SegmentHeader)))
       def DecorateSegments(self,RawHits): #Decorate hit information
           self.SegmentHits=[]
+
           for s in range(len(self.SegmentHeader)):
               self.SegmentHits.append([])
               for t in RawHits:
@@ -51,6 +57,8 @@ class Track:
                       self.SegmentHits[s].append(t[:3])
           for Hit in range(0, len(self.SegmentHits)):
              self.SegmentHits[Hit]=sorted(self.SegmentHits[Hit],key=lambda x: float(x[2]),reverse=False)
+          import torch
+          __ClusterNodes=torch.Tensor(self.ClusterHits)
 
       def DecorateTrackGeoInfo(self):
           if hasattr(self,'SegmentHits'):

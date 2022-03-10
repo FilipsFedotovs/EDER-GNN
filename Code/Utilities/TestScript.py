@@ -119,6 +119,6 @@ final_edge_index = model.decode_all(z)
 print(final_edge_index)
 torch.save(model.state_dict(), 'Test')
 
-model1 = TheModelClass()
+model1 = Net().to(device)
 model1.load_state_dict(torch.load('Test'))
 model1.eval()

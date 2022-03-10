@@ -23,7 +23,7 @@ mc_data=[[1,1,2,1,1,1,'1'],[2,500,500,500,1,1,'2'],[3,999,999,800,1,1,'2'],[4,99
 hc.LabelClusterHits(mc_data)
 
 hc.ClusterGraph.train_mask = hc.ClusterGraph.val_mask = hc.ClusterGraph.test_mask = hc.ClusterGraph.y = None
-data = train_test_split_edges(hc.ClusterGraph)
+data = train_test_split_edges(hc.ClusterGraph,0.3,0.3)
 print(data)
 
 
@@ -69,8 +69,8 @@ def train():
     neg_edge_index = negative_sampling(
         edge_index=data.train_pos_edge_index, #positive edges
         num_nodes=data.num_nodes, # number of nodes
-        #num_neg_samples=data.train_pos_edge_index.size(1)) # number of neg_sample equal to number of pos_edges
-        num_neg_samples=2)
+        num_neg_samples=data.train_pos_edge_index.size(1)) # number of neg_sample equal to number of pos_edges
+
     optimizer.zero_grad()
 
     z = model.encode() #encode

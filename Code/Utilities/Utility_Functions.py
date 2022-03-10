@@ -53,7 +53,7 @@ class HitCluster:
            _MCHits=pd.merge(_l_MCHits, _r_MCHits, how="inner", on=['MC_ID'])
            print(_MCHits)
            _MCHits.drop(['MC_ID'],axis=1,inplace=True)
-           _MCHits.drop(_MCHits.index[_MCHits[_l_MCHits] == _MCHits[_r_MCHits]], inplace = True)
+           _MCHits.drop(_MCHits.index[_MCHits['l_HitID'] == _MCHits['r_HitID']], inplace = True)
 
            print(_MCHits)
            # import torch

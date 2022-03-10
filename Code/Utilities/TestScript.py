@@ -13,6 +13,8 @@ from torch_geometric.utils import negative_sampling
 from torch_geometric.nn import GCNConv
 from torch_geometric.utils import train_test_split_edges
 
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+device = "cpu"
 
 hc=HitCluster([0,0,0],[1000,1000,1000])
 raw_data=[[1,1,2,1,1,1],[2,500,500,500,1,1],[3,999,999,800,1,1],[4,999,999,800,1,1]]

@@ -69,8 +69,8 @@ def train():
     neg_edge_index = negative_sampling(
         edge_index=data.train_pos_edge_index, #positive edges
         num_nodes=data.num_nodes, # number of nodes
-        num_neg_samples=data.train_pos_edge_index.size(1)) # number of neg_sample equal to number of pos_edges
-
+        #num_neg_samples=data.train_pos_edge_index.size(1)) # number of neg_sample equal to number of pos_edges
+        num_neg_samples=2
     optimizer.zero_grad()
 
     z = model.encode() #encode

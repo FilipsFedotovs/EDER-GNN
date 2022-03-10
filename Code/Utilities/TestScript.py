@@ -21,6 +21,8 @@ raw_data=[[1,1,2,1,1,1],[2,500,500,500,1,1],[3,999,999,800,1,1],[4,999,999,800,1
 hc.LoadClusterHits(raw_data)
 mc_data=[[1,1,2,1,1,1,'1'],[2,500,500,500,1,1,'2'],[3,999,999,800,1,1,'2'],[4,999,999,800,1,1,'1']]
 hc.LabelClusterHits(mc_data)
+
+hc.ClusterGraph.train_mask = hc.ClusterGraph.val_mask = hc.ClusterGraph.test_mask = hc.ClusterGraph.y = None
 data = train_test_split_edges(hc.ClusterGraph)
 print(data)
 

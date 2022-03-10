@@ -68,7 +68,7 @@ class HitCluster:
            import torch
            import torch_geometric
            from torch_geometric.data import Data
-           self.ClusterGraph.edge_index=torch.Tensor(_Edge_List)
+           self.ClusterGraph.edge_index=torch.Tensor(np.array(_Edge_List))
            print(self.ClusterGraph)
            print(self.ClusterGraph.x)
            print(self.ClusterGraph.edge_index)

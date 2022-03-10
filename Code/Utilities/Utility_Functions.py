@@ -38,6 +38,20 @@ class HitCluster:
            import torch_geometric
            from torch_geometric.data import Data
            self.ClusterGraph=Data(x=torch.Tensor(self.ClusterHits), edge_index=None, y=None)
+      def LabelClusterHits(self,MCHits): #Decorate hit information
+           import pandas as pd
+           _MCClusterHits=['HitID','MC_ID']
+           for s in MCHits:
+               if s[1]>=self.ClusterID[0]*self.Step[0] and s[1]<((self.ClusterID[0]+1)*self.Step[0]):
+                   if s[2]>=self.ClusterID[1]*self.Step[1] and s[2]<((self.ClusterID[1]+1)*self.Step[1]):
+                       if s[3]>=self.ClusterID[2]*self.Step[2] and s[3]<((self.ClusterID[2]+1)*self.Step[2]):
+                          _MCClusterHits.append([s[0],s[6]])
+           _l_MCHits=pd.DataFrame(_MCClusterHits, columns = ['l_HitID','MC_ID'])
+           print(_l_MCHits)
+           # import torch
+           # import torch_geometric
+           # from torch_geometric.data import Data
+           # self.ClusterGraph=Data(x=torch.Tensor(self.ClusterHits), edge_index=None, y=None)
 
 class Track:
       def __init__(self,segments):

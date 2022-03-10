@@ -27,7 +27,7 @@ print(data)
 class Net(torch.nn.Module):
     def __init__(self):
         super(Net, self).__init__()
-        self.conv1 = GCNConv(dataset.num_features, 128)
+        self.conv1 = GCNConv(data.num_features, 128)
         self.conv2 = GCNConv(128, 64)
 
     def encode(self):

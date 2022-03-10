@@ -46,9 +46,12 @@ class HitCluster:
                    if s[2]>=self.ClusterID[1]*self.Step[1] and s[2]<((self.ClusterID[1]+1)*self.Step[1]):
                        if s[3]>=self.ClusterID[2]*self.Step[2] and s[3]<((self.ClusterID[2]+1)*self.Step[2]):
                           _MCClusterHits.append([s[0],s[6]])
-           print(_MCClusterHits)
            _l_MCHits=pd.DataFrame(_MCClusterHits, columns = ['l_HitID','MC_ID'])
            print(_l_MCHits)
+           _r_MCHits=pd.DataFrame(_MCClusterHits, columns = ['r_HitID','MC_ID'])
+           print(_r_MCHits)
+           _MCHits=pd.merge(_l_MCHits, _r_MCHits, how="inner", on=['MC_ID'])
+           print(_MCHits)
            # import torch
            # import torch_geometric
            # from torch_geometric.data import Data

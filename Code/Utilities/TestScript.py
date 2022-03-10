@@ -117,5 +117,5 @@ for epoch in range(1, 101):
 z = model.encode()
 final_edge_index = model.decode_all(z)
 print(final_edge_index)
-
+torch.save(model.state_dict(), 'Test')
 

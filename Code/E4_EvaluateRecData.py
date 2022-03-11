@@ -71,6 +71,31 @@ if os.path.isfile(test_file_location)!=True:
 test_data = pd.read_csv(test_file_location, header=0,
                                 usecols=['Hit_ID', args.Track])
 
+
+seed_test_data_l=test_data.rename(columns={'Hit_ID': "Left_Hit"})
+seed_test_data_r=test_data.rename(columns={'Hit_ID': "Right_Hit"})
+seed_test_data=pd.merge(seed_test_data_l, seed_test_data_r, how="inner", on=[args.Track])
+seed_test_data["Hit_Seed_ID"]= ['-'.join(sorted(tup)) for tup in zip(seed_test_data["Left_Hit"], seed_test_data["Right_Hit"])]
+seed_test_data.drop_duplicates(subset="Hit_Seed_ID",keep='first',inplace=True)
+seed_test_data.drop(seed_test_data.index[seed_test_data["Left_Hit"] == seed_test_data["Right_Hit"]], inplace = True)
+seed_test_data.drop(["Hit_Seed_ID"],axis=1,inplace=True)
+Seed_Test_Count=len(seed_test_data.axes[0])
+
+seed_eval_data_l=eval_data.rename(columns={'Hit_ID': "Left_Hit"})
+seed_eval_data_r=eval_data.rename(columns={'Hit_ID': "Right_Hit"})
+seed_eval_data=pd.merge(seed_eval_data_l, seed_eval_data_r, how="inner", on=['MC_Mother_Track_ID'])
+seed_eval_data["Hit_Seed_ID"]= ['-'.join(sorted(tup)) for tup in zip(seed_eval_data["Left_Hit"], seed_eval_data["Right_Hit"])]
+seed_eval_data.drop_duplicates(subset="Hit_Seed_ID",keep='first',inplace=True)
+seed_eval_data.drop(seed_eval_data.index[seed_eval_data["Left_Hit"] == seed_eval_data["Right_Hit"]], inplace = True)
+seed_eval_data.drop(["Hit_Seed_ID"],axis=1,inplace=True)
+Seed_Eval_Count=len(seed_eval_data.axes[0])
+
+seed_merge_data=pd.merge(seed_test_data, seed_eval_data, how="inner", on=["Left_Hit","Right_Hit"])
+Seed_Merge_Count=len(seed_merge_data.axes[0])
+
+Recall=round((float(Seed_Merge_Count)/float(Seed_Eval_Count))*100,2)
+Precision=round((float(Seed_Merge_Count)/float(Seed_Test_Count))*100,2)
+
 test_data_no=test_data.drop(['Hit_ID'],axis=1)
 test_data_no['Track_No']=test_data_no[args.Track]
 test_data_no=test_data_no.groupby([args.Track],as_index=False).count()
@@ -103,6 +128,14 @@ try:
     avg_track_efficiency=round((float(len(combined_hits))/float(len(eval_matched_data)))*100,2)
 except:
     avg_track_efficiency=0
+
+print(bcolors.HEADER+"############################################# Hit combination metrics ################################################"+bcolors.ENDC)
+print('Total 2-hit combinations are expected according to Monte Carlo:',Seed_Eval_Count)
+print('Total 2-hit combinations were reconstructed:',Seed_Test_Count)
+print('Correct combinations were reconstructed:',Seed_Merge_Count)
+print('Therefore the recall of the current model is',bcolors.BOLD+str(Recall), '%'+bcolors.ENDC)
+print('And the precision of the current model is',bcolors.BOLD+str(Precision), '%'+bcolors.ENDC)
+print(bcolors.HEADER+"############################################# Track reconstruction metrics ################################################"+bcolors.ENDC)
 print('Maximum number of particles according to MC Data that can be reconstructed:',N_particles_TR)
 print('Maximum number of particles reconstructed:',N_particles_RR)
 print('Overall track reconstruction efficiency:',bcolors.BOLD+str(efficiency), '%'+bcolors.ENDC)

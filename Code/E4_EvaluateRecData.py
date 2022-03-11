@@ -64,13 +64,14 @@ input_GNN_eval_file_location=args.of
 if os.path.isfile(input_GNN_eval_file_location)!=True:
                      print(UF.TimeStamp(), bcolors.FAIL+"Critical fail: file",input_eval_file_location,'is missing, please restart the evaluation sequence scripts'+bcolors.ENDC)
 eval_data=pd.read_csv(input_GNN_eval_file_location,header=0,usecols=['Hit_ID','MC_Mother_Track_ID'])
+eval_data[PM.Hit_ID] = eval_data[PM.Hit_ID].astype(str)
 print(UF.TimeStamp(),'Evaluating reconstructed set ',bcolors.ENDC)
 test_file_location=args.sf
 if os.path.isfile(test_file_location)!=True:
         print(UF.TimeStamp(), bcolors.FAIL+"Critical fail: file",test_file_location,'is missing, please restart the reconstruction sequence scripts'+bcolors.ENDC)
 test_data = pd.read_csv(test_file_location, header=0,
                                 usecols=['Hit_ID', args.Track])
-
+test_data[PM.Hit_ID] = test_data[PM.Hit_ID].astype(str)
 
 seed_test_data_l=test_data.rename(columns={'Hit_ID': "Left_Hit"})
 seed_test_data_r=test_data.rename(columns={'Hit_ID': "Right_Hit"})

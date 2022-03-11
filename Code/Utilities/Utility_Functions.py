@@ -27,17 +27,21 @@ class HitCluster:
       def LoadClusterHits(self,RawHits): #Decorate hit information
            self.ClusterHits=[]
            self.ClusterHitIDs=[]
+           __ClusterHitsTemp=[]
            for s in RawHits:
                if s[1]>=self.ClusterID[0]*self.Step[0] and s[1]<((self.ClusterID[0]+1)*self.Step[0]):
                    if s[2]>=self.ClusterID[1]*self.Step[1] and s[2]<((self.ClusterID[1]+1)*self.Step[1]):
                        if s[3]>=self.ClusterID[2]*self.Step[2] and s[3]<((self.ClusterID[2]+1)*self.Step[2]):
-                          self.ClusterHits.append([(s[1]-(self.ClusterID[0]*self.Step[0])),(s[2]-(self.ClusterID[1]*self.Step[1])), (s[3]-(self.ClusterID[2]*self.Step[2])), s[4], s[5]])
+                          __ClusterHitsTemp.append([(s[1]-(self.ClusterID[0]*self.Step[0])),(s[2]-(self.ClusterID[1]*self.Step[1])), (s[3]-(self.ClusterID[2]*self.Step[2])), s[4], s[5]])
                           self.ClusterHitIDs.append(s[0])
-           self.ClusterSize=len(self.ClusterHits)
+                          self.ClusterHits.append(s)
+           self.ClusterSize=len(__ClusterHitsTemp)
            import torch
            import torch_geometric
            from torch_geometric.data import Data
-           self.ClusterGraph=Data(x=torch.Tensor(self.ClusterHits), edge_index=None, y=None)
+           self.ClusterGraph=Data(x=torch.Tensor(__ClusterHitsTemp), edge_index=None, y=None)
+           del __ClusterHitsTemp
+
       def LabelClusterHits(self,MCHits): #Decorate hit information
            import pandas as pd
            _MCClusterHits=[]
@@ -64,6 +68,58 @@ class HitCluster:
            from torch_geometric.data import Data
            self.ClusterGraph.edge_index=torch.tensor(np.array(_Edge_List))
 
+      def GiveStats(self,MCHits): #Decorate hit information
+           import pandas as pd
+           _MCClusterHits=[]
+           StatFakeValues=[]
+           StatTruthValues=[]
+           StatLabels=['Initial # of combinations']
+           for s in MCHits:
+               if s[1]>=self.ClusterID[0]*self.Step[0] and s[1]<((self.ClusterID[0]+1)*self.Step[0]):
+                   if s[2]>=self.ClusterID[1]*self.Step[1] and s[2]<((self.ClusterID[1]+1)*self.Step[1]):
+                       if s[3]>=self.ClusterID[2]*self.Step[2] and s[3]<((self.ClusterID[2]+1)*self.Step[2]):
+                          _MCClusterHits.append([s[0],s[6]])
+           #Preparing Raw and MC combined data 1
+           _l_MCHits=pd.DataFrame(_MCClusterHits, columns = ['l_HitID','l_MC_ID'])
+           _l_Hits=pd.DataFrame(self.ClusterHits, columns = ['l_HitID','x','y','z','tx','ty'])
+           _r_MCHits=pd.DataFrame(_MCClusterHits, columns = ['r_HitID','l_MC_ID'])
+           _r_Hits=pd.DataFrame(self.ClusterHits, columns = ['r_HitID','x','y','z','tx','ty'])
+           #Join hits + MC truth
+           _l_Tot_Hits=pd.merge(_l_MCHits, _l_Hits, how="inner", on=['l_HitID'])
+           _l_Tot_Hits['join_key'] = 'join_key'
+
+           #Preparing Raw and MC combined data 2
+           _r_MCHits=pd.DataFrame(_MCClusterHits, columns = ['r_HitID','r_MC_ID'])
+           _r_Hits=pd.DataFrame(self.ClusterHits, columns = ['r_HitID','x','y','z','tx','ty'])
+           _r_MCHits=pd.DataFrame(_MCClusterHits, columns = ['r_HitID','r_MC_ID'])
+           _r_Hits=pd.DataFrame(self.ClusterHits, columns = ['r_HitID','x','y','z','tx','ty'])
+           #Join hits + MC truth
+           _r_Tot_Hits=pd.merge(_r_MCHits, _r_Hits, how="inner", on=['r_HitID'])
+           _r_Tot_Hits['join_key'] = 'join_key'
+
+           #Combining data 1 and 2
+           _Tot_Hits=pd.merge(_l_Tot_Hits, _r_Tot_Hits, how="inner", on=['join_key'])
+           StatFakeValues.append(len(_Tot_Hits.axes[0])-len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['l_MC_ID']]).axes[0]))
+           StatTruthValues.append(len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['l_MC_ID']]).axes[0]))
+           return([StatLabels,StatFakeValues,StatTruthValues])
+           # result["Track_ID"]= ['-'.join(sorted(tup)) for tup in zip(result['Segment_1'], result['Segment_2'])]
+           # result.drop_duplicates(subset="Track_ID",keep='first',inplace=True)
+
+
+           # _MCHits.drop(['MC_ID'],axis=1,inplace=True)
+           # _MCHits.drop(_MCHits.index[_MCHits['l_HitID'] == _MCHits['r_HitID']], inplace = True)
+           # _MCHitsList = _MCHits.values.tolist()
+           # del _MCHits
+           # _Edge_List_Top=[]
+           # _Edge_List_Bottom=[]
+           # for el in _MCHitsList:
+           #     _Edge_List_Top.append(self.ClusterHitIDs.index(el[0]))
+           #     _Edge_List_Bottom.append(self.ClusterHitIDs.index(el[1]))
+           # _Edge_List=[_Edge_List_Top,_Edge_List_Bottom]
+           # import torch
+           # import torch_geometric
+           # from torch_geometric.data import Data
+           # self.ClusterGraph.edge_index=torch.tensor(np.array(_Edge_List))
 class Track:
       def __init__(self,segments):
           self.SegmentHeader=sorted(segments, key=str.lower)

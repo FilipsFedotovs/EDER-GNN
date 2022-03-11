@@ -61,6 +61,7 @@ final_rows=len(data.axes[0])
 print(UF.TimeStamp(),'The cleaned data has ',final_rows,' hits')
 data[PM.MC_Event_ID] = data[PM.MC_Event_ID].astype(str)
 data[PM.MC_Track_ID] = data[PM.MC_Track_ID].astype(str)
+data[PM.Hit_ID] = data[PM.Hit_ID].astype(str)
 data['MC_Mother_Track_ID'] = data[PM.MC_Event_ID] + '-' + data[PM.MC_Track_ID]
 data=data.drop([PM.MC_Event_ID],axis=1)
 data=data.drop([PM.MC_Track_ID],axis=1)

@@ -54,6 +54,7 @@ data=pd.read_csv(input_file_location,
             header=0,
             usecols=[PM.Hit_ID,PM.x,PM.y,PM.z,PM.tx,PM.ty])
 total_rows=len(data.axes[0])
+data[PM.Hit_ID] = data[PM.Hit_ID].astype(str)
 print(UF.TimeStamp(),'The raw data has ',total_rows,' hits')
 print(UF.TimeStamp(),'Removing unreconstructed hits...')
 data=data.dropna()

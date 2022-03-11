@@ -61,6 +61,7 @@ final_rows=len(data.axes[0])
 print(UF.TimeStamp(),'The cleaned data has ',final_rows,' hits')
 data[PM.FEDRA_Track_QUADRANT] = data[PM.FEDRA_Track_QUADRANT].astype(str)
 data[PM.FEDRA_Track_ID] = data[PM.FEDRA_Track_ID].astype(str)
+data[PM.Hit_ID] = data[PM.Hit_ID].astype(str)
 data['FEDRA_Track_ID'] = data[PM.FEDRA_Track_QUADRANT] + '-' + data[PM.FEDRA_Track_ID]
 data=data.drop([PM.FEDRA_Track_QUADRANT],axis=1)
 data=data.drop([PM.FEDRA_Track_ID],axis=1)

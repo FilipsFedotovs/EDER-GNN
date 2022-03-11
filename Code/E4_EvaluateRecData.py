@@ -45,7 +45,7 @@ from Utility_Functions import Track
 parser = argparse.ArgumentParser(description='This script compares the ouput of the previous step with the output of EDER-GNN reconstructed data to calculate reconstruction performance.')
 parser.add_argument('--sf',help="Please choose the input file", default=EOS_DIR+'/EDER-GNN/Data/REC_SET/R1_HITS.csv')
 parser.add_argument('--of',help="Please choose the evaluation file (has to match the same geometrical domain and type of the track as the subject", default=EOS_DIR+'/EDER-GNN/Data/TEST_SET/E1_HITS.csv')
-parser.add_argument('--Track',help="Name of the control track", default='Fedra_Track_ID')
+parser.add_argument('--Track',help="Name of the control track", default='FEDRA_Track_ID')
 ######################################## Set variables  #############################################################
 args = parser.parse_args()
 

@@ -73,8 +73,8 @@ data_list=data.values.tolist()
 x_max=data['x'].max()
 y_max=data['y'].max()
 
-Xsteps=math.ceil(x_max/StepX) #Even if use only a max of 20000 track on the right join we cannot perform the full outer join due to the memory limitations, we do it in a small 'cuts'
-Ysteps=math.ceil(y_max/StepY)  #Calculating number of cuts
+Xsteps=math.ceil(x_max/stepX) #Even if use only a max of 20000 track on the right join we cannot perform the full outer join due to the memory limitations, we do it in a small 'cuts'
+Ysteps=math.ceil(y_max/stepY)  #Calculating number of cuts
 print(Xsteps)
 print(Ysteps)
 exit()

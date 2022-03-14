@@ -62,7 +62,7 @@ print(bcolors.HEADER+"#########################                 PhD Student at U
 print(bcolors.HEADER+"########################################################################################################"+bcolors.ENDC)
 print(UF.TimeStamp(), bcolors.OKGREEN+"Modules Have been imported successfully..."+bcolors.ENDC)
 print(UF.TimeStamp(),'Loading preselected data from ',bcolors.OKBLUE+input_file_location+bcolors.ENDC)
-data=pd.read_csv(input_file_location,header=0,usecols=['z'])
+data=pd.read_csv(input_file_location,header=0,usecols=['z','x'])
 print(UF.TimeStamp(),'Analysing data... ',bcolors.ENDC)
 z_offset=data['z'].min()
 data['z']=data['z']-z_offset
@@ -94,14 +94,25 @@ if Mode=='C':
    exit()
    bad_pop=[]
    print(UF.TimeStamp(),'Checking jobs... ',bcolors.ENDC)
-   for j in range(0,len(data)):
-       for sj in range(0,int(data[j][2])):
-           for f in range(0,1000):
-              new_output_file_location=EOS_DIR+'/EDER-VIANN/Data/REC_SET/R2_R3_RawSeeds_'+str(j+1)+'_'+str(sj+1)+'_'+str(f)+'.csv'
-              required_output_file_location=EOS_DIR+'/EDER-VIANN/Data/REC_SET/R3_R3_FilteredSeeds_'+str(j+1)+'_'+str(sj+1)+'_'+str(f)+'.pkl'
-              job_details=[(j+1),(sj+1),f,VO_T,VO_max_Z,VO_min_Z,MaxDoca,AFS_DIR,EOS_DIR,MinAngle,MaxAngle]
-              if os.path.isfile(required_output_file_location)!=True  and os.path.isfile(new_output_file_location):
-                 bad_pop.append(job_details)
+   for k in range(0,Zsteps):
+       data_temp=data.drop(data.index[data['z'] >= ((Set+1)*stepZ)])  #Keeping the relevant z slice
+       data_temp=data.drop(data.index[data['z'] < (Set*stepZ)])  #Keeping the relevant z slice
+       x_offset=data_temp['x'].min()
+       data_temp['x']=data_temp['x']-x_offset
+       x_max=data_temp['x'].max()
+       Xsteps=math.ceil(x_max/stepX) #Even if use only a max of 20000 track on the right join we cannot perform the full outer join due to the memory limitations, we do it in a small 'cuts'
+       for i in range(0,Xsteps):
+            LoadedClusters=[]
+            progress=round((float(i)/float(Xsteps))*100,2)
+            print(UF.TimeStamp(),"progress is ",progress,' %') #Progress display
+            required_output_file_location=EOS_DIR+'/EDER-GNN/Data/REC_SET/R2_R2_SelectedClusters_'+str(k)+'_'+str(i)+'.pkl'
+            OptionHeader = [' --set ', ' --stepX ',' --stepY ',' --stepZ ', ' --EOS ', " --AFS "]
+            OptionLine = [k, stepX,stepY,stepZ, EOS_DIR, AFS_DIR]
+            SHName = AFS_DIR + '/HTCondor/SH/SH_R2_' + str(k) + '.sh'
+            SUBName = AFS_DIR + '/HTCondor/SUB/SUB_R2_' + str(k) + '.sub'
+            MSGName = AFS_DIR + '/HTCondor/MSG/MSG_R2_' + str(k)
+            ScriptName = AFS_DIR + '/Code/Utilities/R2_GenerateClusters_Sub.py '
+            bad_pop.append([OptionHeader, OptionLine, SHName, SUBName, MSGName, ScriptName, 1, 'EDER-GNN-R2', True,False])
    if len(bad_pop)>0:
      print(UF.TimeStamp(),bcolors.WARNING+'Warning, there are still', len(bad_pop), 'HTCondor jobs remaining'+bcolors.ENDC)
      print(bcolors.BOLD+'If you would like to wait and try again later please enter W'+bcolors.ENDC)
@@ -112,13 +123,14 @@ if Mode=='C':
          exit()
      if UserAnswer=='R':
         for bp in bad_pop:
-             UF.SubmitFilterSeedsJobsCondor(bp)
+             UF.SubmitJobs2Condor(bp)
         print(UF.TimeStamp(), bcolors.OKGREEN+"All jobs have been resubmitted"+bcolors.ENDC)
         print(bcolors.BOLD+"Please check them in few hours"+bcolors.ENDC)
         exit()
    else:
        print(UF.TimeStamp(),bcolors.OKGREEN+'All HTCondor Seed Creation jobs have finished'+bcolors.ENDC)
        print(UF.TimeStamp(),'Collating the results...')
+       exit()
        for j in range(0,len(data)):
         for sj in range(0,int(data[j][2])):
            for f in range(0,1000):

@@ -45,10 +45,16 @@ input_file_location=EOS_DIR+'/EDER-GNN/Data/REC_SET/R1_HITS.csv'
 output_file_location=EOS_DIR+'/EDER-GNN/Data/REC_SET/R2_R2_RawClusters_'+str(Set)+'.pkl'
 print(UF.TimeStamp(), "Modules Have been imported successfully...")
 print(UF.TimeStamp(),'Loading pre-selected data from ',input_file_location)
-data=pd.read_csv(input_file_location)
 
+data=pd.read_csv(input_file_location,header=0,
+            usecols=["Hit_ID","x","y","z","tx","ty"])
+
+data["x"] = pd.to_numeric(data["x"],downcast='float')
+data["y"] = pd.to_numeric(data["y"],downcast='float')
+data["z"] = pd.to_numeric(data["z"],downcast='float')
 
 print(len(data))
+print(data)
 print((Set+1)*stepZ)
 print((Set*stepZ))
 print(UF.TimeStamp(),'Creating clusters... ')

@@ -49,7 +49,6 @@ print(UF.TimeStamp(),'Loading pre-selected data from ',input_file_location)
 
 data=pd.read_csv(input_file_location,header=0,
             usecols=["Hit_ID","x","y","z","tx","ty"])
-
 data["x"] = pd.to_numeric(data["x"],downcast='float')
 data["y"] = pd.to_numeric(data["y"],downcast='float')
 data["z"] = pd.to_numeric(data["z"],downcast='float')
@@ -59,25 +58,15 @@ data['z']=data['z']-z_offset
 print(UF.TimeStamp(),'Creating clusters... ')
 data.drop(data.index[data['z'] >= ((Set+1)*stepZ)], inplace = True)  #Keeping the relevant z slice
 data.drop(data.index[data['z'] < (Set*stepZ)], inplace = True)  #Keeping the relevant z slice
-#data=data.reset_index()
-print(data)
-
 x_offset=data['x'].min()
 y_offset=data['y'].min()
-print(x_offset)
-print(y_offset)
 data['x']=data['x']-x_offset
 data['y']=data['y']-y_offset
-
 data_list=data.values.tolist()
-
 x_max=data['x'].max()
 y_max=data['y'].max()
-
 Xsteps=math.ceil(x_max/stepX) #Even if use only a max of 20000 track on the right join we cannot perform the full outer join due to the memory limitations, we do it in a small 'cuts'
 Ysteps=math.ceil(y_max/stepY)  #Calculating number of cuts
-print(Xsteps)
-print(Ysteps)
 for i in range(0,Xsteps):
     LoadedClusters=[]
     progress=round((float(i)/float(Xsteps))*100,2)

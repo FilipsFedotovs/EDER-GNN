@@ -17,11 +17,10 @@ MC_Event_ID='MCEvent' #Column name for Event id for MC truth reconstruction data
 
 
 ########List of the package run parameters
-MaxSegmentsPerJob=20000 #This parameter imposes the limit on the number of the tracks form the Start plate when forming the Seeds.
-MaxEvalSegmentsPerJob=20000 #This parameter imposes the limit on the number of the tracks form the Start plate when forming the Seeds.
-MaxTracksPerJob=40000
-MaxFitTracksPerJob=10000
-MaxTracksPerTrPool=20000
+stepX=1000
+stepY=1000
+stepZ=4000
+
 
 ######List of geometrical constain parameters
 MaxSLG=4000

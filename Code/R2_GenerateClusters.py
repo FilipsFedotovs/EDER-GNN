@@ -84,9 +84,9 @@ if Mode=='R':
       for k in range(0,Zsteps):
             OptionHeader = [' --set ', ' --stepX ',' --stepY ',' --stepZ ', ' --EOS ', " --AFS "]
             OptionLine = [k, stepX,stepY,stepZ, EOS_DIR, AFS_DIR]
-            SHName = AFS_DIR + '/HTCondor/SH/SH_R2_' + str(j) + '.sh'
-            SUBName = AFS_DIR + '/HTCondor/SUB/SUB_R2_' + str(j) + '.sub'
-            MSGName = AFS_DIR + '/HTCondor/MSG/MSG_R2_' + str(j)
+            SHName = AFS_DIR + '/HTCondor/SH/SH_R2_' + str(k) + '.sh'
+            SUBName = AFS_DIR + '/HTCondor/SUB/SUB_R2_' + str(k) + '.sub'
+            MSGName = AFS_DIR + '/HTCondor/MSG/MSG_R2_' + str(k)
             ScriptName = AFS_DIR + '/Code/Utilities/R2_GenerateClusters_Sub.py '
             UF.SubmitJobs2Condor([OptionHeader, OptionLine, SHName, SUBName, MSGName, ScriptName, 1, 'EDER-GNN-R2', True,False])
       print(UF.TimeStamp(), bcolors.OKGREEN+'All jobs have been submitted, please rerun this script with "--Mode C" in few hours'+bcolors.ENDC)

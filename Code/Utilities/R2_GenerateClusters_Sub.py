@@ -87,6 +87,7 @@ for i in range(0,Xsteps):
         HC.LoadClusterHits(data_list)
         LoadedClusters.append(HC)
     output_file_location=EOS_DIR+'/EDER-GNN/Data/REC_SET/R2_R2_SelectedClusters_'+str(Set)+'_'+str(i)+'.pkl'
+    open_file = open(output_file_location, "wb")
     pickle.dump(LoadedClusters, output_file_location)
 print(UF.TimeStamp(), "Cluster generation is finished...")
 #End of the script

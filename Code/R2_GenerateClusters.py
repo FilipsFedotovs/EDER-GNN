@@ -100,10 +100,9 @@ if Mode=='C':
        data_temp['x']=data_temp['x']-x_offset
        x_max=data_temp['x'].max()
        Xsteps=math.ceil(x_max/stepX) #Even if use only a max of 20000 track on the right join we cannot perform the full outer join due to the memory limitations, we do it in a small 'cuts'
+       progress=round((float(k)/float(Zsteps))*100,2)
+       print(UF.TimeStamp(),"progress is ",progress,' %') #Progress display
        for i in range(0,Xsteps):
-            LoadedClusters=[]
-            progress=round((float(i)/float(Xsteps))*100,2)
-            print(UF.TimeStamp(),"progress is ",progress,' %') #Progress display
             required_output_file_location=EOS_DIR+'/EDER-GNN/Data/REC_SET/R2_R2_SelectedClusters_'+str(k)+'_'+str(i)+'.pkl'
             OptionHeader = [' --set ', ' --stepX ',' --stepY ',' --stepZ ', ' --EOS ', " --AFS "]
             OptionLine = [k, stepX,stepY,stepZ, EOS_DIR, AFS_DIR]
@@ -111,7 +110,8 @@ if Mode=='C':
             SUBName = AFS_DIR + '/HTCondor/SUB/SUB_R2_' + str(k) + '.sub'
             MSGName = AFS_DIR + '/HTCondor/MSG/MSG_R2_' + str(k)
             ScriptName = AFS_DIR + '/Code/Utilities/R2_GenerateClusters_Sub.py '
-            bad_pop.append([OptionHeader, OptionLine, SHName, SUBName, MSGName, ScriptName, 1, 'EDER-GNN-R2', True,False])
+            if os.path.isfile(required_output_file_location)!=True:
+               bad_pop.append([OptionHeader, OptionLine, SHName, SUBName, MSGName, ScriptName, 1, 'EDER-GNN-R2', True,False])
    if len(bad_pop)>0:
      print(UF.TimeStamp(),bcolors.WARNING+'Warning, there are still', len(bad_pop), 'HTCondor jobs remaining'+bcolors.ENDC)
      print(bcolors.BOLD+'If you would like to wait and try again later please enter W'+bcolors.ENDC)

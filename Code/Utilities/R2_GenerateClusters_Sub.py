@@ -67,13 +67,17 @@ print(x_offset)
 print(y_offset)
 data['x']=data['x']-x_offset
 data['y']=data['y']-y_offset
-print(data)
-exit()
-data_list=data.values.tolist()
-Cut=math.ceil(MaxRecords/Records) #Even if use only a max of 20000 track on the right join we cannot perform the full outer join due to the memory limitations, we do it in a small 'cuts'
-Steps=math.ceil(MaxTracks/Cut)  #Calculating number of cuts
-data=pd.merge(data, data_header, how="inner", on=["Track_ID","z"]) #Shrinking the Track data so just a star hit for each track is present.
 
+data_list=data.values.tolist()
+
+x_max=data['x'].max()
+y_max=data['y'].max()
+
+Xsteps=math.ceil(x_max/StepX) #Even if use only a max of 20000 track on the right join we cannot perform the full outer join due to the memory limitations, we do it in a small 'cuts'
+Ysteps=math.ceil(y_max/StepY)  #Calculating number of cuts
+print(Xsteps)
+print(Ysteps)
+exit()
 #What section of data will we cut?
 StartDataCut=(Subset-1)*MaxTracks
 EndDataCut=Subset*MaxTracks

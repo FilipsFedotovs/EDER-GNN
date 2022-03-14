@@ -54,9 +54,10 @@ data["y"] = pd.to_numeric(data["y"],downcast='float')
 data["z"] = pd.to_numeric(data["z"],downcast='float')
 data["Hit_ID"] = data["Hit_ID"].astype(str)
 z_offset=data['z'].min()
+data['z']=data['z']-z_offset
 print(UF.TimeStamp(),'Creating clusters... ')
-data.drop(data.index[data['z'] >= (((Set+1)*stepZ)+z_offset)], inplace = True)  #Keeping the relevant z slice
-data.drop(data.index[data['z'] < ((Set*stepZ)+z_offset)], inplace = True)  #Keeping the relevant z slice
+data.drop(data.index[data['z'] >= ((Set+1)*stepZ)], inplace = True)  #Keeping the relevant z slice
+data.drop(data.index[data['z'] < (Set*stepZ)], inplace = True)  #Keeping the relevant z slice
 #data=data.reset_index()
 print(data)
 

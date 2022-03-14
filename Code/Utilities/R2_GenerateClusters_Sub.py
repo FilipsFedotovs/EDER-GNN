@@ -55,12 +55,12 @@ data["z"] = pd.to_numeric(data["z"],downcast='float')
 z_offset=data['z'].min()
 print(len(data))
 print(data)
-print((Set+1)*stepZ)
-print((Set*stepZ))
+print((((Set+1)*stepZ)+z_offset))
+print(((Set*stepZ)+z_offset))
 
 print(UF.TimeStamp(),'Creating clusters... ')
-data.drop(data.index[data['z'] >= (((Set+1)*stepZ)-z_offset)], inplace = True)  #Keeping the relevant z slice
-data.drop(data.index[data['z'] < ((Set*stepZ)-z_offset)], inplace = True)  #Keeping the relevant z slice
+data.drop(data.index[data['z'] >= (((Set+1)*stepZ)+z_offset)], inplace = True)  #Keeping the relevant z slice
+data.drop(data.index[data['z'] < ((Set*stepZ)+z_offset)], inplace = True)  #Keeping the relevant z slice
 #data=data.reset_index()
 print(data)
 exit()

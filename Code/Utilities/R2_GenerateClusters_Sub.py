@@ -52,21 +52,23 @@ data=pd.read_csv(input_file_location,header=0,
 data["x"] = pd.to_numeric(data["x"],downcast='float')
 data["y"] = pd.to_numeric(data["y"],downcast='float')
 data["z"] = pd.to_numeric(data["z"],downcast='float')
+data["Hit_ID"] = data["Hit_ID"].astype(str)
 z_offset=data['z'].min()
 print(UF.TimeStamp(),'Creating clusters... ')
 data.drop(data.index[data['z'] >= (((Set+1)*stepZ)+z_offset)], inplace = True)  #Keeping the relevant z slice
 data.drop(data.index[data['z'] < ((Set*stepZ)+z_offset)], inplace = True)  #Keeping the relevant z slice
 #data=data.reset_index()
 print(data)
-data_list=data.values.tolist()
-print(data_list)
-exit()
-#Doing a plate region cut for the Main Data
-data_header.drop(data_header.index[data_header['z'] > (PlateZ+SI_7)], inplace = True)
-data_header.drop(data_header.index[data_header['z'] < PlateZ], inplace = True)
-Records=len(data_header.axes[0])
-print(UF.TimeStamp(),'There are total of ', Records, 'tracks in the data set')
 
+x_offset=data['x'].min()
+y_offset=data['y'].min()
+print(x_offset)
+print(y_offset)
+data['x']=data['x']-x_offset
+data['y']=data['y']-y_offset
+print(data)
+exit()
+data_list=data.values.tolist()
 Cut=math.ceil(MaxRecords/Records) #Even if use only a max of 20000 track on the right join we cannot perform the full outer join due to the memory limitations, we do it in a small 'cuts'
 Steps=math.ceil(MaxTracks/Cut)  #Calculating number of cuts
 data=pd.merge(data, data_header, how="inner", on=["Track_ID","z"]) #Shrinking the Track data so just a star hit for each track is present.

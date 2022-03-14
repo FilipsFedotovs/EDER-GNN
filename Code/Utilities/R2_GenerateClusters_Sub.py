@@ -58,8 +58,8 @@ print(data)
 print((Set+1)*stepZ)
 print((Set*stepZ))
 print(UF.TimeStamp(),'Creating clusters... ')
-data.drop(data.index[data['z'] > ((Set+1)*stepZ)], inplace = True)  #Keeping the relevant z slice
-data.drop(data.index[data['z'] <= (Set*stepZ)], inplace = True)  #Keeping the relevant z slice
+data.drop(data.index[data['z'] >= ((Set+1)*stepZ)], inplace = True)  #Keeping the relevant z slice
+#data.drop(data.index[data['z'] < (Set*stepZ)], inplace = True)  #Keeping the relevant z slice
 #data=data.reset_index()
 print(data)
 exit()

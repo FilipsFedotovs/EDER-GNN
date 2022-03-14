@@ -94,8 +94,8 @@ if Mode=='C':
    bad_pop=[]
    print(UF.TimeStamp(),'Checking jobs... ',bcolors.ENDC)
    for k in range(0,Zsteps):
-       data_temp=data.drop(data.index[data['z'] >= ((Set+1)*stepZ)])  #Keeping the relevant z slice
-       data_temp=data.drop(data.index[data['z'] < (Set*stepZ)])  #Keeping the relevant z slice
+       data_temp=data.drop(data.index[data['z'] >= ((k+1)*stepZ)])  #Keeping the relevant z slice
+       data_temp=data.drop(data.index[data['z'] < (k*stepZ)])  #Keeping the relevant z slice
        x_offset=data_temp['x'].min()
        data_temp['x']=data_temp['x']-x_offset
        x_max=data_temp['x'].max()

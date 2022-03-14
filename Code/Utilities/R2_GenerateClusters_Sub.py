@@ -60,7 +60,7 @@ print((Set*stepZ))
 print(UF.TimeStamp(),'Creating clusters... ')
 data.drop(data.index[data['z'] > ((Set+1)*stepZ)], inplace = True)  #Keeping the relevant z slice
 data.drop(data.index[data['z'] <= (Set*stepZ)], inplace = True)  #Keeping the relevant z slice
-data=data.reset_index()
+#data=data.reset_index()
 print(data)
 exit()
 #Doing a plate region cut for the Main Data

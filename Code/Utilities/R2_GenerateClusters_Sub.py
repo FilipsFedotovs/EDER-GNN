@@ -53,16 +53,13 @@ data["x"] = pd.to_numeric(data["x"],downcast='float')
 data["y"] = pd.to_numeric(data["y"],downcast='float')
 data["z"] = pd.to_numeric(data["z"],downcast='float')
 z_offset=data['z'].min()
-print(len(data))
-print(data)
-print((((Set+1)*stepZ)+z_offset))
-print(((Set*stepZ)+z_offset))
-
 print(UF.TimeStamp(),'Creating clusters... ')
 data.drop(data.index[data['z'] >= (((Set+1)*stepZ)+z_offset)], inplace = True)  #Keeping the relevant z slice
 data.drop(data.index[data['z'] < ((Set*stepZ)+z_offset)], inplace = True)  #Keeping the relevant z slice
 #data=data.reset_index()
 print(data)
+data_list=data.values.tolist()
+print(data_list)
 exit()
 #Doing a plate region cut for the Main Data
 data_header.drop(data_header.index[data_header['z'] > (PlateZ+SI_7)], inplace = True)

@@ -42,7 +42,7 @@ import Utility_Functions as UF #This is where we keep routine utility functions
 
 #Specifying the full path to input/output files
 input_file_location=EOS_DIR+'/EDER-GNN/Data/REC_SET/R1_HITS.csv'
-output_file_location=EOS_DIR+'/EDER-GNN/Data/REC_SET/R2_R2_RawClusters_'+Set+'.pkl'
+output_file_location=EOS_DIR+'/EDER-GNN/Data/REC_SET/R2_R2_RawClusters_'+str(Set)+'.pkl'
 print(UF.TimeStamp(), "Modules Have been imported successfully...")
 print(UF.TimeStamp(),'Loading pre-selected data from ',input_file_location)
 data=pd.read_csv(input_file_location)

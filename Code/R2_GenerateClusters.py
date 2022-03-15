@@ -62,7 +62,7 @@ print(bcolors.HEADER+"#########################                 PhD Student at U
 print(bcolors.HEADER+"########################################################################################################"+bcolors.ENDC)
 print(UF.TimeStamp(), bcolors.OKGREEN+"Modules Have been imported successfully..."+bcolors.ENDC)
 print(UF.TimeStamp(),'Loading preselected data from ',bcolors.OKBLUE+input_file_location+bcolors.ENDC)
-data=pd.read_csv(input_file_location,header=0,usecols=['z','x'])
+data=pd.read_csv(input_file_location,header=0,usecols=['z','x','y'])
 print(UF.TimeStamp(),'Analysing data... ',bcolors.ENDC)
 z_offset=data['z'].min()
 data['z']=data['z']-z_offset

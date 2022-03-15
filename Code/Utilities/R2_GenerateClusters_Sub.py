@@ -22,7 +22,9 @@ parser.add_argument('--stepY',help="Enter Y step size", default='0')
 parser.add_argument('--stepZ',help="Enter Z step size", default='0')
 parser.add_argument('--EOS',help="EOS directory location", default='.')
 parser.add_argument('--AFS',help="AFS directory location", default='.')
-
+parser.add_argument('--zOffset',help="Data offset on z", default='0.0')
+parser.add_argument('--yOffset',help="Data offset on y", default='0.0')
+parser.add_argument('--xOffset',help="Data offset on x", default='0.0')
 
 ######################################## Set variables  #############################################################
 args = parser.parse_args()
@@ -32,7 +34,9 @@ Set=int(args.set)
 stepX=float(args.stepX) #The coordinate of the st plate in the current scope
 stepZ=float(args.stepZ)
 stepY=float(args.stepY)
-
+z_offset=float(args.zOffset)
+y_offset=float(args.yOffset)
+x_offset=float(args.xOffset)
 #Loading Directory locations
 EOS_DIR=args.EOS
 AFS_DIR=args.AFS
@@ -52,19 +56,16 @@ data=pd.read_csv(input_file_location,header=0,
 data["x"] = pd.to_numeric(data["x"],downcast='float')
 data["y"] = pd.to_numeric(data["y"],downcast='float')
 data["z"] = pd.to_numeric(data["z"],downcast='float')
+data['x']=data['x']-x_offset
+data['y']=data['y']-y_offset
 data["Hit_ID"] = data["Hit_ID"].astype(str)
-z_offset=data['z'].min()
 data['z']=data['z']-z_offset
+x_max=data['x'].max()
+y_max=data['y'].max()
 print(UF.TimeStamp(),'Creating clusters... ')
 data.drop(data.index[data['z'] >= ((Set+1)*stepZ)], inplace = True)  #Keeping the relevant z slice
 data.drop(data.index[data['z'] < (Set*stepZ)], inplace = True)  #Keeping the relevant z slice
-x_offset=data['x'].min()
-y_offset=data['y'].min()
-data['x']=data['x']-x_offset
-data['y']=data['y']-y_offset
 data_list=data.values.tolist()
-x_max=data['x'].max()
-y_max=data['y'].max()
 Xsteps=math.ceil(x_max/stepX) #Even if use only a max of 20000 track on the right join we cannot perform the full outer join due to the memory limitations, we do it in a small 'cuts'
 Ysteps=math.ceil(y_max/stepY)  #Calculating number of cuts
 for i in range(0,Xsteps):

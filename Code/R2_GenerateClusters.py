@@ -157,24 +157,30 @@ if Mode=='C':
                Xsteps=math.ceil(x_max/stepX) #Even if use only a max of 20000 track on the right join we cannot perform the full outer join due to the memory limitations, we do it in a small 'cuts'
                progress=round((float(k)/float(Zsteps))*100,2)
                print(UF.TimeStamp(),"progress is ",progress,' %') #Progress display
+               fake_results_1=[]
+               fake_results_2=[]
+               fake_results_3=[]
+               truth_results_1=[]
+               truth_results_2=[]
+               truth_results_3=[]
                for i in range(0,Xsteps):
                     required_output_file_location=EOS_DIR+'/EDER-GNN/Data/REC_SET/R2_R2_SelectedClusters_'+str(k)+'_'+str(i)+'.pkl'
                     if os.path.isfile(required_output_file_location)!=True:
                      print(UF.TimeStamp(), bcolors.FAIL+"Critical fail: file",required_output_file_location,'is missing, please restart the script with the option "--Mode R"'+bcolors.ENDC)
                     elif os.path.isfile(required_output_file_location):
-                     if k==i==0:
-                        base_data_file=open(required_output_file_location,'rb')
-                        base_data=pickle.load(base_data_file)
-                        print(base_data[0].GiveStats(MCdata_list))
+                        cluster_data_file=open(required_output_file_location,'rb')
+                        cluster_data=pickle.load(cluster_data_file)
+                        print(cluster_data[0].GiveStats(MCdata_list))
                         exit()
-            #             base_data_file.close()
-            #          else:
-            #             new_data_file=open(required_output_file_location,'rb')
-            #             new_data=pickle.load(new_data_file)
-            #             new_data_file.close()
-            #             base_data+=new_data
-            # Records=len(base_data)
-            # print(UF.TimeStamp(),'Set',str(j+1),'contains', Records, '2-track vertices',bcolors.ENDC)
+                        for cd in cluster_data:
+                          result_temp=cd.GiveStats(MCdata_list)
+                          fake_results_1.append(result_temp[0][1][0])
+                          fake_results_2.append(result_temp[0][1][1])
+                          fake_results_3.append(result_temp[0][1][2])
+                          truth_results_1.append(result_temp[0][2][0])
+                          truth_results_2.append(result_temp[0][2][1])
+                          truth_results_3.append(result_temp[0][2][2])
+               print(fake_results_1,fake_results_2,fake_results_3, truth_results_1,truth_results_2,truth_results_3)
        print(bcolors.HEADER+"############################################# End of the program ################################################"+bcolors.ENDC)
 #End of the script
 

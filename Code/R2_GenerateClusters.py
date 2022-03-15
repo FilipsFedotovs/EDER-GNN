@@ -83,7 +83,7 @@ if Mode=='R':
       UF.RecCleanUp(AFS_DIR, EOS_DIR, 'R3', ['R2_R3','R2_R2'], "SoftUsed == \"EDER-GNN-R2\"")
       print(UF.TimeStamp(),'Submitting jobs... ',bcolors.ENDC)
       for k in range(0,Zsteps):
-            OptionHeader = [' --set ', ' --stepX ',' --stepY ',' --stepZ ', ' --EOS ', " --AFS ", " --zOffset", " --xOffset", " --yOffset"]
+            OptionHeader = [' --set ', ' --stepX ',' --stepY ',' --stepZ ', ' --EOS ', " --AFS ", " --zOffset ", " --xOffset ", " --yOffset "]
             OptionLine = [k, stepX,stepY,stepZ, EOS_DIR, AFS_DIR, z_offset, x_offset, y_offset]
             SHName = AFS_DIR + '/HTCondor/SH/SH_R2_' + str(k) + '.sh'
             SUBName = AFS_DIR + '/HTCondor/SUB/SUB_R2_' + str(k) + '.sub'
@@ -104,7 +104,7 @@ if Mode=='C':
        print(UF.TimeStamp(),"progress is ",progress,' %') #Progress display
        for i in range(0,Xsteps):
             required_output_file_location=EOS_DIR+'/EDER-GNN/Data/REC_SET/R2_R2_SelectedClusters_'+str(k)+'_'+str(i)+'.pkl'
-            OptionHeader = [' --set ', ' --stepX ',' --stepY ',' --stepZ ', ' --EOS ', " --AFS ", " --zOffset", " --xOffset", " --yOffset"]
+            OptionHeader = [' --set ', ' --stepX ',' --stepY ',' --stepZ ', ' --EOS ', " --AFS ", " --zOffset ", " --xOffset ", " --yOffset "]
             OptionLine = [k, stepX,stepY,stepZ, EOS_DIR, AFS_DIR, z_offset, x_offset, y_offset]
             SHName = AFS_DIR + '/HTCondor/SH/SH_R2_' + str(k) + '.sh'
             SUBName = AFS_DIR + '/HTCondor/SUB/SUB_R2_' + str(k) + '.sub'

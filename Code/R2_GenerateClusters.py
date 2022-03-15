@@ -171,7 +171,6 @@ if Mode=='C':
                         cluster_data_file=open(required_output_file_location,'rb')
                         cluster_data=pickle.load(cluster_data_file)
                         print(cluster_data[0].GiveStats(MCdata_list))
-                        exit()
                         for cd in cluster_data:
                           result_temp=cd.GiveStats(MCdata_list)
                           fake_results_1.append(result_temp[0][1][0])

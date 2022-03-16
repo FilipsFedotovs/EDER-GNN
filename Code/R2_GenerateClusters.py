@@ -147,6 +147,7 @@ if Mode=='C':
                         cluster_data=pickle.load(cluster_data_file)
                         for cd in cluster_data:
                             result_temp=cd.Stats
+                            print(cd.Stats)
                             fake_results_1.append(int(result_temp[0][1][0]))
                             fake_results_2.append(int(result_temp[0][1][1]))
                             fake_results_3.append(int(result_temp[0][1][2]))

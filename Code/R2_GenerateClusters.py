@@ -11,7 +11,7 @@ import math #We use it for data manipulation
 import numpy as np
 import os
 import pickle
-
+from tabulate import tabulate
 
 class bcolors:   #We use it for the interface
     HEADER = '\033[95m'
@@ -70,6 +70,9 @@ z_max=data['z'].max()
 Zsteps=math.ceil(z_max/stepZ)
 y_offset=data['y'].min()
 x_offset=data['x'].min()
+data['x']=data['x']-x_offset
+x_max=data['x'].max()
+Xsteps=math.ceil(x_max/stepX) #Even if use only a max of 20000 track on the right join we cannot perform the full outer join due to the memory limitations, we do it in a small 'cuts'
 if Mode=='R':
    print(UF.TimeStamp(),bcolors.WARNING+'Warning! You are running the script with the "Mode R" option which means that you want to vertex the seeds from the scratch'+bcolors.ENDC)
    print(UF.TimeStamp(),bcolors.WARNING+'This option will erase all the previous Seed vertexing jobs/results'+bcolors.ENDC)
@@ -95,11 +98,6 @@ if Mode=='C':
    bad_pop=[]
    print(UF.TimeStamp(),'Checking jobs... ',bcolors.ENDC)
    for k in range(0,Zsteps):
-       data_temp=data.drop(data.index[data['z'] >= ((k+1)*stepZ)])  #Keeping the relevant z slice
-       data_temp=data.drop(data.index[data['z'] < (k*stepZ)])  #Keeping the relevant z slice
-       data_temp['x']=data_temp['x']-x_offset
-       x_max=data_temp['x'].max()
-       Xsteps=math.ceil(x_max/stepX) #Even if use only a max of 20000 track on the right join we cannot perform the full outer join due to the memory limitations, we do it in a small 'cuts'
        progress=round((float(k)/float(Zsteps))*100,2)
        print(UF.TimeStamp(),"progress is ",progress,' %') #Progress display
        for i in range(0,Xsteps):
@@ -132,12 +130,6 @@ if Mode=='C':
            print(UF.TimeStamp(), bcolors.OKGREEN+"Cluster generation is completed, you can start applying GNN on them now"+bcolors.ENDC)
        else:
             for k in range(0,Zsteps):
-               data_temp=data.drop(data.index[data['z'] >= ((k+1)*stepZ)])  #Keeping the relevant z slice
-               data_temp=data.drop(data.index[data['z'] < (k*stepZ)])  #Keeping the relevant z slice
-               x_offset=data_temp['x'].min()
-               data_temp['x']=data_temp['x']-x_offset
-               x_max=data_temp['x'].max()
-               Xsteps=math.ceil(x_max/stepX) #Even if use only a max of 20000 track on the right join we cannot perform the full outer join due to the memory limitations, we do it in a small 'cuts'
                progress=round((float(k)/float(Zsteps))*100,2)
                print(UF.TimeStamp(),"progress is ",progress,' %') #Progress display
                fake_results_1=[]
@@ -149,20 +141,21 @@ if Mode=='C':
                for i in range(0,Xsteps):
                     required_output_file_location=EOS_DIR+'/EDER-GNN/Data/REC_SET/R2_R2_SelectedClusters_'+str(k)+'_'+str(i)+'.pkl'
                     if os.path.isfile(required_output_file_location)!=True:
-                     print(UF.TimeStamp(), bcolors.FAIL+"Critical fail: file",required_output_file_location,'is missing, please restart the script with the option "--Mode R"'+bcolors.ENDC)
+                       print(UF.TimeStamp(), bcolors.FAIL+"Critical fail: file",required_output_file_location,'is missing, please restart the script with the option "--Mode R"'+bcolors.ENDC)
                     elif os.path.isfile(required_output_file_location):
                         cluster_data_file=open(required_output_file_location,'rb')
                         cluster_data=pickle.load(cluster_data_file)
-                        print(cluster_data[0].Stats)
-                        #for cd in cluster_data:
-               #            result_temp=cd.GiveStats(MCdata_list)
-               #            fake_results_1.append(result_temp[0][1][0])
-               #            fake_results_2.append(result_temp[0][1][1])
-               #            fake_results_3.append(result_temp[0][1][2])
-               #            truth_results_1.append(result_temp[0][2][0])
-               #            truth_results_2.append(result_temp[0][2][1])
-               #            truth_results_3.append(result_temp[0][2][2])
-               # print(fake_results_1,fake_results_2,fake_results_3, truth_results_1,truth_results_2,truth_results_3)
+                        for cd in cluster_data:
+                            result_temp=cd.Stats
+                            fake_results_1.append(result_temp[0][1][0])
+                            fake_results_2.append(result_temp[0][1][1])
+                            fake_results_3.append(result_temp[0][1][2])
+                            truth_results_1.append(result_temp[0][2][0])
+                            truth_results_2.append(result_temp[0][2][1])
+                            truth_results_3.append(result_temp[0][2][2])
+                            label=result_temp[0][0]
+            print(UF.TimeStamp(),bcolors.OKGREEN+'Results have been compiled and presented bellow:'+bcolors.ENDC)
+            print(tabulate([[label[0], np.average(fake_results_1), np.std(fake_results_1), np.average(truth_results_1), np.std(truth_results_1)], [label[1], np.average(fake_results_2), np.std(fake_results_2), np.average(truth_results_2), np.std(truth_results_2)], [label[2], np.average(fake_results_3), np.std(fake_results_3), np.average(truth_results_3), np.std(truth_results_3)]], headers=['Step', 'Avg # Fake edges', 'Fake edges std', 'Avg # of Genuine edges', 'Genuine edges std'], tablefmt='orgtbl'))
        print(bcolors.HEADER+"############################################# End of the program ################################################"+bcolors.ENDC)
 #End of the script
 

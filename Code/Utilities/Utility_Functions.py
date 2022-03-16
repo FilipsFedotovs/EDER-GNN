@@ -36,7 +36,7 @@ class HitCluster:
                           self.ClusterHitIDs.append(s[0])
                           self.ClusterHits.append(s)
            self.ClusterSize=len(__ClusterHitsTemp)
-           print(self.ClusterSize)
+           print(self.ClusterHits)
            import torch
            import torch_geometric
            from torch_geometric.data import Data

@@ -25,6 +25,7 @@ parser.add_argument('--AFS',help="AFS directory location", default='.')
 parser.add_argument('--zOffset',help="Data offset on z", default='0.0')
 parser.add_argument('--yOffset',help="Data offset on y", default='0.0')
 parser.add_argument('--xOffset',help="Data offset on x", default='0.0')
+parser.add_argument('--Log',help="Logging yes?", default='N')
 
 ######################################## Set variables  #############################################################
 args = parser.parse_args()
@@ -68,6 +69,23 @@ data.drop(data.index[data['z'] < (Set*stepZ)], inplace = True)  #Keeping the rel
 data_list=data.values.tolist()
 Xsteps=math.ceil(x_max/stepX) #Even if use only a max of 20000 track on the right join we cannot perform the full outer join due to the memory limitations, we do it in a small 'cuts'
 Ysteps=math.ceil(y_max/stepY)  #Calculating number of cuts
+
+
+
+if args.Log=='Y':
+    input_file_location=EOS_DIR+'/EDER-GNN/Data/TEST_SET/E1_HITS.csv'
+    MCdata=pd.read_csv(input_file_location,header=0,
+                            usecols=["Hit_ID","x","y","z","tx","ty",'MC_Mother_Track_ID'])
+    MCdata["x"] = pd.to_numeric(MCdata["x"],downcast='float')
+    MCdata["y"] = pd.to_numeric(MCdata["y"],downcast='float')
+    MCdata["z"] = pd.to_numeric(MCdata["z"],downcast='float')
+    MCdata["Hit_ID"] = MCdata["Hit_ID"].astype(str)
+    MCdata['z']=MCdata['z']-z_offset
+    MCdata['x']=MCdata['x']-x_offset
+    MCdata['y']=MCdata['y']-y_offset
+    MCdata.drop(MCdata.index[data['z'] >= ((Set+1)*stepZ)], inplace = True)  #Keeping the relevant z slice
+    MCdata.drop(MCdata.index[data['z'] < (Set*stepZ)], inplace = True)  #Keeping the relevant z slice
+    MCdata_list=MCdata.values.tolist()
 for i in range(0,Xsteps):
     LoadedClusters=[]
     progress=round((float(i)/float(Xsteps))*100,2)
@@ -75,6 +93,8 @@ for i in range(0,Xsteps):
     for j in range(0,Ysteps):
         HC=UF.HitCluster([i,j,Set],[stepX,stepY,stepZ])
         HC.LoadClusterHits(data_list)
+        if args.Log=='Y':
+            HC.GiveStats(MCdata_list)
         LoadedClusters.append(HC)
     output_file_location=EOS_DIR+'/EDER-GNN/Data/REC_SET/R2_R2_SelectedClusters_'+str(Set)+'_'+str(i)+'.pkl'
     open_file = open(output_file_location, "wb")

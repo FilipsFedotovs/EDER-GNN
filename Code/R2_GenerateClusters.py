@@ -83,8 +83,8 @@ if Mode=='R':
       UF.RecCleanUp(AFS_DIR, EOS_DIR, 'R3', ['R2_R3','R2_R2'], "SoftUsed == \"EDER-GNN-R2\"")
       print(UF.TimeStamp(),'Submitting jobs... ',bcolors.ENDC)
       for k in range(0,Zsteps):
-            OptionHeader = [' --set ', ' --stepX ',' --stepY ',' --stepZ ', ' --EOS ', " --AFS ", " --zOffset ", " --xOffset ", " --yOffset "]
-            OptionLine = [k, stepX,stepY,stepZ, EOS_DIR, AFS_DIR, z_offset, x_offset, y_offset]
+            OptionHeader = [' --set ', ' --stepX ',' --stepY ',' --stepZ ', ' --EOS ', " --AFS ", " --zOffset ", " --xOffset ", " --yOffset ", ' --Log ']
+            OptionLine = [k, stepX,stepY,stepZ, EOS_DIR, AFS_DIR, z_offset, x_offset, y_offset, args.Log]
             SHName = AFS_DIR + '/HTCondor/SH/SH_R2_' + str(k) + '.sh'
             SUBName = AFS_DIR + '/HTCondor/SUB/SUB_R2_' + str(k) + '.sub'
             MSGName = AFS_DIR + '/HTCondor/MSG/MSG_R2_' + str(k)
@@ -104,8 +104,8 @@ if Mode=='C':
        print(UF.TimeStamp(),"progress is ",progress,' %') #Progress display
        for i in range(0,Xsteps):
             required_output_file_location=EOS_DIR+'/EDER-GNN/Data/REC_SET/R2_R2_SelectedClusters_'+str(k)+'_'+str(i)+'.pkl'
-            OptionHeader = [' --set ', ' --stepX ',' --stepY ',' --stepZ ', ' --EOS ', " --AFS ", " --zOffset ", " --xOffset ", " --yOffset "]
-            OptionLine = [k, stepX,stepY,stepZ, EOS_DIR, AFS_DIR, z_offset, x_offset, y_offset]
+            OptionHeader = [' --set ', ' --stepX ',' --stepY ',' --stepZ ', ' --EOS ', " --AFS ", " --zOffset ", " --xOffset ", " --yOffset ", ' --Log ']
+            OptionLine = [k, stepX,stepY,stepZ, EOS_DIR, AFS_DIR, z_offset, x_offset, y_offset, args.Log]
             SHName = AFS_DIR + '/HTCondor/SH/SH_R2_' + str(k) + '.sh'
             SUBName = AFS_DIR + '/HTCondor/SUB/SUB_R2_' + str(k) + '.sub'
             MSGName = AFS_DIR + '/HTCondor/MSG/MSG_R2_' + str(k)
@@ -131,23 +131,6 @@ if Mode=='C':
        if args.Log!='Y':
            print(UF.TimeStamp(), bcolors.OKGREEN+"Cluster generation is completed, you can start applying GNN on them now"+bcolors.ENDC)
        else:
-            print(UF.TimeStamp(),'Collating the results...')
-            input_file_location=EOS_DIR+'/EDER-GNN/Data/TEST_SET/E1_HITS.csv'
-            print(UF.TimeStamp(),'Loading pre-selected data from ',input_file_location)
-
-            MCdata=pd.read_csv(input_file_location,header=0,
-                        usecols=["Hit_ID","x","y","z","tx","ty",'MC_Mother_Track_ID'])
-            MCdata["x"] = pd.to_numeric(MCdata["x"],downcast='float')
-            MCdata["y"] = pd.to_numeric(MCdata["y"],downcast='float')
-            MCdata["z"] = pd.to_numeric(MCdata["z"],downcast='float')
-            MCdata["Hit_ID"] = MCdata["Hit_ID"].astype(str)
-            MCdata['z']=MCdata['z']-z_offset
-            print(UF.TimeStamp(),'Creating clusters... ')
-            x_offset=MCdata['x'].min()
-            y_offset=MCdata['y'].min()
-            MCdata['x']=MCdata['x']-x_offset
-            MCdata['y']=MCdata['y']-y_offset
-            MCdata_list=MCdata.values.tolist()
             for k in range(0,Zsteps):
                data_temp=data.drop(data.index[data['z'] >= ((k+1)*stepZ)])  #Keeping the relevant z slice
                data_temp=data.drop(data.index[data['z'] < (k*stepZ)])  #Keeping the relevant z slice
@@ -170,16 +153,16 @@ if Mode=='C':
                     elif os.path.isfile(required_output_file_location):
                         cluster_data_file=open(required_output_file_location,'rb')
                         cluster_data=pickle.load(cluster_data_file)
-                        print(cluster_data[0].GiveStats(MCdata_list))
-                        for cd in cluster_data:
-                          result_temp=cd.GiveStats(MCdata_list)
-                          fake_results_1.append(result_temp[0][1][0])
-                          fake_results_2.append(result_temp[0][1][1])
-                          fake_results_3.append(result_temp[0][1][2])
-                          truth_results_1.append(result_temp[0][2][0])
-                          truth_results_2.append(result_temp[0][2][1])
-                          truth_results_3.append(result_temp[0][2][2])
-               print(fake_results_1,fake_results_2,fake_results_3, truth_results_1,truth_results_2,truth_results_3)
+                        print(cluster_data[0].Stats)
+                        #for cd in cluster_data:
+               #            result_temp=cd.GiveStats(MCdata_list)
+               #            fake_results_1.append(result_temp[0][1][0])
+               #            fake_results_2.append(result_temp[0][1][1])
+               #            fake_results_3.append(result_temp[0][1][2])
+               #            truth_results_1.append(result_temp[0][2][0])
+               #            truth_results_2.append(result_temp[0][2][1])
+               #            truth_results_3.append(result_temp[0][2][2])
+               # print(fake_results_1,fake_results_2,fake_results_3, truth_results_1,truth_results_2,truth_results_3)
        print(bcolors.HEADER+"############################################# End of the program ################################################"+bcolors.ENDC)
 #End of the script
 

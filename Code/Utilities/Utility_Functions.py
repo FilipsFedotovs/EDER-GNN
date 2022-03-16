@@ -104,26 +104,7 @@ class HitCluster:
            _Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_z'] <= _Tot_Hits['r_z']], inplace = True)
            StatFakeValues.append(len(_Tot_Hits.axes[0])-len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
            StatTruthValues.append(len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
-
-           return([StatLabels,StatFakeValues,StatTruthValues])
-           # result["Track_ID"]= ['-'.join(sorted(tup)) for tup in zip(result['Segment_1'], result['Segment_2'])]
-           # result.drop_duplicates(subset="Track_ID",keep='first',inplace=True)
-
-
-           # _MCHits.drop(['MC_ID'],axis=1,inplace=True)
-           # _MCHits.drop(_MCHits.index[_MCHits['l_HitID'] == _MCHits['r_HitID']], inplace = True)
-           # _MCHitsList = _MCHits.values.tolist()
-           # del _MCHits
-           # _Edge_List_Top=[]
-           # _Edge_List_Bottom=[]
-           # for el in _MCHitsList:
-           #     _Edge_List_Top.append(self.ClusterHitIDs.index(el[0]))
-           #     _Edge_List_Bottom.append(self.ClusterHitIDs.index(el[1]))
-           # _Edge_List=[_Edge_List_Top,_Edge_List_Bottom]
-           # import torch
-           # import torch_geometric
-           # from torch_geometric.data import Data
-           # self.ClusterGraph.edge_index=torch.tensor(np.array(_Edge_List))
+           self.Stats=[StatLabels,StatFakeValues,StatTruthValues]
 class Track:
       def __init__(self,segments):
           self.SegmentHeader=sorted(segments, key=str.lower)

@@ -147,14 +147,15 @@ if Mode=='C':
                         cluster_data=pickle.load(cluster_data_file)
                         for cd in cluster_data:
                             result_temp=cd.Stats
-                            fake_results_1.append(result_temp[0][1][0])
-                            fake_results_2.append(result_temp[0][1][1])
-                            fake_results_3.append(result_temp[0][1][2])
-                            truth_results_1.append(result_temp[0][2][0])
-                            truth_results_2.append(result_temp[0][2][1])
-                            truth_results_3.append(result_temp[0][2][2])
+                            fake_results_1.append(int(result_temp[0][1][0]))
+                            fake_results_2.append(int(result_temp[0][1][1]))
+                            fake_results_3.append(int(result_temp[0][1][2]))
+                            truth_results_1.append(int(result_temp[0][2][0]))
+                            truth_results_2.append(int(result_temp[0][2][1]))
+                            truth_results_3.append(int(result_temp[0][2][2]))
                             label=result_temp[0][0]
             print(UF.TimeStamp(),bcolors.OKGREEN+'Results have been compiled and presented bellow:'+bcolors.ENDC)
+            print(fake_results_1)
             print(tabulate([[label[0], np.average(fake_results_1), np.std(fake_results_1), np.average(truth_results_1), np.std(truth_results_1)], [label[1], np.average(fake_results_2), np.std(fake_results_2), np.average(truth_results_2), np.std(truth_results_2)], [label[2], np.average(fake_results_3), np.std(fake_results_3), np.average(truth_results_3), np.std(truth_results_3)]], headers=['Step', 'Avg # Fake edges', 'Fake edges std', 'Avg # of Genuine edges', 'Genuine edges std'], tablefmt='orgtbl'))
        print(bcolors.HEADER+"############################################# End of the program ################################################"+bcolors.ENDC)
 #End of the script

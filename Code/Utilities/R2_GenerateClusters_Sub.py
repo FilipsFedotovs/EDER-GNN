@@ -83,8 +83,8 @@ if args.Log=='Y':
     MCdata['z']=MCdata['z']-z_offset
     MCdata['x']=MCdata['x']-x_offset
     MCdata['y']=MCdata['y']-y_offset
-    MCdata.drop(MCdata.index[data['z'] >= ((Set+1)*stepZ)], inplace = True)  #Keeping the relevant z slice
-    MCdata.drop(MCdata.index[data['z'] < (Set*stepZ)], inplace = True)  #Keeping the relevant z slice
+    MCdata.drop(MCdata.index[MCdata['z'] >= ((Set+1)*stepZ)], inplace = True)  #Keeping the relevant z slice
+    MCdata.drop(MCdata.index[MCdata['z'] < (Set*stepZ)], inplace = True)  #Keeping the relevant z slice
     MCdata_list=MCdata.values.tolist()
 for i in range(0,Xsteps):
     LoadedClusters=[]

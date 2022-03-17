@@ -975,3 +975,14 @@ def SubmitJobs2Condor(job):
     f.close()
     subprocess.call(['condor_submit', SUBName])
     print(TotalLine, " has been successfully submitted")
+
+def ErrorOperations(a,b,a_e,b_e,mode):
+    if mode=='+' or mode == '-':
+        c_e=math.sqrt((a_e**2) + (b_e**2))
+        return(c_e)
+    if mode=='*':
+        c_e=a*b*math.sqrt(((a_e/a)**2) + ((b_e/b)**2))
+        return(c_e)
+    if mode=='/':
+        c_e=(a/b)*math.sqrt(((a_e/a)**2) + ((b_e/b)**2))
+        return(c_e)

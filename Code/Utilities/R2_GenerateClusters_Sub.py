@@ -66,6 +66,7 @@ y_max=data['y'].max()
 print(UF.TimeStamp(),'Creating clusters... ')
 data.drop(data.index[data['z'] >= ((Set+1)*stepZ)], inplace = True)  #Keeping the relevant z slice
 data.drop(data.index[data['z'] < (Set*stepZ)], inplace = True)  #Keeping the relevant z slice
+print(data)
 data_list=data.values.tolist()
 Xsteps=math.ceil(x_max/stepX) #Even if use only a max of 20000 track on the right join we cannot perform the full outer join due to the memory limitations, we do it in a small 'cuts'
 Ysteps=math.ceil(y_max/stepY)  #Calculating number of cuts
@@ -85,6 +86,7 @@ if args.Log=='Y':
     MCdata['y']=MCdata['y']-y_offset
     MCdata.drop(MCdata.index[MCdata['z'] >= ((Set+1)*stepZ)], inplace = True)  #Keeping the relevant z slice
     MCdata.drop(MCdata.index[MCdata['z'] < (Set*stepZ)], inplace = True)  #Keeping the relevant z slice
+    print(MCdata)
     MCdata_list=MCdata.values.tolist()
 for i in range(0,Xsteps):
     LoadedClusters=[]
@@ -95,6 +97,8 @@ for i in range(0,Xsteps):
         HC.LoadClusterHits(data_list)
         if args.Log=='Y':
             HC.GiveStats(MCdata_list)
+            print(HC.Stats)
+            exit()
         LoadedClusters.append(HC)
     output_file_location=EOS_DIR+'/EDER-GNN/Data/REC_SET/R2_R2_SelectedClusters_'+str(Set)+'_'+str(i)+'.pkl'
     open_file = open(output_file_location, "wb")

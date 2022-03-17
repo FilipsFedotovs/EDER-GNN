@@ -129,15 +129,16 @@ if Mode=='C':
        if args.Log!='Y':
            print(UF.TimeStamp(), bcolors.OKGREEN+"Cluster generation is completed, you can start applying GNN on them now"+bcolors.ENDC)
        else:
+            fake_results_1=[]
+            fake_results_2=[]
+            fake_results_3=[]
+            truth_results_1=[]
+            truth_results_2=[]
+            truth_results_3=[]
             for k in range(0,Zsteps):
                progress=round((float(k)/float(Zsteps))*100,2)
                print(UF.TimeStamp(),"progress is ",progress,' %') #Progress display
-               fake_results_1=[]
-               fake_results_2=[]
-               fake_results_3=[]
-               truth_results_1=[]
-               truth_results_2=[]
-               truth_results_3=[]
+
                for i in range(0,Xsteps):
                     required_output_file_location=EOS_DIR+'/EDER-GNN/Data/REC_SET/R2_R2_SelectedClusters_'+str(k)+'_'+str(i)+'.pkl'
                     if os.path.isfile(required_output_file_location)!=True:

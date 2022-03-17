@@ -105,10 +105,10 @@ class HitCluster:
            _Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_z'] <= _Tot_Hits['r_z']], inplace = True)
            StatFakeValues.append(len(_Tot_Hits.axes[0])-len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
            StatTruthValues.append(len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
-           print(_Tot_Hits)
+           print(_Tot_Hits['l_MC_ID','r_MC_ID', 'l_tx', 'r_tx', 'l_ty', 'r_tx'])
 
            self.Stats=[StatLabels,StatFakeValues,StatTruthValues]
-           print(self.Stats['l_MC_ID','r_MC_ID', 'l_tx', 'r_tx', 'l_ty', 'r_tx'])
+           print(self.Stats)
            exit()
 class Track:
       def __init__(self,segments):

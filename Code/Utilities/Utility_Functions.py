@@ -109,6 +109,7 @@ class HitCluster:
 
            self.Stats=[StatLabels,StatFakeValues,StatTruthValues]
            print(self.Stats)
+           exit()
 class Track:
       def __init__(self,segments):
           self.SegmentHeader=sorted(segments, key=str.lower)

@@ -107,6 +107,7 @@ class HitCluster:
            StatTruthValues.append(len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
            print(_Tot_Hits)
            _Tot_Hits['d_tx'] = _Tot_Hits['l_tx']-_Tot_Hits['r_tx']
+           _Tot_Hits['d_tx'] = _Tot_Hits['d_tx'].abs()
            self.Stats=[StatLabels,StatFakeValues,StatTruthValues]
            print(_Tot_Hits)
            print(self.Stats)

@@ -108,6 +108,7 @@ class HitCluster:
            print(_Tot_Hits)
            _Tot_Hits['d_tx'] = _Tot_Hits['l_tx']-_Tot_Hits['r_tx']
            self.Stats=[StatLabels,StatFakeValues,StatTruthValues]
+           print(_Tot_Hits)
            print(self.Stats)
            exit()
 class Track:

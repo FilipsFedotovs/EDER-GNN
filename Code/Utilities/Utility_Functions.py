@@ -108,7 +108,7 @@ class HitCluster:
            print(_Tot_Hits)
 
            self.Stats=[StatLabels,StatFakeValues,StatTruthValues]
-           print(self.Stats)
+           print(self.Stats['l_MC_ID','r_MC_ID', 'l_tx', 'r_tx', 'l_ty', 'r_tx'])
            exit()
 class Track:
       def __init__(self,segments):

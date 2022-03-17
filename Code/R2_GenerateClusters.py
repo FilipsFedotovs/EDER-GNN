@@ -155,8 +155,16 @@ if Mode=='C':
                             truth_results_2.append(int(result_temp[2][1]))
                             truth_results_3.append(int(result_temp[2][2]))
                             label=result_temp[0]
-            print(UF.TimeStamp(),bcolors.OKGREEN+'Results have been compiled and presented bellow:'+bcolors.ENDC)
+            print(UF.TimeStamp(),bcolors.OKGREEN+'Raw results have been compiled and presented bellow:'+bcolors.ENDC)
             print(tabulate([[label[0], np.average(fake_results_1), np.std(fake_results_1), np.average(truth_results_1), np.std(truth_results_1)], [label[1], np.average(fake_results_2), np.std(fake_results_2), np.average(truth_results_2), np.std(truth_results_2)], [label[2], np.average(fake_results_3), np.std(fake_results_3), np.average(truth_results_3), np.std(truth_results_3)]], headers=['Step', 'Avg # Fake edges', 'Fake edges std', 'Avg # of Genuine edges', 'Genuine edges std'], tablefmt='orgtbl'))
+            print(UF.TimeStamp(),bcolors.OKGREEN+'Perfromance metrics are presented bellow'+bcolors.ENDC)
+            Precision_Nom=np.average(truth_results_3)
+            Precision_Nom_Err=np.std(truth_results_3)
+            Precision_Den=np.average(fake_results_3)+np.average(truth_results_3)
+            Precision_Den_Err=UF.ErrorOperations(np.average(fake_results_3),np.average(truth_results_3),np.std(fake_results_3),np.std(truth_results_3),'+')
+            Precision=round((Precision_Nom/Precision_Den)*100,2)
+            Precision_Err=round(UF.ErrorOperations(Precision_Nom,Precision_Den,Precision_Nom_Err,Precision_Den_Err,'/')*100,2)
+            print(tabulate([['Precision', Precision, Precision_Err]], headers=['Average [%]', 'Error [%]'], tablefmt='orgtbl'))
        print(bcolors.HEADER+"############################################# End of the program ################################################"+bcolors.ENDC)
 #End of the script
 

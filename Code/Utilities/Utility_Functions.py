@@ -73,7 +73,7 @@ class HitCluster:
            _MCClusterHits=[]
            StatFakeValues=[]
            StatTruthValues=[]
-           StatLabels=['Initial # of combinations','Delete self-permutations','Enforce positive directionality']
+           StatLabels=['Initial # of combinations','Delete self-permutations','Enforce positive directionality','Cut on delta tx']
            for s in MCHits:
                if s[1]>=self.ClusterID[0]*self.Step[0] and s[1]<((self.ClusterID[0]+1)*self.Step[0]):
                    if s[2]>=self.ClusterID[1]*self.Step[1] and s[2]<((self.ClusterID[1]+1)*self.Step[1]):
@@ -108,6 +108,10 @@ class HitCluster:
            print(_Tot_Hits)
            _Tot_Hits['d_tx'] = _Tot_Hits['l_tx']-_Tot_Hits['r_tx']
            _Tot_Hits['d_tx'] = _Tot_Hits['d_tx'].abs()
+
+           _Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['d_tx'] >= 0.5], inplace = True)
+           StatFakeValues.append(len(_Tot_Hits.axes[0])-len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
+           StatTruthValues.append(len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
            self.Stats=[StatLabels,StatFakeValues,StatTruthValues]
            print(_Tot_Hits)
            print(self.Stats)

@@ -27,6 +27,7 @@ parser.add_argument('--yOffset',help="Data offset on y", default='0.0')
 parser.add_argument('--xOffset',help="Data offset on x", default='0.0')
 parser.add_argument('--Log',help="Logging yes?", default='N')
 parser.add_argument('--cut_dt',help="Cut on angle difference", default='1.0')
+parser.add_argument('--cut_dr',help="Cut on angle difference", default='4000')
 
 ######################################## Set variables  #############################################################
 args = parser.parse_args()
@@ -40,6 +41,7 @@ z_offset=float(args.zOffset)
 y_offset=float(args.yOffset)
 x_offset=float(args.xOffset)
 cut_dt=float(args.cut_dt)
+cut_dr=float(args.cut_dr)
 #Loading Directory locations
 EOS_DIR=args.EOS
 AFS_DIR=args.AFS
@@ -97,7 +99,7 @@ for i in range(0,Xsteps):
         HC=UF.HitCluster([i,j,Set],[stepX,stepY,stepZ])
         HC.LoadClusterHits(data_list)
         if args.Log=='Y':
-            HC.GiveStats(MCdata_list,cut_dt,0)
+            HC.GiveStats(MCdata_list,cut_dt,cut_dr)
             print(HC.Stats)
             exit()
         LoadedClusters.append(HC)

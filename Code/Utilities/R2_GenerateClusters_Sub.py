@@ -26,6 +26,7 @@ parser.add_argument('--zOffset',help="Data offset on z", default='0.0')
 parser.add_argument('--yOffset',help="Data offset on y", default='0.0')
 parser.add_argument('--xOffset',help="Data offset on x", default='0.0')
 parser.add_argument('--Log',help="Logging yes?", default='N')
+parser.add_argument('--cut_dt',help="Cut on angle difference", default='1.0')
 
 ######################################## Set variables  #############################################################
 args = parser.parse_args()
@@ -38,6 +39,7 @@ stepY=float(args.stepY)
 z_offset=float(args.zOffset)
 y_offset=float(args.yOffset)
 x_offset=float(args.xOffset)
+cut_dt=float(args.cut_dt)
 #Loading Directory locations
 EOS_DIR=args.EOS
 AFS_DIR=args.AFS
@@ -95,7 +97,9 @@ for i in range(0,Xsteps):
         HC=UF.HitCluster([i,j,Set],[stepX,stepY,stepZ])
         HC.LoadClusterHits(data_list)
         if args.Log=='Y':
-            HC.GiveStats(MCdata_list)
+            HC.GiveStats(MCdata_list,cut_dt,0)
+            print(HC.Stats)
+            exit()
         LoadedClusters.append(HC)
     output_file_location=EOS_DIR+'/EDER-GNN/Data/REC_SET/R2_R2_SelectedClusters_'+str(Set)+'_'+str(i)+'.pkl'
     open_file = open(output_file_location, "wb")

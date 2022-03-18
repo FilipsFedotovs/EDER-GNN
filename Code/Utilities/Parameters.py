@@ -16,45 +16,34 @@ MC_Track_ID='MCTrack'  #Column name for Track ID for MC Truth reconstruction dat
 MC_Event_ID='MCEvent' #Column name for Event id for MC truth reconstruction data (If absent please enter the MCTrack as for above)
 
 
-########List of the package run parameters
+######List of geometrical constain parameters
 stepX=1000
 stepY=1000
 stepZ=4000
+cut_dt=0,2
+cut_dr=60
 
 
-######List of geometrical constain parameters
-MaxSLG=4000
-MaxSTG=50#This parameter restricts the maximum length of of the longitudinal and transverse distance between track segments.
-MinHitsTrack=2
-MaxTrainSampleSize=50000
-MaxValSampleSize=100000
-MaxDoca=50
-MinAngle=0 #Seed Opening Angle (Magnitude) in radians
-MaxAngle=1 #Seed Opening Angle (Magnitude) in radians
+# MaxSLG=4000
+# MaxSTG=50#This parameter restricts the maximum length of of the longitudinal and transverse distance between track segments.
+# MinHitsTrack=2
+# MaxTrainSampleSize=50000
+# MaxValSampleSize=100000
+# MaxDoca=50
+# MinAngle=0 #Seed Opening Angle (Magnitude) in radians
+# MaxAngle=1 #Seed Opening Angle (Magnitude) in radians
+#
+#
+#
+# ##Model parameters
+# pre_acceptance=0.5
+# post_acceptance=0.5
+# #pre_vx_acceptance=0.662
+# resolution=50
+# MaxX=2000.0
+# MaxY=500.0
+# MaxZ=20000.0
+# Pre_CNN_Model_Name='1T_50_SHIP_PREFIT_1_model'
+# Post_CNN_Model_Name='1T_50_SHIP_POSTFIT_1_model'
+# ModelArchitecture=[[6, 4, 1, 2, 2, 2, 2], [], [],[], [], [1, 4, 2], [], [], [], [], [7, 1, 1, 4]]
 
-
-
-##Model parameters
-pre_acceptance=0.5
-post_acceptance=0.5
-#pre_vx_acceptance=0.662
-resolution=50
-MaxX=2000.0
-MaxY=500.0
-MaxZ=20000.0
-Pre_CNN_Model_Name='1T_50_SHIP_PREFIT_1_model'
-Post_CNN_Model_Name='1T_50_SHIP_POSTFIT_1_model'
-#Post Model Architecture 1e_1e
-#ModelArchitecture=[[1, 4, 1, 2, 2, 2, 2], [], [],[], [], [1, 4, 2], [], [], [], [], [7, 1, 1, 4]]
-#Post Model Architecture 1c_1e
-ModelArchitecture=[[6, 4, 1, 2, 2, 2, 2], [], [],[], [], [1, 4, 2], [], [], [], [], [7, 1, 1, 4]]
-#Post Model Architecture 2c_1e
-#ModelArchitecture=[[6, 4, 1, 1, 2, 2, 2], [5, 4, 2, 2, 2, 2, 2], [],[], [], [1, 4, 2], [], [], [], [], [7, 1, 1, 4]]
-#Post Model Architecture 3c_1e
-#ModelArchitecture=[[6, 4, 1, 1, 2, 2, 2], [5, 4, 1, 1, 2, 2, 2], [4, 4, 2, 2, 2, 2, 2],[], [], [1, 4, 2], [], [], [], [], [7, 1, 1, 4]]
-#Post Model Architecture 4c_1e
-#@ModelArchitecture=[[6, 4, 1, 1, 2, 2, 2], [5, 4, 1, 1, 2, 2, 2], [4, 4, 1, 1, 2, 2, 2],[4, 4, 2, 2, 2, 2, 2], [], [1, 4, 2], [], [], [], [], [7, 1, 1, 4]]
-#Post Model Architecture 1c_1c
-#ModelArchitecture=[[6, 4, 1, 2, 2, 2, 2], [], [],[], [], [2, 4, 2], [], [], [], [], [7, 1, 1, 4]]
-#Post Model Architecture 2c_1c
-#ModelArchitecture=[[6, 4, 1, 1, 2, 2, 2], [5, 4, 1, 2, 2, 2, 2], [4, 4, 2, 2, 2, 2, 2],[], [], [4, 4, 2], [], [], [], [], [7, 1, 1, 4]]

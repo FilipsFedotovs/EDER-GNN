@@ -53,6 +53,8 @@ import Parameters as PM #This is where we keep framework global parameters
 stepX=PM.stepX
 stepY=PM.stepY
 stepZ=PM.stepZ
+cut_dt=PM.cut_dt
+cut_dr=PM.cut_dr
 #Specifying the full path to input/output files
 input_file_location=EOS_DIR+'/EDER-GNN/Data/REC_SET/R1_HITS.csv'
 print(bcolors.HEADER+"########################################################################################################"+bcolors.ENDC)
@@ -86,8 +88,8 @@ if Mode=='R':
       UF.RecCleanUp(AFS_DIR, EOS_DIR, 'R3', ['R2_R3','R2_R2'], "SoftUsed == \"EDER-GNN-R2\"")
       print(UF.TimeStamp(),'Submitting jobs... ',bcolors.ENDC)
       for k in range(0,Zsteps):
-            OptionHeader = [' --set ', ' --stepX ',' --stepY ',' --stepZ ', ' --EOS ', " --AFS ", " --zOffset ", " --xOffset ", " --yOffset ", ' --Log ']
-            OptionLine = [k, stepX,stepY,stepZ, EOS_DIR, AFS_DIR, z_offset, x_offset, y_offset, args.Log]
+            OptionHeader = [' --set ', ' --stepX ',' --stepY ',' --stepZ ', ' --EOS ', " --AFS ", " --zOffset ", " --xOffset ", " --yOffset ", ' --Log ', ' --cut_dt ', ' --cut_dr ']
+            OptionLine = [k, stepX,stepY,stepZ, EOS_DIR, AFS_DIR, z_offset, x_offset, y_offset, args.Log, cut_dt,cut_dr]
             SHName = AFS_DIR + '/HTCondor/SH/SH_R2_' + str(k) + '.sh'
             SUBName = AFS_DIR + '/HTCondor/SUB/SUB_R2_' + str(k) + '.sub'
             MSGName = AFS_DIR + '/HTCondor/MSG/MSG_R2_' + str(k)
@@ -101,8 +103,8 @@ if Mode=='C':
        progress=round((float(k)/float(Zsteps))*100,2)
        print(UF.TimeStamp(),"progress is ",progress,' %') #Progress display
        for i in range(0,Xsteps):
-            required_output_file_location=EOS_DIR+'/EDER-GNN/Data/REC_SET/R2_R2_SelectedClusters_'+str(k)+'_'+str(i)+'.pkl'
-            OptionHeader = [' --set ', ' --stepX ',' --stepY ',' --stepZ ', ' --EOS ', " --AFS ", " --zOffset ", " --xOffset ", " --yOffset ", ' --Log ']
+            OptionHeader = [' --set ', ' --stepX ',' --stepY ',' --stepZ ', ' --EOS ', " --AFS ", " --zOffset ", " --xOffset ", " --yOffset ", ' --Log ', ' --cut_dt ', ' --cut_dr ']
+            OptionLine = [k, stepX,stepY,stepZ, EOS_DIR, AFS_DIR, z_offset, x_offset, y_offset, args.Log, cut_dt,cut_dr]
             OptionLine = [k, stepX,stepY,stepZ, EOS_DIR, AFS_DIR, z_offset, x_offset, y_offset, args.Log]
             SHName = AFS_DIR + '/HTCondor/SH/SH_R2_' + str(k) + '.sh'
             SUBName = AFS_DIR + '/HTCondor/SUB/SUB_R2_' + str(k) + '.sub'
@@ -132,9 +134,13 @@ if Mode=='C':
             fake_results_1=[]
             fake_results_2=[]
             fake_results_3=[]
+            fake_results_4=[]
+            fake_results_5=[]
             truth_results_1=[]
             truth_results_2=[]
             truth_results_3=[]
+            truth_results_4=[]
+            truth_results_5=[]
             for k in range(0,Zsteps):
                progress=round((float(k)/float(Zsteps))*100,2)
                print(UF.TimeStamp(),"progress is ",progress,' %') #Progress display
@@ -151,17 +157,21 @@ if Mode=='C':
                             fake_results_1.append(int(result_temp[1][0]))
                             fake_results_2.append(int(result_temp[1][1]))
                             fake_results_3.append(int(result_temp[1][2]))
+                            fake_results_4.append(int(result_temp[1][3]))
+                            fake_results_5.append(int(result_temp[1][4]))
                             truth_results_1.append(int(result_temp[2][0]))
                             truth_results_2.append(int(result_temp[2][1]))
                             truth_results_3.append(int(result_temp[2][2]))
+                            truth_results_4.append(int(result_temp[2][3]))
+                            truth_results_5.append(int(result_temp[2][4]))
                             label=result_temp[0]
             print(UF.TimeStamp(),bcolors.OKGREEN+'Raw results have been compiled and presented bellow:'+bcolors.ENDC)
-            print(tabulate([[label[0], np.average(fake_results_1), np.std(fake_results_1), np.average(truth_results_1), np.std(truth_results_1)], [label[1], np.average(fake_results_2), np.std(fake_results_2), np.average(truth_results_2), np.std(truth_results_2)], [label[2], np.average(fake_results_3), np.std(fake_results_3), np.average(truth_results_3), np.std(truth_results_3)]], headers=['Step', 'Avg # Fake edges', 'Fake edges std', 'Avg # of Genuine edges', 'Genuine edges std'], tablefmt='orgtbl'))
+            print(tabulate([[label[0], np.average(fake_results_1), np.std(fake_results_1), np.average(truth_results_1), np.std(truth_results_1)], [label[1], np.average(fake_results_2), np.std(fake_results_2), np.average(truth_results_2), np.std(truth_results_2)], [label[2], np.average(fake_results_3), np.std(fake_results_3), np.average(truth_results_3), np.std(truth_results_3)], [label[3], np.average(fake_results_4), np.std(fake_results_4), np.average(truth_results_4), np.std(truth_results_4)], [label[4], np.average(fake_results_5), np.std(fake_results_5), np.average(truth_results_5), np.std(truth_results_5)]], headers=['Step', 'Avg # Fake edges', 'Fake edges std', 'Avg # of Genuine edges', 'Genuine edges std'], tablefmt='orgtbl'))
             print(UF.TimeStamp(),bcolors.OKGREEN+'Performance metrics are presented bellow'+bcolors.ENDC)
-            Precision_Nom=np.average(truth_results_3)
-            Precision_Nom_Err=np.std(truth_results_3)
-            Precision_Den=np.average(fake_results_3)+np.average(truth_results_3)
-            Precision_Den_Err=UF.ErrorOperations(np.average(fake_results_3),np.average(truth_results_3),np.std(fake_results_3),np.std(truth_results_3),'+')
+            Precision_Nom=np.average(truth_results_5)
+            Precision_Nom_Err=np.std(truth_results_5)
+            Precision_Den=np.average(fake_results_5)+np.average(truth_results_5)
+            Precision_Den_Err=UF.ErrorOperations(np.average(fake_results_5),np.average(truth_results_5),np.std(fake_results_5),np.std(truth_results_5),'+')
             Precision=round((Precision_Nom/Precision_Den)*100,2)
             Precision_Err=round(UF.ErrorOperations(Precision_Nom,Precision_Den,Precision_Nom_Err,Precision_Den_Err,'/')*100,2)
             print(tabulate([['Precision', Precision, Precision_Err]], headers=['Average [%]', 'Error [%]'], tablefmt='orgtbl'))

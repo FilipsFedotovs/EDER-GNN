@@ -20,7 +20,7 @@ MC_Event_ID='MCEvent' #Column name for Event id for MC truth reconstruction data
 stepX=1000
 stepY=1000
 stepZ=4000
-cut_dt=0,2
+cut_dt=0.2
 cut_dr=60
 
 

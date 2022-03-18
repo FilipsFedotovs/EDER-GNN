@@ -17,9 +17,9 @@ MC_Event_ID='MCEvent' #Column name for Event id for MC truth reconstruction data
 
 
 ######List of geometrical constain parameters
-stepX=1000
-stepY=1000
-stepZ=4000
+stepX=2000
+stepY=2000
+stepZ=6000
 cut_dt=0.2
 cut_dr=60
 

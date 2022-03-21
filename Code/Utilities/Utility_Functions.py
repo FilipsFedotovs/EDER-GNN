@@ -54,7 +54,7 @@ class HitCluster:
            _l_MCHits=pd.DataFrame(_MCClusterHits, columns = ['l_HitID','l_MC_ID'])
            _l_Hits=pd.DataFrame(self.ClusterHits, columns = ['l_HitID','l_x','l_y','l_z','l_tx','l_ty'])
            #Join hits + MC truth
-           _l_Tot_Hits=pd.merge(_l_MCHits, _l_Hits, how="inner", on=['l_HitID'])
+           _l_Tot_Hits=pd.merge(_l_MCHits, _l_Hits, how="left outer", on=['l_HitID'])
            _l_Tot_Hits['join_key'] = 'join_key'
 
            #Preparing Raw and MC combined data 2
@@ -82,6 +82,7 @@ class HitCluster:
            _Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['d_y'] >= cut_dr], inplace = True)
            Genuine=_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']])
            Fakes=_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] == _Tot_Hits['r_MC_ID']])
+           Genuine = Genuine.drop(["l_MC_ID"],axis=1)
            print(Fakes)
            print(Genuine)
            exit()
@@ -114,16 +115,17 @@ class HitCluster:
            _l_MCHits=pd.DataFrame(_MCClusterHits, columns = ['l_HitID','l_MC_ID'])
            _l_Hits=pd.DataFrame(self.ClusterHits, columns = ['l_HitID','l_x','l_y','l_z','l_tx','l_ty'])
            #Join hits + MC truth
-           _l_Tot_Hits=pd.merge(_l_MCHits, _l_Hits, how="inner", on=['l_HitID'])
+           _l_Tot_Hits=pd.merge(_l_MCHits, _l_Hits, how="right", on=['l_HitID'])
            _l_Tot_Hits['join_key'] = 'join_key'
 
            #Preparing Raw and MC combined data 2
            _r_MCHits=pd.DataFrame(_MCClusterHits, columns = ['r_HitID','r_MC_ID'])
            _r_Hits=pd.DataFrame(self.ClusterHits, columns = ['r_HitID','r_x','r_y','r_z','r_tx','r_ty'])
            #Join hits + MC truth
-           _r_Tot_Hits=pd.merge(_r_MCHits, _r_Hits, how="inner", on=['r_HitID'])
+           _r_Tot_Hits=pd.merge(_r_MCHits, _r_Hits, how="right", on=['r_HitID'])
            _r_Tot_Hits['join_key'] = 'join_key'
-
+           print(_r_Tot_Hits)
+           exit()
            #Combining data 1 and 2
            _Tot_Hits=pd.merge(_l_Tot_Hits, _r_Tot_Hits, how="inner", on=['join_key'])
 

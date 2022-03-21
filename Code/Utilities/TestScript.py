@@ -2,19 +2,19 @@ import Utility_Functions
 from Utility_Functions import HitCluster
 import torch
 import torch_geometric
-# from torch_geometric.utils import train_test_split_edges
+from torch_geometric.utils import train_test_split_edges
 #
 #
-# import torch
-# import torch.nn.functional as F
-# from sklearn.metrics import roc_auc_score
-#
-# from torch_geometric.utils import negative_sampling
-# from torch_geometric.nn import GCNConv
-# from torch_geometric.utils import train_test_split_edges
-#
-# device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-# device = "cpu"
+import torch
+import torch.nn.functional as F
+from sklearn.metrics import roc_auc_score
+
+from torch_geometric.utils import negative_sampling
+from torch_geometric.nn import GCNConv
+from torch_geometric.utils import train_test_split_edges
+
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+device = "cpu"
 
 hc=HitCluster([0,0,0],[1000,1000,1000])
 raw_data=[[1,500,500,0,1,1],[2,500,500,200,1,1],[3,999,999,500,1,1]]
@@ -23,9 +23,9 @@ mc_data=[[1,500,500,0,1,1,'1'],[2,500,500,200,1,1,'2'],[3,999,999,500,1,1,'2']]
 print(hc.GiveStats(mc_data))
 
 
-# hc.ClusterGraph.train_mask = hc.ClusterGraph.val_mask = hc.ClusterGraph.test_mask = hc.ClusterGraph.y = None
-# data = train_test_split_edges(hc.ClusterGraph,0.3,0.3)
-# print(data)
+hc.ClusterGraph.train_mask = hc.ClusterGraph.val_mask = hc.ClusterGraph.test_mask = hc.ClusterGraph.y = None
+data = train_test_split_edges(hc.ClusterGraph,0.3,0.3)
+print(data)
 
 #
 #

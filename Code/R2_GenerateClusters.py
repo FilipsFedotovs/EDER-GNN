@@ -141,6 +141,17 @@ if Mode=='C':
             truth_results_3=[]
             truth_results_4=[]
             truth_results_5=[]
+
+            precision_results_1=[]
+            precision_results_2=[]
+            precision_results_3=[]
+            precision_results_4=[]
+            precision_results_5=[]
+            recall_results_1=[]
+            recall_results_2=[]
+            recall_results_3=[]
+            recall_results_4=[]
+            recall_results_5=[]
             for k in range(0,Zsteps):
                progress=round((float(k)/float(Zsteps))*100,2)
                print(UF.TimeStamp(),"progress is ",progress,' %') #Progress display
@@ -164,17 +175,32 @@ if Mode=='C':
                             truth_results_3.append(int(result_temp[2][2]))
                             truth_results_4.append(int(result_temp[2][3]))
                             truth_results_5.append(int(result_temp[2][4]))
+                            precision_results_1.append(int(result_temp[2][0])/(int(result_temp[2][0])+int(result_temp[1][0])))
+                            precision_results_2.append(int(result_temp[2][1])/(int(result_temp[2][1])+int(result_temp[1][1])))
+                            precision_results_3.append(int(result_temp[2][2])/(int(result_temp[2][2])+int(result_temp[1][2])))
+                            precision_results_4.append(int(result_temp[2][3])/(int(result_temp[2][3])+int(result_temp[1][3])))
+                            precision_results_5.append(int(result_temp[2][4])/(int(result_temp[2][4])+int(result_temp[1][4])))
+                            recall_results_1.append(int(result_temp[2][0])/(int(result_temp[2][2])))
+                            recall_results_2.append(int(result_temp[2][1])/(int(result_temp[2][2])))
+                            recall_results_3.append(int(result_temp[2][2])/(int(result_temp[2][2])))
+                            recall_results_4.append(int(result_temp[2][3])/(int(result_temp[2][2])))
+                            recall_results_5.append(int(result_temp[2][4])/(int(result_temp[2][2])))
                             label=result_temp[0]
             print(UF.TimeStamp(),bcolors.OKGREEN+'Raw results have been compiled and presented bellow:'+bcolors.ENDC)
-            print(tabulate([[label[0], np.average(fake_results_1), np.std(fake_results_1), np.average(truth_results_1), np.std(truth_results_1)], [label[1], np.average(fake_results_2), np.std(fake_results_2), np.average(truth_results_2), np.std(truth_results_2)], [label[2], np.average(fake_results_3), np.std(fake_results_3), np.average(truth_results_3), np.std(truth_results_3)], [label[3], np.average(fake_results_4), np.std(fake_results_4), np.average(truth_results_4), np.std(truth_results_4)], [label[4], np.average(fake_results_5), np.std(fake_results_5), np.average(truth_results_5), np.std(truth_results_5)]], headers=['Step', 'Avg # Fake edges', 'Fake edges std', 'Avg # of Genuine edges', 'Genuine edges std'], tablefmt='orgtbl'))
+            print(tabulate([[label[0], np.average(fake_results_1), np.std(fake_results_1), np.average(truth_results_1), np.std(truth_results_1), np.average(precision_results_1), np.std(precision_results_1), np.average(recall_results_1), np.std(recall_results_1)], \
+                            [label[1], np.average(fake_results_2), np.std(fake_results_2), np.average(truth_results_2), np.std(truth_results_2), np.average(precision_results_2), np.std(precision_results_2), np.average(recall_results_2), np.std(recall_results_2)], \
+                            [label[2], np.average(fake_results_3), np.std(fake_results_3), np.average(truth_results_3), np.std(truth_results_3),np.average(precision_results_3), np.std(precision_results_3), np.average(recall_results_3), np.std(recall_results_3)], \
+                            [label[3], np.average(fake_results_4), np.std(fake_results_4), np.average(truth_results_4), np.std(truth_results_4),np.average(precision_results_4), np.std(precision_results_4), np.average(recall_results_4), np.std(recall_results_4)],\
+                            [label[4], np.average(fake_results_5), np.std(fake_results_5), np.average(truth_results_5), np.std(truth_results_5), np.average(precision_results_5), np.std(precision_results_5), np.average(recall_results_5), np.std(recall_results_5)]], \
+                            headers=['Step', 'Avg # Fake edges', 'Fake edges std', 'Avg # of Genuine edges', 'Genuine edges std', 'Avg precision', 'Precision std','Avg recall', 'Recall std' ], tablefmt='orgtbl'))
             print(UF.TimeStamp(),bcolors.OKGREEN+'Performance metrics are presented bellow'+bcolors.ENDC)
-            Precision_Nom=np.average(truth_results_5)
-            Precision_Nom_Err=np.std(truth_results_5)
-            Precision_Den=np.average(fake_results_5)+np.average(truth_results_5)
-            Precision_Den_Err=UF.ErrorOperations(np.average(fake_results_5),np.average(truth_results_5),np.std(fake_results_5),np.std(truth_results_5),'+')
-            Precision=round((Precision_Nom/Precision_Den)*100,2)
-            Precision_Err=round(UF.ErrorOperations(Precision_Nom,Precision_Den,Precision_Nom_Err,Precision_Den_Err,'/')*100,2)
-            print(tabulate([['Precision', Precision, Precision_Err]], headers=['Average [%]', 'Error [%]'], tablefmt='orgtbl'))
+            # Precision_Nom=np.average(truth_results_5)
+            # Precision_Nom_Err=np.std(truth_results_5)
+            # Precision_Den=np.average(fake_results_5)+np.average(truth_results_5)
+            # Precision_Den_Err=UF.ErrorOperations(np.average(fake_results_5),np.average(truth_results_5),np.std(fake_results_5),np.std(truth_results_5),'+')
+            # Precision=round((Precision_Nom/Precision_Den)*100,2)
+            # Precision_Err=round(UF.ErrorOperations(Precision_Nom,Precision_Den,Precision_Nom_Err,Precision_Den_Err,'/')*100,2)
+            # print(tabulate([['Precision', Precision, Precision_Err]], headers=['Average [%]', 'Error [%]'], tablefmt='orgtbl'))
        print(bcolors.HEADER+"############################################# End of the program ################################################"+bcolors.ENDC)
 #End of the script
 

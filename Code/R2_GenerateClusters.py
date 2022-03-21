@@ -196,7 +196,7 @@ if Mode=='C':
                             [label[3], np.average(fake_results_4), np.average(truth_results_4), np.average(precision_results_4), np.std(precision_results_4), np.average(recall_results_4), np.std(recall_results_4)],\
                             [label[4], np.average(fake_results_5), np.average(truth_results_5), np.average(precision_results_5), np.std(precision_results_5), np.average(recall_results_5), np.std(recall_results_5)]], \
                             headers=['Step', 'Avg # Fake edges', 'Fake edges std', 'Avg # of Genuine edges', 'Genuine edges std', 'Avg precision', 'Precision std','Avg recall', 'Recall std' ], tablefmt='orgtbl'))
-            print(UF.TimeStamp(),bcolors.OKGREEN+'Performance metrics are presented bellow'+bcolors.ENDC)
+            # print(UF.TimeStamp(),bcolors.OKGREEN+'Performance metrics are presented bellow'+bcolors.ENDC)
             # Precision_Nom=np.average(truth_results_5)
             # Precision_Nom_Err=np.std(truth_results_5)
             # Precision_Den=np.average(fake_results_5)+np.average(truth_results_5)

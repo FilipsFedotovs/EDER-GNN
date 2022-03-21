@@ -26,7 +26,7 @@ cut_dr=60
 
 # MaxSLG=4000
 # MaxSTG=50#This parameter restricts the maximum length of of the longitudinal and transverse distance between track segments.
-# MinHitsTrack=2
+MinHitsTrack=2
 # MaxTrainSampleSize=50000
 # MaxValSampleSize=100000
 # MaxDoca=50

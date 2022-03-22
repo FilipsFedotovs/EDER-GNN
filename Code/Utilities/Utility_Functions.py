@@ -86,10 +86,8 @@ class HitCluster:
            Fakes=_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] == _Tot_Hits['r_MC_ID']])
            Genuine = Genuine.drop(['d_tx','d_ty','d_x','d_y','join_key','r_x','r_y','r_z','l_x','l_y','l_z','l_tx','l_ty','r_tx','r_ty','l_MC_ID','r_MC_ID'],axis=1)
            Fakes = Fakes.drop(['d_tx','d_ty','d_x','d_y','join_key','r_x','r_y','r_z','l_x','l_y','l_z','l_tx','l_ty','r_tx','r_ty','l_MC_ID','r_MC_ID'],axis=1)
-           print(Fakes)
-           print(Genuine)
-           print(len(Fakes))
            print(len(Genuine))
+           print(len(Fakes))
            _r_f=len(Fakes)
            _r_t=len(Genuine)
            _ar=_r_t/_r_f
@@ -97,7 +95,7 @@ class HitCluster:
            print(_ar)
            print(_xr)
            if _ar>1:
-               _r_f=int(round(_r_f*_xr,0))
+               _r_f=int(round(_r_f/_xr,0))
            elif _ar<1:
                _r_t=int(round(_r_t*_xr,0))
            print(_r_f)

@@ -26,6 +26,7 @@ parser.add_argument('--zOffset',help="Data offset on z", default='0.0')
 parser.add_argument('--yOffset',help="Data offset on y", default='0.0')
 parser.add_argument('--xOffset',help="Data offset on x", default='0.0')
 parser.add_argument('--Fraction',help="False/Truth label ratio", default='0.5')
+parser.add_argument('--Val_Train_Ratio',help="False/Truth label ratio", default='0.1')
 parser.add_argument('--cut_dt',help="Cut on angle difference", default='1.0')
 parser.add_argument('--cut_dr',help="Cut on angle difference", default='4000')
 
@@ -43,6 +44,7 @@ x_offset=float(args.xOffset)
 cut_dt=float(args.cut_dt)
 cut_dr=float(args.cut_dr)
 fraction=float(args.Fraction)
+val_train_ratio=float(args.Val_Train_Ratio)
 #Loading Directory locations
 EOS_DIR=args.EOS
 AFS_DIR=args.AFS
@@ -98,7 +100,7 @@ for i in range(0,Xsteps):
     for j in range(0,Ysteps):
         HC=UF.HitCluster([i,j,Set],[stepX,stepY,stepZ])
         HC.LoadClusterHits(data_list)
-        HC.GenerateTrainData(MCdata_list, fraction,cut_dt, cut_dr)
+        HC.GenerateTrainData(MCdata_list, fraction,val_train_ratio,cut_dt, cut_dr)
         exit()
         LoadedClusters.append(HC)
     output_file_location=EOS_DIR+'/EDER-GNN/Data/TRAIN_SET/M1_M2_SelectedTrainClusters_'+str(Set)+'_'+str(i)+'.pkl'

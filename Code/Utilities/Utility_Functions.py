@@ -42,7 +42,7 @@ class HitCluster:
            self.ClusterGraph=Data(x=torch.Tensor(__ClusterHitsTemp), edge_index=None, y=None)
            del __ClusterHitsTemp
 
-      def GenerateTrainData(self, MCHits, fraction,cut_dt, cut_dr): #Decorate hit information
+      def GenerateTrainData(self, MCHits, fraction,val_train_ratio,cut_dt, cut_dr): #Decorate hit information
            import pandas as pd
            _MCClusterHits=[]
            for s in MCHits:
@@ -54,14 +54,14 @@ class HitCluster:
            _l_MCHits=pd.DataFrame(_MCClusterHits, columns = ['l_HitID','l_MC_ID'])
            _l_Hits=pd.DataFrame(self.ClusterHits, columns = ['l_HitID','l_x','l_y','l_z','l_tx','l_ty'])
            #Join hits + MC truth
-           _l_Tot_Hits=pd.merge(_l_MCHits, _l_Hits, how="inner", on=['l_HitID'])
+           _l_Tot_Hits=pd.merge(_l_MCHits, _l_Hits, how="right", on=['l_HitID'])
            _l_Tot_Hits['join_key'] = 'join_key'
 
            #Preparing Raw and MC combined data 2
            _r_MCHits=pd.DataFrame(_MCClusterHits, columns = ['r_HitID','r_MC_ID'])
            _r_Hits=pd.DataFrame(self.ClusterHits, columns = ['r_HitID','r_x','r_y','r_z','r_tx','r_ty'])
            #Join hits + MC truth
-           _r_Tot_Hits=pd.merge(_r_MCHits, _r_Hits, how="inner", on=['r_HitID'])
+           _r_Tot_Hits=pd.merge(_r_MCHits, _r_Hits, how="right", on=['r_HitID'])
            _r_Tot_Hits['join_key'] = 'join_key'
 
            #Combining data 1 and 2
@@ -88,6 +88,8 @@ class HitCluster:
            Fakes = Fakes.drop(['d_tx','d_ty','d_x','d_y','join_key','r_x','r_y','r_z','l_x','l_y','l_z','l_tx','l_ty','r_tx','r_ty','l_MC_ID','r_MC_ID'],axis=1)
            print(Fakes)
            print(Genuine)
+           print(len(Fakes))
+           print(len(Genuine))
            exit()
            # self.Stats=[StatLabels,StatFakeValues,StatTruthValues]
            # _MCHitsList = _MCHits.values.tolist()

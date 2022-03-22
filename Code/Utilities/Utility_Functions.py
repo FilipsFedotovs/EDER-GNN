@@ -42,7 +42,7 @@ class HitCluster:
            self.ClusterGraph=Data(x=torch.Tensor(__ClusterHitsTemp), edge_index=None, y=None)
            del __ClusterHitsTemp
 
-      def GenerateTrainData(self, MCHits, fraction,val_train_ratio,cut_dt, cut_dr): #Decorate hit information
+      def GenerateTrainData(self, MCHits, val_train_ratio,cut_dt, cut_dr): #Decorate hit information
            import pandas as pd
            _MCClusterHits=[]
            for s in MCHits:
@@ -88,20 +88,11 @@ class HitCluster:
            Fakes = Fakes.drop(['d_tx','d_ty','d_x','d_y','join_key','r_x','r_y','r_z','l_x','l_y','l_z','l_tx','l_ty','r_tx','r_ty','l_MC_ID','r_MC_ID'],axis=1)
            print(len(Genuine))
            print(len(Fakes))
-           _r_f=len(Fakes)
-           _r_t=len(Genuine)
-           _r_f=10
-           _r_t=5
-           _ar=_r_t/_r_f
-           _xr=fraction/_ar
-           print(_ar)
-           print(_xr)
-           if _ar>1:
-               _r_t=int(round(_r_t*_xr,0))
-           elif _ar<1:
-               _r_f=int(round(_r_f/_xr,0))
-           print(_r_f)
-           print(_r_t)
+           min_n=min(len(Genuine),len(Fakes))
+           Genuine=Genuine.sample(n=min_n)
+           Fakes=Fakes.sample(n=min_n)
+           print(Genuine)
+           print(Fakes)
            # self.Stats=[StatLabels,StatFakeValues,StatTruthValues]
            # _MCHitsList = _MCHits.values.tolist()
            # del _MCHits

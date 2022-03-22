@@ -95,7 +95,7 @@ class HitCluster:
            print(_ar)
            print(_xr)
            if _ar>1:
-               _r_f=int(round(_r_f/_xr,0))
+               _r_t=int(round(_r_t*_xr,0))
            elif _ar<1:
                _r_t=int(round(_r_t*_xr,0))
            print(_r_f)

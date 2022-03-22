@@ -90,6 +90,8 @@ class HitCluster:
            print(len(Fakes))
            _r_f=len(Fakes)
            _r_t=len(Genuine)
+           _r_f=10
+           _r_t=5
            _ar=_r_t/_r_f
            _xr=fraction/_ar
            print(_ar)

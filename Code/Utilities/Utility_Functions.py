@@ -90,7 +90,10 @@ class HitCluster:
            print(Genuine)
            print(len(Fakes))
            print(len(Genuine))
-           exit()
+           _ar=len(Genuine)/len(Fakes)
+           _xr=fraction/_ar
+           print(_ar)
+           print(_xr)
            # self.Stats=[StatLabels,StatFakeValues,StatTruthValues]
            # _MCHitsList = _MCHits.values.tolist()
            # del _MCHits

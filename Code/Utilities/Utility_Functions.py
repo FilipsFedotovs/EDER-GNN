@@ -90,18 +90,16 @@ class HitCluster:
            print(Genuine)
            print(len(Fakes))
            print(len(Genuine))
-           _r_f=len(len(Fakes))
-           _r_t=len(len(Genuine))
-           _ar=len(Genuine)/len(Fakes)
+           _r_f=len(Fakes)
+           _r_t=len(Genuine)
+           _ar=_r_t/_r_f
            _xr=fraction/_ar
            print(_ar)
            print(_xr)
            if _ar>1:
-               _r_f=int(round(len(Fakes)*_xr,0))
-               _r_t=len(Genuine)
+               _r_f=int(round(_r_f*_xr,0))
            elif _ar<1:
-               _r_f=len(Fakes)
-               _r_t=int(round(len(Genuine)*_xr,0))
+               _r_t=int(round(_r_t*_xr,0))
            print(_r_f)
            print(_r_t)
            # self.Stats=[StatLabels,StatFakeValues,StatTruthValues]

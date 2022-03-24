@@ -3,6 +3,7 @@ from Utility_Functions import HitCluster
 import torch
 import torch_geometric
 from torch_geometric.utils import train_test_split_edges
+import pickle
 #
 #
 import torch
@@ -16,16 +17,14 @@ from torch_geometric.utils import train_test_split_edges
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 device = "cpu"
 
-hc=HitCluster([0,0,0],[1000,1000,1000])
-raw_data=[[1,500,500,0,1,1],[2,500,500,200,1,1],[3,999,999,500,1,1]]
-hc.LoadClusterHits(raw_data)
-mc_data=[[1,500,500,0,1,1,'1'],[2,500,500,200,1,1,'2'],[3,999,999,500,1,1,'2']]
+
 #print(hc.GiveStats(mc_data))
-
-
+base_data_file=open('Test_File','rb')
+base_data=pickle.load(base_data_file)
+hc=base_data[0]
 hc.ClusterGraph.train_mask = hc.ClusterGraph.val_mask = hc.ClusterGraph.test_mask = hc.ClusterGraph.y = None
-data = train_test_split_edges(hc.ClusterGraph,0.3,0.3)
-print(data)
+#data = train_test_split_edges(hc.ClusterGraph,0.3,0.3)
+print(hc.ClusterGraph.train_pos_edge_index)
 
 #
 #

@@ -101,10 +101,7 @@ class HitCluster:
            _GenuineList=_GenuineList[(_ValSize+_TestSize):]
            print(len(_FakeTestList),len(_FakeValList), len(_FakeList))
            print(_FakeTestList)
-           import torch
-           import torch_geometric
-           from torch_geometric.data import Data
-           self.ClusterGraph.edge_index=torch.tensor(np.array(_Edge_List))
+           self.ClusterGraph.val_pos_edge_index=torch.tensor(np.array(HitCluster.GenerateLinks(_GenuineValList,self.ClusterHitIDs)))
 
 
       def GiveStats(self,MCHits,cut_dt, cut_dr): #Decorate hit information

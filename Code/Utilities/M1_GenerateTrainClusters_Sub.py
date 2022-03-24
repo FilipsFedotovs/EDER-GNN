@@ -101,6 +101,7 @@ for i in range(0,Xsteps):
         HC=UF.HitCluster([i,j,Set],[stepX,stepY,stepZ])
         HC.LoadClusterHits(data_list)
         HC.GenerateTrainData(MCdata_list, val_ratio, test_ratio,cut_dt, cut_dr)
+        print(HC.ClusterGraph.val_pos_edge_index)
         exit()
         LoadedClusters.append(HC)
     output_file_location=EOS_DIR+'/EDER-GNN/Data/TRAIN_SET/M1_M2_SelectedTrainClusters_'+str(Set)+'_'+str(i)+'.pkl'

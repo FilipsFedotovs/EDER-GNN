@@ -103,7 +103,7 @@ def test():
      return perfs
 
 best_val_perf = test_perf = 0
-for epoch in range(1, 101):
+for epoch in range(1, 2000):
      train_loss = train()
      val_perf, tmp_test_perf = test()
      if val_perf > best_val_perf:

@@ -99,8 +99,7 @@ class HitCluster:
            _GenuineValList=_GenuineList[_TestSize:(_ValSize+_TestSize)]
            _FakeList=_FakeList[(_ValSize+_TestSize):]
            _GenuineList=_GenuineList[(_ValSize+_TestSize):]
-           print(len(_FakeTestList),len(_FakeValList), len(_FakeList))
-           print(_FakeTestList)
+           import torch
            self.ClusterGraph.val_pos_edge_index=torch.tensor(np.array(HitCluster.GenerateLinks(_GenuineValList,self.ClusterHitIDs)))
 
 

@@ -93,11 +93,17 @@ class HitCluster:
            _Fakes=_Fakes.sample(n=min_n)
            print(_Genuine)
            print(_Fakes)
-           _TestEndIndx=int(round(len(_Fakes)*test_ratio))
-           print(_TestEndIndx)
+           _TestSize=int(round(len(_Fakes)*test_ratio))
+           _ValSize=int(round(len(_Fakes)*val_ratio))
            _FakeList=_Fakes.values.tolist()
            _GenuineList=_Genuine.values.tolist()
-
+           _FakeTestList=_FakeList[0:_TestSize]
+           _GenuineTestList=_GenuineList[0:_TestSize]
+           _FakeValList=_FakeList[_TestSize:_ValSize]
+           _GenuineValList=_GenuineList[_TestSize:_ValSize]
+           _FakeList=_FakeList[_ValSize:]
+           _GenuineList=_GenuineList[_ValSize:]
+           print(len(_FakeTestList),len(_FakeList), len(_FakeList))
            # self.Stats=[StatLabels,StatFakeValues,StatTruthValues]
            # _MCHitsList = _MCHits.values.tolist()
            # del _MCHits

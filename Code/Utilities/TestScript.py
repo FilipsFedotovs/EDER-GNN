@@ -19,7 +19,7 @@ device = "cpu"
 
 
 #print(hc.GiveStats(mc_data))
-base_data_file=open('Test_File','rb')
+base_data_file=open('Test_File.pkl','rb')
 base_data=pickle.load(base_data_file)
 hc=base_data[0]
 hc.ClusterGraph.train_mask = hc.ClusterGraph.val_mask = hc.ClusterGraph.test_mask = hc.ClusterGraph.y = None

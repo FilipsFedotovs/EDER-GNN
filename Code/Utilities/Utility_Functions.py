@@ -42,7 +42,7 @@ class HitCluster:
            self.ClusterGraph=Data(x=torch.Tensor(__ClusterHitsTemp), edge_index=None, y=None)
            del __ClusterHitsTemp
 
-      def GenerateTrainData(self, MCHits, val_train_ratio,cut_dt, cut_dr): #Decorate hit information
+      def GenerateTrainData(self, MCHits, val_ratio, test_ratio,cut_dt, cut_dr): #Decorate hit information
            import pandas as pd
            _MCClusterHits=[]
            for s in MCHits:
@@ -82,17 +82,22 @@ class HitCluster:
            _Tot_Hits['d_y'] = _Tot_Hits['d_y'].abs()
            _Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['d_x'] >= cut_dr], inplace = True)
            _Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['d_y'] >= cut_dr], inplace = True)
-           Genuine=_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']])
-           Fakes=_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] == _Tot_Hits['r_MC_ID']])
-           Genuine = Genuine.drop(['d_tx','d_ty','d_x','d_y','join_key','r_x','r_y','r_z','l_x','l_y','l_z','l_tx','l_ty','r_tx','r_ty','l_MC_ID','r_MC_ID'],axis=1)
-           Fakes = Fakes.drop(['d_tx','d_ty','d_x','d_y','join_key','r_x','r_y','r_z','l_x','l_y','l_z','l_tx','l_ty','r_tx','r_ty','l_MC_ID','r_MC_ID'],axis=1)
-           print(len(Genuine))
-           print(len(Fakes))
-           min_n=min(len(Genuine),len(Fakes))
-           Genuine=Genuine.sample(n=min_n)
-           Fakes=Fakes.sample(n=min_n)
-           print(Genuine)
-           print(Fakes)
+           _Genuine=_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']])
+           _Fakes=_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] == _Tot_Hits['r_MC_ID']])
+           _Genuine = _Genuine.drop(['d_tx','d_ty','d_x','d_y','join_key','r_x','r_y','r_z','l_x','l_y','l_z','l_tx','l_ty','r_tx','r_ty','l_MC_ID','r_MC_ID'],axis=1)
+           _Fakes = _Fakes.drop(['d_tx','d_ty','d_x','d_y','join_key','r_x','r_y','r_z','l_x','l_y','l_z','l_tx','l_ty','r_tx','r_ty','l_MC_ID','r_MC_ID'],axis=1)
+           print(len(_Genuine))
+           print(len(_Fakes))
+           min_n=min(len(_Genuine),len(_Fakes))
+           _Genuine=_Genuine.sample(n=min_n)
+           _Fakes=_Fakes.sample(n=min_n)
+           print(_Genuine)
+           print(_Fakes)
+           _TestEndIndx=int(round(len_Fakes*test_ratio))
+           print(_TestEndIndx)
+           _FakeList=_Fakes.values.tolist()
+           _GenuineList=_Genuine.values.tolist()
+
            # self.Stats=[StatLabels,StatFakeValues,StatTruthValues]
            # _MCHitsList = _MCHits.values.tolist()
            # del _MCHits

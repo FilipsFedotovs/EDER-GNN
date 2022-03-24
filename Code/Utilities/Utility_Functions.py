@@ -99,8 +99,8 @@ class HitCluster:
            _GenuineList=_Genuine.values.tolist()
            _FakeTestList=_FakeList[0:_TestSize]
            _GenuineTestList=_GenuineList[0:_TestSize]
-           _FakeValList=_FakeList[_TestSize:_ValSize]
-           _GenuineValList=_GenuineList[_TestSize:_ValSize]
+           _FakeValList=_FakeList[_TestSize:(_ValSize+_TestSize)]
+           _GenuineValList=_GenuineList[_TestSize:(_ValSize+_TestSize)]
            _FakeList=_FakeList[_ValSize:]
            _GenuineList=_GenuineList[_ValSize:]
            print(len(_FakeTestList),len(_FakeValList), len(_FakeList))

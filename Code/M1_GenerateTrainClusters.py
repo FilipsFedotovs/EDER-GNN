@@ -90,7 +90,7 @@ if Mode=='R':
       print(UF.TimeStamp(),'Submitting jobs... ',bcolors.ENDC)
       for k in range(0,Zsteps):
             OptionHeader = [' --set ', ' --stepX ',' --stepY ',' --stepZ ', ' --EOS ', " --AFS ", " --zOffset ", " --xOffset ", " --yOffset ", ' --cut_dt ', ' --cut_dr ', ' --testRatio ', ' --valRatio ']
-            OptionLine = [k, stepX,stepY,stepZ, EOS_DIR, AFS_DIR, z_offset, x_offset, y_offset, args.Log, cut_dt,cut_dr,testRatio,valRatio]
+            OptionLine = [k, stepX,stepY,stepZ, EOS_DIR, AFS_DIR, z_offset, x_offset, y_offset, cut_dt,cut_dr,testRatio,valRatio]
             SHName = AFS_DIR + '/HTCondor/SH/SH_M1_' + str(k) + '.sh'
             SUBName = AFS_DIR + '/HTCondor/SUB/SUB_M1_' + str(k) + '.sub'
             MSGName = AFS_DIR + '/HTCondor/MSG/MSG_M1_' + str(k)
@@ -105,7 +105,7 @@ if Mode=='C':
        print(UF.TimeStamp(),"progress is ",progress,' %') #Progress display
        for i in range(0,Xsteps):
             OptionHeader = [' --set ', ' --stepX ',' --stepY ',' --stepZ ', ' --EOS ', " --AFS ", " --zOffset ", " --xOffset ", " --yOffset ", ' --cut_dt ', ' --cut_dr ', ' --testRatio ', ' --valRatio ']
-            OptionLine = [k, stepX,stepY,stepZ, EOS_DIR, AFS_DIR, z_offset, x_offset, y_offset, args.Log, cut_dt,cut_dr,testRatio,valRatio]
+            OptionLine = [k, stepX,stepY,stepZ, EOS_DIR, AFS_DIR, z_offset, x_offset, y_offset, cut_dt,cut_dr,testRatio,valRatio]
             required_output_file_location=EOS_DIR+'/EDER-GNN/Data/TRAIN_SET/M1_M1_SelectedTrainClusters_'+str(k)+'_'+str(i)+'.pkl'
             SHName = AFS_DIR + '/HTCondor/SH/SH_M1_' + str(k) + '.sh'
             SUBName = AFS_DIR + '/HTCondor/SUB/SUB_M1_' + str(k) + '.sub'

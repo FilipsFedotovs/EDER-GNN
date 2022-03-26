@@ -102,11 +102,7 @@ for i in range(0,Xsteps):
         HC.LoadClusterHits(data_list)
         HC.GenerateTrainData(MCdata_list, val_ratio, test_ratio,cut_dt, cut_dr)
         LoadedClusters.append(HC)
-        open_file = open('Test_File.pkl', "wb")
-        pickle.dump(LoadedClusters, open_file)
-        exit()
-
-    output_file_location=EOS_DIR+'/EDER-GNN/Data/TRAIN_SET/M1_M2_SelectedTrainClusters_'+str(Set)+'_'+str(i)+'.pkl'
+    output_file_location=EOS_DIR+'/EDER-GNN/Data/TRAIN_SET/M1_M1_SelectedTrainClusters_'+str(Set)+'_'+str(i)+'.pkl'
     open_file = open(output_file_location, "wb")
     pickle.dump(LoadedClusters, open_file)
 print(UF.TimeStamp(), "Cluster generation is finished...")

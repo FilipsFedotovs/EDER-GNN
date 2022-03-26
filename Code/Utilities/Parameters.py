@@ -22,7 +22,8 @@ stepY=2000
 stepZ=6000
 cut_dt=0.2
 cut_dr=60
-
+valRatio=0.1
+testRatio=0.05
 
 # MaxSLG=4000
 # MaxSTG=50#This parameter restricts the maximum length of of the longitudinal and transverse distance between track segments.

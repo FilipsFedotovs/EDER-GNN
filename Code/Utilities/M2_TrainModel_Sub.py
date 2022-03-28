@@ -17,7 +17,7 @@ import pickle
 import Utility_Functions
 from Utility_Functions import HitCluster
 import torch
-# import torch_geometric
+import torch_geometric
 # from torch_geometric.utils import train_test_split_edges
 
 import torch.nn.functional as F

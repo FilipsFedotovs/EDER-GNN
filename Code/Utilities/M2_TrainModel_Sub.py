@@ -51,7 +51,7 @@ parser.add_argument('--ModelNewName',help="Name of the model", default='1T_MC_1_
 parser.add_argument('--f',help="Image set location (for test)", default='')
 ########################################     Initialising Variables    #########################################
 args = parser.parse_args()
-ClusterSet=args.ImageSet
+ClusterSet=args.ClusterSet
 Mode=args.Mode
 Epoch=int(args.Epoch)
 DNA=ast.literal_eval(args.DNA)

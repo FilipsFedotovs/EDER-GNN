@@ -113,7 +113,7 @@ def train(sample):
 #
      optimizer.zero_grad()
 #
-     z = model.encode() #encode
+     z = model.encode(sample) #encode
      link_logits = model.decode(z, sample.train_pos_edge_index, neg_edge_index) # decode
 
      link_labels = get_link_labels(sample.train_pos_edge_index, neg_edge_index)

@@ -238,7 +238,7 @@ if Mode!='Train' and Mode!='Test':
 print(UF.TimeStamp(),'Starting the training process... ')
 for tc in range(0,len(TrainClusters)):
     sample=TrainClusters[tc].ClusterGraph
-    sample.ClusterGraph.train_mask = sample.ClusterGraph.val_mask = sample.ClusterGraph.test_mask = sample.ClusterGraph.y = None
+    sample.train_mask = sample.val_mask = sample.test_mask = sample.y = None
     sample = sample.to(device)
     best_val_perf = test_perf = 0
     for epoch in range(1, Epoch):

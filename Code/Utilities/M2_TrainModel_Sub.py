@@ -23,7 +23,7 @@ import torch
 # import torch.nn.functional as F
 from sklearn.metrics import roc_auc_score
 # from torch_geometric.utils import negative_sampling
-# from torch_geometric.nn import GCNConv
+from torch_geometric.nn import GCNConv
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 device = "cpu"
 ########################## Visual Formatting #################################################

@@ -29,15 +29,15 @@ data=hc.ClusterGraph
 
 
 class Net(torch.nn.Module):
-     def __init__(self):
+     def __init__(self,sample):
          super(Net, self).__init__()
-         self.conv1 = GCNConv(data.num_features, 128)
+         self.conv1 = GCNConv(sample.num_features, 128)
          self.conv2 = GCNConv(128, 64)
 
-     def encode(self):
-         x = self.conv1(data.x, data.train_pos_edge_index) # convolution 1
+     def encode(self,sample):
+         x = self.conv1(sample.x, sample.train_pos_edge_index) # convolution 1
          x = x.relu()
-         return self.conv2(x, data.train_pos_edge_index) # convolution 2
+         return self.conv2(x, sample.train_pos_edge_index) # convolution 2
 
      def decode(self, z, pos_edge_index, neg_edge_index): # only pos and neg edges
          edge_index = torch.cat([pos_edge_index, neg_edge_index], dim=-1) # concatenate pos and neg edges
@@ -59,25 +59,25 @@ def get_link_labels(pos_edge_index, neg_edge_index):
      # [1,1,1,1,...,0,0,0,0,0,..] with the number of ones is equel to the lenght of pos_edge_index
      # and the number of zeros is equal to the length of neg_edge_index
      E = pos_edge_index.size(1) + neg_edge_index.size(1)
-     link_labels = torch.zeros(E, dtype=torch.float, device=device)
+     link_labels = toGCNConvrch.zeros(E, dtype=torch.float, device=device)
      link_labels[:pos_edge_index.size(1)] = 1.
      return link_labels
 #
 #
-def train():
+def train(sample):
      model.train()
 
      neg_edge_index = negative_sampling(
-         edge_index=data.train_pos_edge_index, #positive edges
-         num_nodes=data.num_nodes, # number of nodes
-         num_neg_samples=data.train_pos_edge_index.size(1)) # number of neg_sample equal to number of pos_edges
+         edge_index=sample.train_pos_edge_index, #positive edges
+         num_nodes=sample.num_nodes, # number of nodes
+         num_neg_samples=sample.train_pos_edge_index.size(1)) # number of neg_sample equal to number of pos_edges
 #
      optimizer.zero_grad()
 #
      z = model.encode() #encode
-     link_logits = model.decode(z, data.train_pos_edge_index, neg_edge_index) # decode
+     link_logits = model.decode(z, sample.train_pos_edge_index, neg_edge_index) # decode
 
-     link_labels = get_link_labels(data.train_pos_edge_index, neg_edge_index)
+     link_labels = get_link_labels(sample.train_pos_edge_index, neg_edge_index)
      loss = F.binary_cross_entropy_with_logits(link_logits, link_labels)
      loss.backward()
      optimizer.step()
@@ -86,12 +86,12 @@ def train():
 #
 #
 @torch.no_grad()
-def test():
+def test(sample):
      model.eval()
      perfs = []
      for prefix in ["val", "test"]:
-         pos_edge_index = data[f'{prefix}_pos_edge_index']
-         neg_edge_index = data[f'{prefix}_neg_edge_index']
+         pos_edge_index = sample[f'{prefix}_pos_edge_index']
+         neg_edge_index = sample[f'{prefix}_neg_edge_index']
 
          z = model.encode() # encode train
          link_logits = model.decode(z, pos_edge_index, neg_edge_index) # decode test or val
@@ -125,3 +125,4 @@ model1.eval()
 z = model1.encode()
 final_edge_index1 = model1.decode_all(z)
 print(final_edge_index1)
+GCNConv

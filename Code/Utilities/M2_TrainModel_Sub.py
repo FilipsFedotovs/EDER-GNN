@@ -132,7 +132,7 @@ def test(sample):
          pos_edge_index = sample[f'{prefix}_pos_edge_index']
          neg_edge_index = sample[f'{prefix}_neg_edge_index']
 
-         z = model.encode() # encode train
+         z = model.encode(sample) # encode train
          link_logits = model.decode(z, pos_edge_index, neg_edge_index) # decode test or val
          link_probs = link_logits.sigmoid() # apply sigmoid
 

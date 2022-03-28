@@ -242,6 +242,7 @@ for tc in range(0,len(TrainClusters)):
     best_val_perf = test_perf = 0
     for epoch in range(1, Epoch):
      train_loss = train(sample)
+     print(train_loss)
      val_perf, tmp_test_perf = test(sample)
      if val_perf > best_val_perf:
          best_val_perf = val_perf

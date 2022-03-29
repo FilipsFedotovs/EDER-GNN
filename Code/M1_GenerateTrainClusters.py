@@ -12,6 +12,7 @@ import numpy as np
 import os
 import pickle
 from tabulate import tabulate
+import random
 
 class bcolors:   #We use it for the interface
     HEADER = '\033[95m'
@@ -137,10 +138,12 @@ if Mode=='C':
            progress=round((float(k)/float(Zsteps))*100,2)
            print(UF.TimeStamp(),"progress is ",progress,' %') #Progress display
            for i in range(0,Xsteps):
-                count+=1
-                source_output_file_location=EOS_DIR+'/EDER-GNN/Data/TRAIN_SET/M1_M1_SelectedTrainClusters_'+str(k)+'_'+str(i)+'.pkl'
-                destination_output_file_location=EOS_DIR+'/EDER-GNN/Data/TRAIN_SET/M1_M2_SelectedTrainClusters_'+str(count)+'.pkl'
-                os.rename(source_output_file_location, destination_output_file_location)
+                if Sampling>=random.random:
+                   count+=1
+                   source_output_file_location=EOS_DIR+'/EDER-GNN/Data/TRAIN_SET/M1_M1_SelectedTrainClusters_'+str(k)+'_'+str(i)+'.pkl'
+                   destination_output_file_location=EOS_DIR+'/EDER-GNN/Data/TRAIN_SET/M1_M2_SelectedTrainClusters_'+str(count)+'.pkl'
+                   os.rename(source_output_file_location, destination_output_file_location)
+       UF.TrainCleanUp(AFS_DIR, EOS_DIR, 'M1', ['M1_M1'], "SoftUsed == \"EDER-GNN-M1\"")
        print(UF.TimeStamp(),bcolors.OKGREEN+'Files are ready for the model training'+bcolors.ENDC)
        print(bcolors.HEADER+"############################################# End of the program ################################################"+bcolors.ENDC)
 #End of the script

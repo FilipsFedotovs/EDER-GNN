@@ -43,7 +43,7 @@ parser.add_argument('--ClusterSet',help="Please enter the image set", default='1
 parser.add_argument('--DNA',help="Please enter the model dna", default='[[4, 4, 1, 2, 2, 2, 2], [5, 4, 1, 1, 2, 2, 2], [5, 4, 2, 1, 2, 2, 2], [5, 4, 2, 1, 2, 2, 2], [], [3, 4, 2], [3, 4, 2], [2, 4, 2], [], [], [7, 1, 1, 4]]')
 parser.add_argument('--AFS',help="Please enter the user afs directory", default='.')
 parser.add_argument('--EOS',help="Please enter the user eos directory", default='.')
-parser.add_argument('--LR',help="Please enter the value of learning rate", default='Default')
+parser.add_argument('--LR',help="Please enter the value of learning rate", default='0.01')
 parser.add_argument('--Epoch',help="Please enter the number of epochs per cluster", default='10')
 parser.add_argument('--ModelName',help="Name of the model", default='1T_MC_1_model')
 parser.add_argument('--ModelNewName',help="Name of the model", default='1T_MC_1_model')
@@ -54,6 +54,7 @@ ClusterSet=args.ClusterSet
 Mode=args.Mode
 Epoch=int(args.Epoch)
 DNA=ast.literal_eval(args.DNA)
+LR=float(args.LR)
 HiddenLayerDNA=[]
 FullyConnectedDNA=[]
 OutputDNA=[]
@@ -179,7 +180,7 @@ if Mode=='Train':
                          return (prob_adj > 0).nonzero(as_tuple=False).t() # get predicted edge_list
             model_name=EOSsubModelDIR+'/'+args.ModelName
             model = Net(5).to(device)
-            optimizer = torch.optim.Adam(params=model.parameters(), lr=0.01)
+            optimizer = torch.optim.Adam(params=model.parameters(), lr=LR)
             model.load_state_dict(torch.load(model_name))
 if Mode!='Train' and Mode!='Test':
 #            #try:

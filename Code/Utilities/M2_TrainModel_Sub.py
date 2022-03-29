@@ -241,6 +241,14 @@ for tc in range(0,len(TrainClusters)):
     sample=TrainClusters[tc].ClusterGraph
     sample.train_mask = sample.val_mask = sample.test_mask = sample.y = None
     sample = sample.to(device)
+    print(sample.x)
+    print(sample.train_pos_edge_index)
+    print(sample.train_neg_edge_index)
+    print(sample.val_pos_edge_index)
+    print(sample.val_neg_edge_index)
+    print(sample.test_pos_edge_index)
+    print(sample.test_neg_edge_index)
+    exit()
     best_val_perf = test_perf = 0
     for epoch in range(1, Epoch):
      train_loss = train(sample)

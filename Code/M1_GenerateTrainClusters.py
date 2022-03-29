@@ -137,7 +137,7 @@ if Mode=='C':
            progress=round((float(k)/float(Zsteps))*100,2)
            print(UF.TimeStamp(),"progress is ",progress,' %') #Progress display
            for i in range(0,Xsteps):
-                if Sampling>=random.random:
+                if Sampling>=random.random():
                    count+=1
                    source_output_file_location=EOS_DIR+'/EDER-GNN/Data/TRAIN_SET/M1_M1_SelectedTrainClusters_'+str(k)+'_'+str(i)+'.pkl'
                    destination_output_file_location=EOS_DIR+'/EDER-GNN/Data/TRAIN_SET/M1_M2_SelectedTrainClusters_'+str(count)+'.pkl'

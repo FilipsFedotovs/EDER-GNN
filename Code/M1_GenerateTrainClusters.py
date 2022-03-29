@@ -131,7 +131,6 @@ if Mode=='C':
         exit()
    else:
        print(UF.TimeStamp(),bcolors.OKGREEN+'All HTCondor Seed Creation jobs have finished'+bcolors.ENDC)
-       exit()
        print(UF.TimeStamp(),'Checking jobs... ',bcolors.ENDC)
        count=0
        for k in range(0,Zsteps):

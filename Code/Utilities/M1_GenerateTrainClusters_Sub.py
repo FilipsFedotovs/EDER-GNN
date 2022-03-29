@@ -17,7 +17,7 @@ import pickle
 #Setting the parser - this script is usually not run directly, but is used by a Master version Counterpart that passes the required arguments
 parser = argparse.ArgumentParser(description='select cut parameters')
 parser.add_argument('--set',help="Enter Z id", default='0')
-parser.add_argument('--subset',help="Enter Z id", default='0')
+parser.add_argument('--subset',help="Enter X id", default='0')
 parser.add_argument('--stepX',help="Enter X step size", default='0')
 parser.add_argument('--stepY',help="Enter Y step size", default='0')
 parser.add_argument('--stepZ',help="Enter Z step size", default='0')
@@ -104,7 +104,7 @@ for j in range(0,Ysteps):
         HC.LoadClusterHits(data_list)
         HC.GenerateTrainData(MCdata_list, val_ratio, test_ratio,cut_dt, cut_dr)
         LoadedClusters.append(HC)
-output_file_location=EOS_DIR+'/EDER-GNN/Data/TRAIN_SET/M1_M1_SelectedTrainClusters_'+str(Set)+'_' +str(Subset)+'_'+str(j)+'.pkl'
+output_file_location=EOS_DIR+'/EDER-GNN/Data/TRAIN_SET/M1_M1_SelectedTrainClusters_'+str(Set)+'_' +str(Subset)+'.pkl'
 open_file = open(output_file_location, "wb")
 pickle.dump(LoadedClusters, open_file)
 print(UF.TimeStamp(), "Cluster generation is finished...")

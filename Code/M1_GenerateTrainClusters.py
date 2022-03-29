@@ -90,13 +90,13 @@ if Mode=='R':
       UF.TrainCleanUp(AFS_DIR, EOS_DIR, 'M1', ['M1_M1','M1_M2'], "SoftUsed == \"EDER-GNN-M1\"")
       print(UF.TimeStamp(),'Submitting jobs... ',bcolors.ENDC)
       for k in range(0,Zsteps):
-            OptionHeader = [' --set ', ' --stepX ',' --stepY ',' --stepZ ', ' --EOS ', " --AFS ", " --zOffset ", " --xOffset ", " --yOffset ", ' --cut_dt ', ' --cut_dr ', ' --testRatio ', ' --valRatio ']
-            OptionLine = [k, stepX,stepY,stepZ, EOS_DIR, AFS_DIR, z_offset, x_offset, y_offset, cut_dt,cut_dr,testRatio,valRatio]
+            OptionHeader = [' --set ', ' --stepX ',' --stepY ',' --stepZ ', ' --EOS ', " --AFS ", " --zOffset ", " --xOffset ", " --yOffset ", ' --cut_dt ', ' --cut_dr ', ' --testRatio ', ' --valRatio ', ' --subset ']
+            OptionLine = [k, stepX,stepY,stepZ, EOS_DIR, AFS_DIR, z_offset, x_offset, y_offset, cut_dt,cut_dr,testRatio,'$1']
             SHName = AFS_DIR + '/HTCondor/SH/SH_M1_' + str(k) + '.sh'
             SUBName = AFS_DIR + '/HTCondor/SUB/SUB_M1_' + str(k) + '.sub'
             MSGName = AFS_DIR + '/HTCondor/MSG/MSG_M1_' + str(k)
             ScriptName = AFS_DIR + '/Code/Utilities/M1_GenerateTrainClusters_Sub.py '
-            UF.SubmitJobs2Condor([OptionHeader, OptionLine, SHName, SUBName, MSGName, ScriptName, 1, 'EDER-GNN-M1', True,False])
+            UF.SubmitJobs2Condor([OptionHeader, OptionLine, SHName, SUBName, MSGName, ScriptName, Xsteps, 'EDER-GNN-M1', False,False])
       print(UF.TimeStamp(), bcolors.OKGREEN+'All jobs have been submitted, please rerun this script with "--Mode C" in few hours'+bcolors.ENDC)
 if Mode=='C':
    bad_pop=[]
@@ -105,15 +105,15 @@ if Mode=='C':
        progress=round((float(k)/float(Zsteps))*100,2)
        print(UF.TimeStamp(),"progress is ",progress,' %') #Progress display
        for i in range(0,Xsteps):
-            OptionHeader = [' --set ', ' --stepX ',' --stepY ',' --stepZ ', ' --EOS ', " --AFS ", " --zOffset ", " --xOffset ", " --yOffset ", ' --cut_dt ', ' --cut_dr ', ' --testRatio ', ' --valRatio ']
-            OptionLine = [k, stepX,stepY,stepZ, EOS_DIR, AFS_DIR, z_offset, x_offset, y_offset, cut_dt,cut_dr,testRatio,valRatio]
+            OptionHeader = [' --set ', ' --stepX ',' --stepY ',' --stepZ ', ' --EOS ', " --AFS ", " --zOffset ", " --xOffset ", " --yOffset ", ' --cut_dt ', ' --cut_dr ', ' --testRatio ', ' --valRatio ', ' --subset ']
+            OptionLine = [k, stepX,stepY,stepZ, EOS_DIR, AFS_DIR, z_offset, x_offset, y_offset, cut_dt,cut_dr,testRatio,valRatio, i]
             required_output_file_location=EOS_DIR+'/EDER-GNN/Data/TRAIN_SET/M1_M1_SelectedTrainClusters_'+str(k)+'_'+str(i)+'.pkl'
             SHName = AFS_DIR + '/HTCondor/SH/SH_M1_' + str(k) + '.sh'
             SUBName = AFS_DIR + '/HTCondor/SUB/SUB_M1_' + str(k) + '.sub'
             MSGName = AFS_DIR + '/HTCondor/MSG/MSG_M1_' + str(k)
             ScriptName = AFS_DIR + '/Code/Utilities/M1_GenerateTrainClusters_Sub.py '
             if os.path.isfile(required_output_file_location)!=True:
-               bad_pop.append([OptionHeader, OptionLine, SHName, SUBName, MSGName, ScriptName, 1, 'EDER-GNN-M1', True,False])
+               bad_pop.append([OptionHeader, OptionLine, SHName, SUBName, MSGName, ScriptName, 1, 'EDER-GNN-M1', False,False])
    if len(bad_pop)>0:
      print(UF.TimeStamp(),bcolors.WARNING+'Warning, there are still', len(bad_pop), 'HTCondor jobs remaining'+bcolors.ENDC)
      print(bcolors.BOLD+'If you would like to wait and try again later please enter W'+bcolors.ENDC)
@@ -130,6 +130,7 @@ if Mode=='C':
         exit()
    else:
        print(UF.TimeStamp(),bcolors.OKGREEN+'All HTCondor Seed Creation jobs have finished'+bcolors.ENDC)
+       exit()
        print(UF.TimeStamp(),'Checking jobs... ',bcolors.ENDC)
        count=0
        for k in range(0,Zsteps):

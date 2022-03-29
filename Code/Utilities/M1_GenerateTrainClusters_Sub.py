@@ -35,7 +35,7 @@ parser.add_argument('--cut_dr',help="Cut on angle difference", default='4000')
 args = parser.parse_args()
 
 Set=int(args.set)
-Subset=int(args.subsset)
+Subset=int(args.subset)
 stepX=float(args.stepX) #The coordinate of the st plate in the current scope
 stepZ=float(args.stepZ)
 stepY=float(args.stepY)

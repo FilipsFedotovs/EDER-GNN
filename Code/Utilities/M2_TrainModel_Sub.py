@@ -235,6 +235,7 @@ if Mode!='Train' and Mode!='Test':
 #            exit()
 # records=[]
 print(UF.TimeStamp(),'Starting the training process... ')
+records=[]
 for tc in range(0,len(TrainClusters)):
     c_sample=TrainClusters[tc].ClusterGraph
     c_sample.train_mask = c_sample.val_mask = c_sample.test_mask = c_sample.y = None
@@ -250,38 +251,12 @@ for tc in range(0,len(TrainClusters)):
      if val_perf > best_val_perf:
          best_val_perf = val_perf
          test_perf = tmp_test_perf
-         print(ClusterSet,tc,epoch, train_loss, best_val_perf, test_perf)
+         if epoch % 10 == 0:
+            records.append([ClusterSet,tc, TrainClusters[tc].ClusterSize,epoch, train_loss[0], best_val_perf, test_perf])
      #log = 'Cluster Set {:03d} Epoch: {:03d}, Loss: {:.4f}, Val: {:.4f}, Test: {:.4f}'
 
-     #if epoch % 10 == 0:
-
-#     StartSeed=(ib*TrainBatchSize)+1
-#     EndSeed=StartSeed+TrainBatchSize-1
-#     BatchImages=UF.LoadRenderImages(TrainImages,StartSeed,EndSeed)
-#     model.train_on_batch(BatchImages[0],BatchImages[1])
-#     progress=int(round((float(ib)/float(NTrainBatches))*100,0))
-#     print("Training in progress ",progress,' %', end="\r", flush=True)
-# print(UF.TimeStamp(),'Finished with the training... ')
-# print(UF.TimeStamp(),'Evaluating this epoch ')
-# model.reset_metrics()
-# for ib in range(0,NTrainBatches):
-#     StartSeed=(ib*TrainBatchSize)+1
-#     EndSeed=StartSeed+TrainBatchSize-1
-#     BatchImages=UF.LoadRenderImages(TrainImages,StartSeed,EndSeed)
-#     t=model.test_on_batch(BatchImages[0], BatchImages[1], reset_metrics=False)
-#     train_loss=t[0]
-#     train_acc=t[1]
-# model.reset_metrics()
-# for ib in range(0,NValBatches):
-#     StartSeed=(ib*TrainBatchSize)+1
-#     EndSeed=StartSeed+TrainBatchSize-1
-#     BatchImages=UF.LoadRenderImages(ValImages,StartSeed,EndSeed)
-#     a=model.test_on_batch(BatchImages[0], BatchImages[1], reset_metrics=False)
-#     val_loss=a[0]
-#     val_acc=a[1]
 # if ValidModel:
-#     model_name=EOSsubModelDIR+'/'+args.ModelNewName
-#     model.save(model_name)
-#     records.append([int(args.Epoch),ImageSet,len(TrainImages),train_loss,train_acc,val_loss,val_acc])
-#     UF.LogOperations(EOSsubModelDIR+'/'+'M5_M5_model_train_log_'+ImageSet+'.csv','StartLog', records)
+model_name=EOSsubModelDIR+'/'+args.ModelNewName
+torch.save(model.state_dict(), model_name)
+UF.LogOperations(EOSsubModelDIR+'/'+'M2_M2_model_train_log_'+ClusterSet+'.csv','StartLog', records)
 

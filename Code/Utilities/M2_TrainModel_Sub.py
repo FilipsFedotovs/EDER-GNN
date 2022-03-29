@@ -242,14 +242,14 @@ for tc in range(0,len(TrainClusters)):
     best_val_perf = test_perf = 0
     for epoch in range(0, Epoch):
      train_loss = train(c_sample)
-     print(log.format(ClusterSet,tc,epoch, train_loss, best_val_perf, test_perf))
      val_perf, tmp_test_perf = test(c_sample)
      if val_perf > best_val_perf:
          best_val_perf = val_perf
          test_perf = tmp_test_perf
      log = 'Epoch: {:03d}, Loss: {:.4f}, Val: {:.4f}, Test: {:.4f}'
-     if epoch % 10 == 0:
-         print(log.format(ClusterSet,tc,epoch, train_loss, best_val_perf, test_perf))
+     print(log.format(ClusterSet,tc,epoch, train_loss, best_val_perf, test_perf))
+     #if epoch % 10 == 0:
+
 #     StartSeed=(ib*TrainBatchSize)+1
 #     EndSeed=StartSeed+TrainBatchSize-1
 #     BatchImages=UF.LoadRenderImages(TrainImages,StartSeed,EndSeed)

@@ -241,8 +241,12 @@ for tc in range(0,len(TrainClusters)):
     c_sample = c_sample.to(device)
     best_val_perf = test_perf = 0
     for epoch in range(0, Epoch):
-     train_loss = train(c_sample)
-     val_perf, tmp_test_perf = test(c_sample)
+     try:
+         train_loss = train(c_sample)
+         val_perf, tmp_test_perf = test(c_sample)
+     except:
+         print('Failed training...')
+         break
      if val_perf > best_val_perf:
          best_val_perf = val_perf
          test_perf = tmp_test_perf

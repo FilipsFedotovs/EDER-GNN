@@ -19,7 +19,7 @@ device = "cpu"
 
 
 #print(hc.GiveStats(mc_data))
-base_data_file=open('Test_File.pkl','rb')
+base_data_file=open('/eos/user/f/ffedship/EDER-GNN/Data/TRAIN_SET/M1_M2_SelectedTrainClusters_0.pkl','rb')
 base_data=pickle.load(base_data_file)
 hc=base_data[0]
 hc.ClusterGraph.train_mask = hc.ClusterGraph.val_mask = hc.ClusterGraph.test_mask = hc.ClusterGraph.y = None
@@ -111,8 +111,8 @@ for epoch in range(1, 2000):
      if val_perf > best_val_perf:
          best_val_perf = val_perf
          test_perf = tmp_test_perf
+         print(epoch, train_loss, best_val_perf, test_perf)
 
-     print(epoch, train_loss, best_val_perf, test_perf)
 
 
 z = model.encode()

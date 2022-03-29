@@ -249,7 +249,7 @@ for tc in range(0,len(TrainClusters)):
       if val_perf > best_val_perf:
          best_val_perf = val_perf
          test_perf = tmp_test_perf
-         if epoch % 10 == 0:
+      if epoch % 10 == 0:
             records.append([ClusterSet,tc, TrainClusters[tc].ClusterSize,epoch, train_loss.item(), best_val_perf, test_perf])
             print(ClusterSet,tc, TrainClusters[tc].ClusterSize,epoch, train_loss.item(), best_val_perf, test_perf)
      #log = 'Cluster Set {:03d} Epoch: {:03d}, Loss: {:.4f}, Val: {:.4f}, Test: {:.4f}'

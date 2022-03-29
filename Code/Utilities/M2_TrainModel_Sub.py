@@ -180,6 +180,7 @@ if Mode=='Train':
                          return (prob_adj > 0).nonzero(as_tuple=False).t() # get predicted edge_list
             model_name=EOSsubModelDIR+'/'+args.ModelName
             model = Net(5).to(device)
+            optimizer = torch.optim.Adam(params=model.parameters(), lr=0.01)
             model.load_state_dict(torch.load(model_name))
 if Mode!='Train' and Mode!='Test':
 #            #try:

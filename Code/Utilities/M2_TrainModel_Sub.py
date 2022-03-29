@@ -263,7 +263,7 @@ for tc in range(0,len(TrainClusters)):
      train_loss = train(c_sample)
      val_perf, tmp_test_perf = test(c_sample)
      #except:
-         print('Failed training...')
+         #print('Failed training...')
        #  break
      if val_perf > best_val_perf:
          best_val_perf = val_perf

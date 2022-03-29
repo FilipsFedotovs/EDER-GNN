@@ -131,8 +131,6 @@ def test(sample):
      for prefix in ["val", "test"]:
          pos_edge_index = sample[f'{prefix}_pos_edge_index']
          neg_edge_index = sample[f'{prefix}_neg_edge_index']
-         print(pos_edge_index)
-         print(neg_edge_index)
          z = model.encode(sample) # encode train
          link_logits = model.decode(z, pos_edge_index, neg_edge_index) # decode test or val
          link_probs = link_logits.sigmoid() # apply sigmoid

@@ -158,12 +158,29 @@ print(UF.TimeStamp(), bcolors.OKGREEN+"Train data has been loaded successfully..
 # else:
 #     LR=float(args.LR)
 #     opt = adam(learning_rate=float(args.LR))
-#if Mode=='Train':
-            # model_name=EOSsubModelDIR+'/'+args.ModelName
-            # model=tf.keras.models.load_model(model_name)
-            # K.set_value(model.optimizer.learning_rate, LR)
-            # model.summary()
-            # print(model.optimizer.get_config())
+if Mode=='Train':
+            class Net(torch.nn.Module):
+                    def __init__(self,NoF):
+                        super(Net, self).__init__()
+                        self.conv1 = GCNConv(NoF, 128)
+                        self.conv2 = GCNConv(128, 64)
+
+                    def encode(self,sample):
+                         x = self.conv1(sample.x, sample.train_pos_edge_index) # convolution 1
+                         x = x.relu()
+                         return self.conv2(x, sample.train_pos_edge_index) # convolution 2
+
+                    def decode(self, z, pos_edge_index, neg_edge_index): # only pos and neg edges
+                         edge_index = torch.cat([pos_edge_index, neg_edge_index], dim=-1) # concatenate pos and neg edges
+                         logits = (z[edge_index[0]] * z[edge_index[1]]).sum(dim=-1)  # dot product
+                         return logits
+
+                    def decode_all(self, z):
+                         prob_adj = z @ z.t() # get adj NxN
+                         return (prob_adj > 0).nonzero(as_tuple=False).t() # get predicted edge_list
+            model_name=EOSsubModelDIR+'/'+args.ModelName
+            model = Net().to(device)
+            model.load_state_dict(torch.load(model_name))
 if Mode!='Train' and Mode!='Test':
 #            #try:
 #              model = Sequential()

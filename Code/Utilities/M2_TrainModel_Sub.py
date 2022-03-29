@@ -18,7 +18,6 @@ import Utility_Functions
 from Utility_Functions import HitCluster
 import torch
 import torch_geometric
-# from torch_geometric.utils import train_test_split_edges
 
 import torch.nn.functional as F
 from sklearn.metrics import roc_auc_score
@@ -232,26 +231,7 @@ if Mode!='Train' and Mode!='Test':
 #            #   print(UF.TimeStamp(), bcolors.FAIL+"Invalid model, aborting the training..."+bcolors.ENDC)
 #            #   ValidModel=False
 #             #  exit()
-# if Mode=='Test':
-#            model_name=EOSsubModelDIR+'/'+args.ModelName
-#            model=tf.keras.models.load_model(model_name)
-#            K.set_value(model.optimizer.learning_rate, LR)
-#            model.summary()
-#            print(model.optimizer.get_config())
-#            for ib in range(0,NValBatches):
-#               StartSeed=(ib*TrainBatchSize)+1
-#               EndSeed=StartSeed+TrainBatchSize-1
-#               BatchImages=UF.LoadRenderImages(ValImages,StartSeed,EndSeed)
-#               a=model.test_on_batch(BatchImages[0], BatchImages[1], reset_metrics=False)
-#               val_loss=a[0]
-#               val_acc=a[1]
-#               progress=int(round((float(ib)/float(NValBatches))*100,0))
-#               print("Validation in progress ",progress,' %',"Validation loss is:",val_loss,"Validation accuracy is:",val_acc , end="\r", flush=True)
-#            print('Test is finished')
-#            print("Final Validation loss is:",val_loss)
-#            print("Final Validation accuracy is:",val_acc)
-#            exit()
-# records=[]
+
 print(UF.TimeStamp(),'Starting the training process... ')
 records=[]
 for tc in range(0,len(TrainClusters)):

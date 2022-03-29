@@ -179,7 +179,7 @@ if Mode=='Train':
                          prob_adj = z @ z.t() # get adj NxN
                          return (prob_adj > 0).nonzero(as_tuple=False).t() # get predicted edge_list
             model_name=EOSsubModelDIR+'/'+args.ModelName
-            model = Net().to(device)
+            model = Net(5).to(device)
             model.load_state_dict(torch.load(model_name))
 if Mode!='Train' and Mode!='Test':
 #            #try:

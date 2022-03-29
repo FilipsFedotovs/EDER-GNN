@@ -238,22 +238,13 @@ if Mode!='Train' and Mode!='Test':
 # records=[]
 print(UF.TimeStamp(),'Starting the training process... ')
 for tc in range(0,len(TrainClusters)):
-    sample=TrainClusters[tc].ClusterGraph
-    sample.train_mask = sample.val_mask = sample.test_mask = sample.y = None
-    sample = sample.to(device)
-    print(sample.x)
-    print(sample.train_pos_edge_index)
-    print(sample.train_neg_edge_index)
-    print(sample.val_pos_edge_index)
-    print(sample.val_neg_edge_index)
-    print(sample.test_pos_edge_index)
-    print(sample.test_neg_edge_index)
-    exit()
+    c_sample=TrainClusters[tc].ClusterGraph
+    c_sample.train_mask = c_sample.val_mask = c_sample.test_mask = c_sample.y = None
+    c_sample = c_sample.to(device)
     best_val_perf = test_perf = 0
     for epoch in range(1, Epoch):
-     train_loss = train(sample)
-     print(train_loss)
-     val_perf, tmp_test_perf = test(sample)
+     train_loss = train(c_sample)
+     val_perf, tmp_test_perf = test(c_sample)
      if val_perf > best_val_perf:
          best_val_perf = val_perf
          test_perf = tmp_test_perf

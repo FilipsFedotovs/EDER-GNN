@@ -111,9 +111,8 @@ for epoch in range(1, 2000):
      if val_perf > best_val_perf:
          best_val_perf = val_perf
          test_perf = tmp_test_perf
-     log = 'Epoch: {:03d}, Loss: {:.4f}, Val: {:.4f}, Test: {:.4f}'
-     if epoch % 10 == 0:
-         print(log.format(epoch, train_loss, best_val_perf, test_perf))
+
+     print(epoch, train_loss, best_val_perf, test_perf)
 
 
 z = model.encode()

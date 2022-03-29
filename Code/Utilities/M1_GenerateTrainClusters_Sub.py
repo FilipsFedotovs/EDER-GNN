@@ -94,7 +94,7 @@ MCdata['y']=MCdata['y']-y_offset
 MCdata.drop(MCdata.index[MCdata['z'] >= ((Set+1)*stepZ)], inplace = True)  #Keeping the relevant z slice
 MCdata.drop(MCdata.index[MCdata['z'] < (Set*stepZ)], inplace = True)  #Keeping the relevant z slice
 MCdata.drop(MCdata.index[MCdata['x'] >= ((Subset+1)*stepX)], inplace = True)  #Keeping the relevant z slice
-MCdata.drop(MCdata.index[MCdata['x'] < (Subsetet*stepX)], inplace = True)  #Keeping the relevant z slice
+MCdata.drop(MCdata.index[MCdata['x'] < (Subset*stepX)], inplace = True)  #Keeping the relevant z slice
 MCdata_list=MCdata.values.tolist()
 LoadedClusters=[]
 for j in range(0,Ysteps):

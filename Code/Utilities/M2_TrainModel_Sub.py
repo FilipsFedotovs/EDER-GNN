@@ -177,6 +177,8 @@ if Mode=='Train':
 
                     def decode_all(self, z):
                          prob_adj = z @ z.t() # get adj NxN
+                         print(prob_adj)
+                         exit()
                          return (prob_adj > 0).nonzero(as_tuple=False).t() # get predicted edge_list
             model_name=EOSsubModelDIR+'/'+args.ModelName
             model = Net(5).to(device)

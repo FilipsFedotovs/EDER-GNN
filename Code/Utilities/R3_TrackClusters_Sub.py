@@ -80,7 +80,7 @@ data=RawClusters[0].ClusterGraph
 model = Net(5).to(device)
 top=[]
 bottom=[]
-for i in range(len(data.ClusterSize)):
+for i in range(len(RawClusters[0])):
     top.append(i)
     bottom.append(i)
 data.train_pos_edge_index=torch.tensor(np.array([top,bottom]))

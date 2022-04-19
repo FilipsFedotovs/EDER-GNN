@@ -168,7 +168,8 @@ class HitCluster:
 
 
            self.Stats=[StatLabels,StatFakeValues,StatTruthValues]
-
+      def LinkHits(self,hits):
+          self.HitLinks=hits.tolist()
       @staticmethod
       def GenerateLinks(_input,_ClusterID):
           _Top=[]

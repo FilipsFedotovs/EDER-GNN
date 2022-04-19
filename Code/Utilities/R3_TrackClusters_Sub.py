@@ -78,7 +78,7 @@ class Net(torch.nn.Module):
 data=RawClusters[0].ClusterGraph
 
 model = Net(5).to(device)
-data.train_pos_edge_index=torch.tensor(np.array([[],[]]))
+data.train_pos_edge_index=torch.tensor(np.array([[0,1,2],[0,1,2]]))
 model.load_state_dict(torch.load(EOS_DIR+'/EDER-GNN/Models/DefaultModel'))
 print(data.train_pos_edge_index)
 model.eval()

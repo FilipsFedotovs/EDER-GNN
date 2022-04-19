@@ -21,6 +21,7 @@ parser.add_argument('--ClusterSet',help="Please enter the cluster set", default=
 parser.add_argument('--EOS',help="EOS directory location", default='.')
 parser.add_argument('--AFS',help="AFS directory location", default='.')
 parser.add_argument('--Log',help="Logging yes?", default='N')
+
 parser.add_argument('--cut_dt',help="Cut on angle difference", default='1.0')
 parser.add_argument('--cut_dr',help="Cut on angle difference", default='4000')
 
@@ -71,6 +72,10 @@ class Net(torch.nn.Module):
         prob_adj = z @ z.t() # get adj NxN
         return (prob_adj > 0).nonzero(as_tuple=False).t() # get predicted edge_list
 
+model, data = Net().to(device), data.to(device)
+model = Net().to(device)
+model.load_state_dict(torch.load(EOS_DIR+'/EDER-GNN/Models/DefaultModel'))
+model.eval()
 exit()
 if args.Log=='Y':
     input_file_location=EOS_DIR+'/EDER-GNN/Data/TEST_SET/E1_HITS.csv'

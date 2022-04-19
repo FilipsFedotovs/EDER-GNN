@@ -16,6 +16,8 @@ import pickle
 import torch
 import torch_geometric
 from torch_geometric.nn import GCNConv
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+device = "cpu"
 #Setting the parser - this script is usually not run directly, but is used by a Master version Counterpart that passes the required arguments
 parser = argparse.ArgumentParser(description='select cut parameters')
 parser.add_argument('--set',help="Enter Z id", default='0')

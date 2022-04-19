@@ -177,8 +177,6 @@ if Mode=='Train':
 
                     def decode_all(self, z):
                          prob_adj = z @ z.t() # get adj NxN
-                         print(prob_adj)
-                         exit()
                          return (prob_adj > 0).nonzero(as_tuple=False).t() # get predicted edge_list
             model_name=EOSsubModelDIR+'/'+args.ModelName
             model = Net(5).to(device)
@@ -228,7 +226,7 @@ if Mode!='Train' and Mode!='Test':
                          return (prob_adj > 0).nonzero(as_tuple=False).t() # get predicted edge_list
 # Compile the model
                model = Net(5).to(device)
-               optimizer = torch.optim.Adam(params=model.parameters(), lr=0.01)
+               optimizer = torch.optim.Adam(params=model.parameters(), lr=LR)
 
 #            #except:
 #            #   print(UF.TimeStamp(), bcolors.FAIL+"Invalid model, aborting the training..."+bcolors.ENDC)
@@ -255,7 +253,6 @@ for tc in range(0,len(TrainClusters)):
       if epoch % 10 == 0:
             records.append([ClusterSet,tc, TrainClusters[tc].ClusterSize,epoch, train_loss.item(), best_val_perf, test_perf])
             print(ClusterSet,tc, TrainClusters[tc].ClusterSize,epoch, train_loss.item(), best_val_perf, test_perf)
-     #log = 'Cluster Set {:03d} Epoch: {:03d}, Loss: {:.4f}, Val: {:.4f}, Test: {:.4f}'
 
 # if ValidModel:
 model_name=EOSsubModelDIR+'/'+args.ModelNewName

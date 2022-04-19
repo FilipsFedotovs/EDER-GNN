@@ -25,16 +25,25 @@ parser.add_argument('--ClusterSet',help="Please enter the cluster set", default=
 parser.add_argument('--EOS',help="EOS directory location", default='.')
 parser.add_argument('--AFS',help="AFS directory location", default='.')
 parser.add_argument('--Log',help="Logging yes?", default='N')
-
+parser.add_argument('--stepX',help="Enter X step size", default='0')
+parser.add_argument('--stepY',help="Enter Y step size", default='0')
+parser.add_argument('--stepZ',help="Enter Z step size", default='0')
 parser.add_argument('--cut_dt',help="Cut on angle difference", default='1.0')
 parser.add_argument('--cut_dr',help="Cut on angle difference", default='4000')
-
+parser.add_argument('--zOffset',help="Data offset on z", default='0.0')
+parser.add_argument('--yOffset',help="Data offset on y", default='0.0')
+parser.add_argument('--xOffset',help="Data offset on x", default='0.0')
 ######################################## Set variables  #############################################################
 args = parser.parse_args()
 
 Set=int(args.set)
 ClusterSet=int(args.ClusterSet)
-
+stepX=float(args.stepX) #The coordinate of the st plate in the current scope
+stepZ=float(args.stepZ)
+stepY=float(args.stepY)
+z_offset=float(args.zOffset)
+y_offset=float(args.yOffset)
+x_offset=float(args.xOffset)
 cut_dt=float(args.cut_dt)
 cut_dr=float(args.cut_dr)
 #Loading Directory locations
@@ -75,6 +84,7 @@ class Net(torch.nn.Module):
                     def decode_all(self, z):
                          prob_adj = z @ z.t() # get adj NxN
                          print(prob_adj)
+                         exit()
                          return (prob_adj > 0).nonzero(as_tuple=False).t() # get predicted edge_list
 data=RawClusters[0].ClusterGraph
 
@@ -92,7 +102,6 @@ lat_z = model.encode(data)
 RawClusters[0].LinkHits(model.decode_all(lat_z))
 
 print(RawClusters[0].HitLinks)
-exit()
 if args.Log=='Y':
     input_file_location=EOS_DIR+'/EDER-GNN/Data/TEST_SET/E1_HITS.csv'
     MCdata=pd.read_csv(input_file_location,header=0,
@@ -106,23 +115,22 @@ if args.Log=='Y':
     MCdata['y']=MCdata['y']-y_offset
     MCdata.drop(MCdata.index[MCdata['z'] >= ((Set+1)*stepZ)], inplace = True)  #Keeping the relevant z slice
     MCdata.drop(MCdata.index[MCdata['z'] < (Set*stepZ)], inplace = True)  #Keeping the relevant z slice
-
     MCdata_list=MCdata.values.tolist()
-for i in range(0,Xsteps):
-    LoadedClusters=[]
-    progress=round((float(i)/float(Xsteps))*100,2)
-    print(UF.TimeStamp(),"progress is ",progress,' %') #Progress display
-    for j in range(0,Ysteps):
-        HC=UF.HitCluster([i,j,Set],[stepX,stepY,stepZ])
-        HC.LoadClusterHits(data_list)
-        if args.Log=='Y':
-            HC.GiveStats(MCdata_list,cut_dt,cut_dr)
-        LoadedClusters.append(HC)
-    output_file_location=EOS_DIR+'/EDER-GNN/Data/REC_SET/R2_R2_SelectedClusters_'+str(Set)+'_'+str(i)+'.pkl'
-    open_file = open(output_file_location, "wb")
-    pickle.dump(LoadedClusters, open_file)
-print(UF.TimeStamp(), "Cluster generation is finished...")
-#End of the script
+# for i in range(0,Xsteps):
+#     LoadedClusters=[]
+#     progress=round((float(i)/float(Xsteps))*100,2)
+#     print(UF.TimeStamp(),"progress is ",progress,' %') #Progress display
+#     for j in range(0,Ysteps):
+#         HC=UF.HitCluster([i,j,Set],[stepX,stepY,stepZ])
+#         HC.LoadClusterHits(data_list)
+#         if args.Log=='Y':
+#             HC.GiveStats(MCdata_list,cut_dt,cut_dr)
+#         LoadedClusters.append(HC)
+#     output_file_location=EOS_DIR+'/EDER-GNN/Data/REC_SET/R2_R2_SelectedClusters_'+str(Set)+'_'+str(i)+'.pkl'
+#     open_file = open(output_file_location, "wb")
+#     pickle.dump(LoadedClusters, open_file)
+# print(UF.TimeStamp(), "Cluster generation is finished...")
+# #End of the script
 
 
 

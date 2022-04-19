@@ -76,7 +76,7 @@ class Net(torch.nn.Module):
                          prob_adj = z @ z.t() # get adj NxN
                          return (prob_adj > 0).nonzero(as_tuple=False).t() # get predicted edge_list
 data=RawClusters[0].ClusterGraph
-data.ClusterGraph.train_pos_edge_index=None
+data.train_pos_edge_index=None
 model, data = Net(5).to(device), data.to(device)
 model = Net(5).to(device)
 model.load_state_dict(torch.load(EOS_DIR+'/EDER-GNN/Models/DefaultModel'))

@@ -57,24 +57,24 @@ data_file.close()
 print(UF.TimeStamp(),'Loading the model... ')
 
 class Net(torch.nn.Module):
-    def __init__(self):
-        super(Net, self).__init__()
-        self.conv1 = GCNConv(data.num_features, 128)
-        self.conv2 = GCNConv(128, 64)
+                    def __init__(self,NoF):
+                        super(Net, self).__init__()
+                        self.conv1 = GCNConv(NoF, 128)
+                        self.conv2 = GCNConv(128, 64)
 
-    def encode(self):
-        x = self.conv1(data.x, data.train_pos_edge_index) # convolution 1
-        x = x.relu()
-        return self.conv2(x, data.train_pos_edge_index) # convolution 2
+                    def encode(self,sample):
+                         x = self.conv1(sample.x, sample.train_pos_edge_index) # convolution 1
+                         x = x.relu()
+                         return self.conv2(x, sample.train_pos_edge_index) # convolution 2
 
-    def decode(self, z, pos_edge_index, neg_edge_index): # only pos and neg edges
-        edge_index = torch.cat([pos_edge_index, neg_edge_index], dim=-1) # concatenate pos and neg edges
-        logits = (z[edge_index[0]] * z[edge_index[1]]).sum(dim=-1)  # dot product
-        return logits
+                    def decode(self, z, pos_edge_index, neg_edge_index): # only pos and neg edges
+                         edge_index = torch.cat([pos_edge_index, neg_edge_index], dim=-1) # concatenate pos and neg edges
+                         logits = (z[edge_index[0]] * z[edge_index[1]]).sum(dim=-1)  # dot product
+                         return logits
 
-    def decode_all(self, z):
-        prob_adj = z @ z.t() # get adj NxN
-        return (prob_adj > 0).nonzero(as_tuple=False).t() # get predicted edge_list
+                    def decode_all(self, z):
+                         prob_adj = z @ z.t() # get adj NxN
+                         return (prob_adj > 0).nonzero(as_tuple=False).t() # get predicted edge_list
 data=RawClusters[0].ClusterGraph
 model, data = Net().to(device), data.to(device)
 model = Net().to(device)

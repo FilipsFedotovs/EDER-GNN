@@ -80,6 +80,9 @@ model, data = Net().to(device), data.to(device)
 model = Net().to(device)
 model.load_state_dict(torch.load(EOS_DIR+'/EDER-GNN/Models/DefaultModel'))
 model.eval()
+lat_z = model.encode(data)
+final_edge_index = model.decode_all(lat_z)
+print(final_edge_index)
 exit()
 if args.Log=='Y':
     input_file_location=EOS_DIR+'/EDER-GNN/Data/TEST_SET/E1_HITS.csv'

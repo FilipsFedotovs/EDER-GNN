@@ -95,9 +95,10 @@ if args.Log=='Y':
     MCdata.drop(MCdata.index[MCdata['x'] < (Subset*stepX)], inplace = True)  #Keeping the relevant z slice
     MCdata_list=MCdata.values.tolist()
 LoadedClusters=[]
-progress=round((float(i)/float(Ysteps))*100,2)
-print(UF.TimeStamp(),"progress is ",progress,' %') #Progress display
+
 for j in range(0,Ysteps):
+        progress=round((float(j)/float(Ysteps))*100,2)
+        print(UF.TimeStamp(),"progress is ",progress,' %') #Progress display
         HC=UF.HitCluster([Subset,j,Set],[stepX,stepY,stepZ])
         HC.LoadClusterHits(data_list)
         if args.Log=='Y':

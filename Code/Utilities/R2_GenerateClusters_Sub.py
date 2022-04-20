@@ -17,6 +17,7 @@ import pickle
 #Setting the parser - this script is usually not run directly, but is used by a Master version Counterpart that passes the required arguments
 parser = argparse.ArgumentParser(description='select cut parameters')
 parser.add_argument('--set',help="Enter Z id", default='0')
+parser.add_argument('--subset',help="Enter X id", default='0')
 parser.add_argument('--stepX',help="Enter X step size", default='0')
 parser.add_argument('--stepY',help="Enter Y step size", default='0')
 parser.add_argument('--stepZ',help="Enter Z step size", default='0')
@@ -33,7 +34,7 @@ parser.add_argument('--cut_dr',help="Cut on angle difference", default='4000')
 args = parser.parse_args()
 
 Set=int(args.set)
-
+Subset=int(args.subset)
 stepX=float(args.stepX) #The coordinate of the st plate in the current scope
 stepZ=float(args.stepZ)
 stepY=float(args.stepY)
@@ -70,8 +71,9 @@ y_max=data['y'].max()
 print(UF.TimeStamp(),'Creating clusters... ')
 data.drop(data.index[data['z'] >= ((Set+1)*stepZ)], inplace = True)  #Keeping the relevant z slice
 data.drop(data.index[data['z'] < (Set*stepZ)], inplace = True)  #Keeping the relevant z slice
+data.drop(data.index[data['x'] >= ((Subset+1)*stepX)], inplace = True)  #Keeping the relevant z slice
+data.drop(data.index[data['x'] < (Subset*stepX)], inplace = True)  #Keeping the relevant z slice
 data_list=data.values.tolist()
-Xsteps=math.ceil(x_max/stepX) #Even if use only a max of 20000 track on the right join we cannot perform the full outer join due to the memory limitations, we do it in a small 'cuts'
 Ysteps=math.ceil(y_max/stepY)  #Calculating number of cuts
 
 
@@ -89,21 +91,21 @@ if args.Log=='Y':
     MCdata['y']=MCdata['y']-y_offset
     MCdata.drop(MCdata.index[MCdata['z'] >= ((Set+1)*stepZ)], inplace = True)  #Keeping the relevant z slice
     MCdata.drop(MCdata.index[MCdata['z'] < (Set*stepZ)], inplace = True)  #Keeping the relevant z slice
-
+    MCdata.drop(MCdata.index[MCdata['x'] >= ((Subset+1)*stepX)], inplace = True)  #Keeping the relevant z slice
+    MCdata.drop(MCdata.index[MCdata['x'] < (Subset*stepX)], inplace = True)  #Keeping the relevant z slice
     MCdata_list=MCdata.values.tolist()
-for i in range(0,Xsteps):
-    LoadedClusters=[]
-    progress=round((float(i)/float(Xsteps))*100,2)
-    print(UF.TimeStamp(),"progress is ",progress,' %') #Progress display
-    for j in range(0,Ysteps):
-        HC=UF.HitCluster([i,j,Set],[stepX,stepY,stepZ])
+LoadedClusters=[]
+progress=round((float(i)/float(Ysteps))*100,2)
+print(UF.TimeStamp(),"progress is ",progress,' %') #Progress display
+for j in range(0,Ysteps):
+        HC=UF.HitCluster([Subset,j,Set],[stepX,stepY,stepZ])
         HC.LoadClusterHits(data_list)
         if args.Log=='Y':
             HC.GiveStats(MCdata_list,cut_dt,cut_dr)
         LoadedClusters.append(HC)
-    output_file_location=EOS_DIR+'/EDER-GNN/Data/REC_SET/R2_R2_SelectedClusters_'+str(Set)+'_'+str(i)+'.pkl'
-    open_file = open(output_file_location, "wb")
-    pickle.dump(LoadedClusters, open_file)
+output_file_location=EOS_DIR+'/EDER-GNN/Data/REC_SET/R2_R2_SelectedClusters_'+str(Set)+'_'+str(Subset)+'.pkl'
+open_file = open(output_file_location, "wb")
+pickle.dump(LoadedClusters, open_file)
 print(UF.TimeStamp(), "Cluster generation is finished...")
 #End of the script
 

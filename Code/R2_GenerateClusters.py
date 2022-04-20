@@ -88,13 +88,13 @@ if Mode=='R':
       UF.RecCleanUp(AFS_DIR, EOS_DIR, 'R3', ['R2_R3','R2_R2'], "SoftUsed == \"EDER-GNN-R2\"")
       print(UF.TimeStamp(),'Submitting jobs... ',bcolors.ENDC)
       for k in range(0,Zsteps):
-            OptionHeader = [' --set ', ' --stepX ',' --stepY ',' --stepZ ', ' --EOS ', " --AFS ", " --zOffset ", " --xOffset ", " --yOffset ", ' --Log ', ' --cut_dt ', ' --cut_dr ']
-            OptionLine = [k, stepX,stepY,stepZ, EOS_DIR, AFS_DIR, z_offset, x_offset, y_offset, args.Log, cut_dt,cut_dr]
+            OptionHeader = [' --set ', ' --stepX ',' --stepY ',' --stepZ ', ' --EOS ', " --AFS ", " --zOffset ", " --xOffset ", " --yOffset ", ' --Log ', ' --cut_dt ', ' --cut_dr ', ' --subset ']
+            OptionLine = [k, stepX,stepY,stepZ, EOS_DIR, AFS_DIR, z_offset, x_offset, y_offset, args.Log, cut_dt,cut_dr, '$1']
             SHName = AFS_DIR + '/HTCondor/SH/SH_R2_' + str(k) + '.sh'
             SUBName = AFS_DIR + '/HTCondor/SUB/SUB_R2_' + str(k) + '.sub'
             MSGName = AFS_DIR + '/HTCondor/MSG/MSG_R2_' + str(k)
             ScriptName = AFS_DIR + '/Code/Utilities/R2_GenerateClusters_Sub.py '
-            UF.SubmitJobs2Condor([OptionHeader, OptionLine, SHName, SUBName, MSGName, ScriptName, 1, 'EDER-GNN-R2', True,False])
+            UF.SubmitJobs2Condor([OptionHeader, OptionLine, SHName, SUBName, MSGName, ScriptName, Xsteps, 'EDER-GNN-R2', True,False])
       print(UF.TimeStamp(), bcolors.OKGREEN+'All jobs have been submitted, please rerun this script with "--Mode C" in few hours'+bcolors.ENDC)
 if Mode=='C':
    bad_pop=[]
@@ -103,8 +103,8 @@ if Mode=='C':
        progress=round((float(k)/float(Zsteps))*100,2)
        print(UF.TimeStamp(),"progress is ",progress,' %') #Progress display
        for i in range(0,Xsteps):
-            OptionHeader = [' --set ', ' --stepX ',' --stepY ',' --stepZ ', ' --EOS ', " --AFS ", " --zOffset ", " --xOffset ", " --yOffset ", ' --Log ', ' --cut_dt ', ' --cut_dr ']
-            OptionLine = [k, stepX,stepY,stepZ, EOS_DIR, AFS_DIR, z_offset, x_offset, y_offset, args.Log, cut_dt,cut_dr]
+            OptionHeader = [' --set ', ' --stepX ',' --stepY ',' --stepZ ', ' --EOS ', " --AFS ", " --zOffset ", " --xOffset ", " --yOffset ", ' --Log ', ' --cut_dt ', ' --cut_dr ',' --subset ']
+            OptionLine = [k, stepX,stepY,stepZ, EOS_DIR, AFS_DIR, z_offset, x_offset, y_offset, args.Log, cut_dt,cut_dr, i]
             required_output_file_location=EOS_DIR+'/EDER-GNN/Data/REC_SET/R2_R2_SelectedClusters_'+str(k)+'_'+str(i)+'.pkl'
             SHName = AFS_DIR + '/HTCondor/SH/SH_R2_' + str(k) + '.sh'
             SUBName = AFS_DIR + '/HTCondor/SUB/SUB_R2_' + str(k) + '.sub'

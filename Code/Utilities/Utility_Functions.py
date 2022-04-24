@@ -236,7 +236,7 @@ class HitCluster:
       def LinkHits(self,hits):
           self.HitLinks=hits.tolist()
           _TempClusterHits=[]
-          for ch in self.ClusterHitIDs:
+          for ch in self.ClusterHits:
               for h in range(len(self.HitLinks[0])):
                   print(ch[0],self.ClusterHitIDs[self.HitLinks[0][h]])
                   if ch[0]==self.ClusterHitIDs[self.HitLinks[0][h]]:

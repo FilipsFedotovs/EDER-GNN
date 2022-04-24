@@ -94,15 +94,8 @@ for i in range(RawClusters[0].ClusterSize):
     bottom.append(i)
 data.train_pos_edge_index=torch.tensor(np.array([top,bottom]))
 model.load_state_dict(torch.load(EOS_DIR+'/EDER-GNN/Models/DefaultModel'))
-print(data.train_pos_edge_index)
 model.eval()
 lat_z = model.encode(data)
-RawClusters[0].LinkHits(model.decode_all(lat_z),True)
-
-
-
-print(RawClusters[0].HitLinks)
-exit()
 if args.Log=='Y':
     input_file_location=EOS_DIR+'/EDER-GNN/Data/TEST_SET/E1_HITS.csv'
     MCdata=pd.read_csv(input_file_location,header=0,
@@ -117,6 +110,13 @@ if args.Log=='Y':
     MCdata.drop(MCdata.index[MCdata['z'] >= ((Set+1)*stepZ)], inplace = True)  #Keeping the relevant z slice
     MCdata.drop(MCdata.index[MCdata['z'] < (Set*stepZ)], inplace = True)  #Keeping the relevant z slice
     MCdata_list=MCdata.values.tolist()
+    RawClusters[0].LinkHits(model.decode_all(lat_z),True,MCdata_list)
+
+
+
+print(RawClusters[0].HitLinks)
+exit()
+
 # for i in range(0,Xsteps):
 #     LoadedClusters=[]
 #     progress=round((float(i)/float(Xsteps))*100,2)

@@ -239,6 +239,7 @@ class HitCluster:
           for ch in self.ClusterHits:
               for h in range(len(self.HitLinks[0])):
                   print(ch)
+                  print(self.ClusterID)
                   print(self.ClusterID[self.HitLinks[0][h]])
                   exit()
                   if ch[0]==self.ClusterID[self.HitLinks[0][h]]:

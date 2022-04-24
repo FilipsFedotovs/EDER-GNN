@@ -260,13 +260,14 @@ class HitCluster:
             _l_Hits=_Tot_Hits_df.rename(columns={"x": "l_x", "y": "l_y", "z": "l_z", "tx": "l_tx","ty": "l_ty","_r_HitID": "'_link_HitID'" })
             #Join hits + MC truth
             _l_Tot_Hits=pd.merge(_l_MCHits, _l_Hits, how="left", on=['_l_HitID'])
-            print(_l_Tot_Hits)
+
+            #Preparing Raw and MC combined data 2
+            _r_MCHits=pd.DataFrame(_MCClusterHits, columns = ['r_HitID','r_MC_ID'])
+            _r_Hits=_Tot_Hits_df[['_l_HitID', 'x', 'y', 'z', 'tx', 'ty']].rename(columns={"x": "r_x", "y": "r_y", "z": "r_z", "tx": "r_tx","ty": "r_ty","_l_HitID": "_r_HitID" })
+            #Join hits + MC truth
+            _r_Tot_Hits=pd.merge(_r_MCHits, _r_Hits, how="right", on=['r_HitID'])
+            print(_r_Tot_Hits)
             exit()
-          #  #Preparing Raw and MC combined data 2
-          #  _r_MCHits=pd.DataFrame(_MCClusterHits, columns = ['r_HitID','r_MC_ID'])
-          #  _r_Hits=pd.DataFrame(self.ClusterHits, columns = ['r_HitID','r_x','r_y','r_z','r_tx','r_ty'])
-          #  #Join hits + MC truth
-          #  _r_Tot_Hits=pd.merge(_r_MCHits, _r_Hits, how="right", on=['r_HitID'])
           #  _r_Tot_Hits['join_key'] = 'join_key'
           #  #Combining data 1 and 2
           #  _Tot_Hits=pd.merge(_l_Tot_Hits, _r_Tot_Hits, how="inner", on=['join_key'])

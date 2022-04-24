@@ -256,10 +256,10 @@ class HitCluster:
                        if s[3]>=self.ClusterID[2]*self.Step[2] and s[3]<((self.ClusterID[2]+1)*self.Step[2]):
                           _MCClusterHits.append([s[0],s[6]])
            #Preparing Raw and MC combined data 1
-            _l_MCHits=pd.DataFrame(_MCClusterHits, columns = ['l_HitID','l_MC_ID'])
+            _l_MCHits=pd.DataFrame(_MCClusterHits, columns = ['_l_HitID','l_MC_ID'])
             _l_Hits=_Tot_Hits_df.rename(columns={"x": "l_x", "y": "l_y", "z": "l_z", "tx": "l_tx","ty": "l_ty","_r_HitID": "'_link_HitID'" })
             #Join hits + MC truth
-            _l_Tot_Hits=pd.merge(_l_MCHits, _l_Hits, how="left", on=['l_HitID'])
+            _l_Tot_Hits=pd.merge(_l_MCHits, _l_Hits, how="left", on=['_l_HitID'])
             print(_l_Tot_Hits)
             exit()
           #  #Preparing Raw and MC combined data 2

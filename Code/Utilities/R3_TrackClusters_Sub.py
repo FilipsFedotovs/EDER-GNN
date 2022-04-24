@@ -97,7 +97,7 @@ model.load_state_dict(torch.load(EOS_DIR+'/EDER-GNN/Models/DefaultModel'))
 print(data.train_pos_edge_index)
 model.eval()
 lat_z = model.encode(data)
-RawClusters[0].LinkHits(model.decode_all(lat_z))
+RawClusters[0].LinkHits(model.decode_all(lat_z),True)
 
 
 

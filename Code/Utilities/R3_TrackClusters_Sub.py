@@ -99,7 +99,10 @@ model.eval()
 lat_z = model.encode(data)
 RawClusters[0].LinkHits(model.decode_all(lat_z))
 
+
+
 print(RawClusters[0].HitLinks)
+exit()
 if args.Log=='Y':
     input_file_location=EOS_DIR+'/EDER-GNN/Data/TEST_SET/E1_HITS.csv'
     MCdata=pd.read_csv(input_file_location,header=0,

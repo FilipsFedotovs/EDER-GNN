@@ -246,6 +246,7 @@ class HitCluster:
           print(_Map_df)
           _Tot_Hits_df=pd.merge(_Hits_df, _Map_df, how="inner", on=['_l_HitID'])
           print(_Tot_Hits_df)
+          exit()
 
       @staticmethod
       def GenerateLinks(_input,_ClusterID):

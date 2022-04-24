@@ -237,14 +237,14 @@ class HitCluster:
           self.HitLinks=hits.tolist()
           _Map=[]
           for h in range(len(self.HitLinks[0])):
-              _Map.append([self.ClusterHitIDs[HitLinks[0][h]],self.ClusterHitIDs[HitLinks[1][h]]])
-              _Map.append([self.ClusterHitIDs[HitLinks[1][h]],self.ClusterHitIDs[HitLinks[0][h]]])
+              _Map.append([self.ClusterHitIDs[self.HitLinks[0][h]],self.ClusterHitIDs[self.HitLinks[1][h]]])
+              _Map.append([self.ClusterHitIDs[self.HitLinks[1][h]],self.ClusterHitIDs[self.HitLinks[0][h]]])
           import pandas as pd
           _Hits_df=pd.DataFrame(self.ClusterHits, columns = ['_l_HitID','x','y','z','tx','ty'])
           _Map_df=pd.DataFrame(_Map, columns = ['_l_HitID','_r_HitID'])
           print(_Hits_df)
           print(_Map_df)
-          _Tot_Hits_df=pd.merge(_Hits_df, _Map_df, how="inner", on=['l_HitID'])
+          _Tot_Hits_df=pd.merge(_Hits_df, _Map_df, how="inner", on=['_l_HitID'])
           print(_Tot_Hits_df)
 
       @staticmethod

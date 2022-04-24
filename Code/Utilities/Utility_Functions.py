@@ -235,16 +235,16 @@ class HitCluster:
            self.Stats=[StatLabels,StatFakeValues,StatTruthValues]
       def LinkHits(self,hits):
           self.HitLinks=hits.tolist()
-          _TempClusterHits=[]
-          for ch in self.ClusterHits:
-              for h in range(len(self.HitLinks[0])):
-                  print(ch[0],self.ClusterHitIDs[self.HitLinks[0][h]])
-                  if ch[0]==self.ClusterHitIDs[self.HitLinks[0][h]]:
-                      _TempHit=ch
-                      _TempHit.append(self.ClusterHitIDs[self.HitLinks[1][h]])
-                      _TempClusterHits.append(_TempHit)
-
-
+          _Map=[]
+          for h in range(len(self.HitLinks[0])):
+              _Maps.append([self.HitLinks[0][h],self.HitLinks[1][h]])
+              _Maps.append([self.HitLinks[1][h],self.HitLinks[0][h]])
+          import pandas as pd
+          _Hits_df=pd.DataFrame(self.ClusterHits, columns = ['_l_HitID','x','y','z','tx','ty'])
+          _Map_df=pd.DataFrame(self.ClusterHits, columns = ['_l_HitID','_r_HitID'])
+          _Tot_Hits_df=pd.merge(_Hits_df, _Map_df, how="inner", on=['l_HitID'])
+          print(_Tot_Hits_df)
+ 
       @staticmethod
       def GenerateLinks(_input,_ClusterID):
           _Top=[]

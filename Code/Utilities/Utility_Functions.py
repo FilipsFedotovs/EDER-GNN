@@ -233,7 +233,7 @@ class HitCluster:
 
 
            self.Stats=[StatLabels,StatFakeValues,StatTruthValues]
-      def LinkHits(self,hits):
+      def LinkHits(self,hits,GiveStats):
           self.HitLinks=hits.tolist()
           _Map=[]
           for h in range(len(self.HitLinks[0])):
@@ -244,8 +244,34 @@ class HitCluster:
           _Map_df=pd.DataFrame(_Map, columns = ['_l_HitID','_r_HitID'])
           _Tot_Hits_df=pd.merge(_Hits_df, _Map_df, how="inner", on=['_l_HitID'])
           _Tot_Hits_df.drop_duplicates(keep='first', inplace=True)
-          print(_Tot_Hits_df)
-          exit()
+
+          if GiveStats:
+            _MCClusterHits=[]
+            StatFakeValues=[]
+            StatTruthValues=[]
+            StatLabels=['Initial # of combinations','Delete self-permutations','Enforce positive directionality','Cut on delta t', 'Cut on delta x']
+            for s in MCHits:
+               if s[1]>=self.ClusterID[0]*self.Step[0] and s[1]<((self.ClusterID[0]+1)*self.Step[0]):
+                   if s[2]>=self.ClusterID[1]*self.Step[1] and s[2]<((self.ClusterID[1]+1)*self.Step[1]):
+                       if s[3]>=self.ClusterID[2]*self.Step[2] and s[3]<((self.ClusterID[2]+1)*self.Step[2]):
+                          _MCClusterHits.append([s[0],s[6]])
+           #Preparing Raw and MC combined data 1
+            _l_MCHits=pd.DataFrame(_MCClusterHits, columns = ['l_HitID','l_MC_ID'])
+            _l_Hits=_Tot_Hits_df.rename(columns={"x": "l_x", "y": "l_y", "z": "l_z", "tx": "l_tx","ty": "l_ty","_r_HitID": "'_link_HitID'" })
+            #Join hits + MC truth
+            _l_Tot_Hits=pd.merge(_l_MCHits, _l_Hits, how="left", on=['l_HitID'])
+            print(_l_Tot_Hits)
+            exit()
+          #  #Preparing Raw and MC combined data 2
+          #  _r_MCHits=pd.DataFrame(_MCClusterHits, columns = ['r_HitID','r_MC_ID'])
+          #  _r_Hits=pd.DataFrame(self.ClusterHits, columns = ['r_HitID','r_x','r_y','r_z','r_tx','r_ty'])
+          #  #Join hits + MC truth
+          #  _r_Tot_Hits=pd.merge(_r_MCHits, _r_Hits, how="right", on=['r_HitID'])
+          #  _r_Tot_Hits['join_key'] = 'join_key'
+          #  #Combining data 1 and 2
+          #  _Tot_Hits=pd.merge(_l_Tot_Hits, _r_Tot_Hits, how="inner", on=['join_key'])
+          # print(_Tot_Hits_df)
+          # exit()
 
       @staticmethod
       def GenerateLinks(_input,_ClusterID):

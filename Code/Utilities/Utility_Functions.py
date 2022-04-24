@@ -243,8 +243,6 @@ class HitCluster:
                       _TempHit=ch
                       _TempHit.append(self.ClusterHitIDs[self.HitLinks[1][h]])
                       _TempClusterHits.append(_TempHit)
-                      print(_TempClusterHits)
-                      exit()
 
 
       @staticmethod

@@ -241,6 +241,11 @@ class HitCluster:
               _Map.append([self.ClusterHitIDs[self.HitLinks[1][h]],self.ClusterHitIDs[self.HitLinks[0][h]]])
           import pandas as pd
           _Hits_df=pd.DataFrame(self.ClusterHits, columns = ['_l_HitID','x','y','z','tx','ty'])
+          _Hits_df["x"] = pd.to_numeric(_Hits_df["x"],downcast='float')
+          _Hits_df["y"] = pd.to_numeric(_Hits_df["y"],downcast='float')
+          _Hits_df["z"] = pd.to_numeric(_Hits_df["z"],downcast='float')
+          _Hits_df["tx"] = pd.to_numeric(_Hits_df["tx"],downcast='float')
+          _Hits_df["ty"] = pd.to_numeric(_Hits_df["ty"],downcast='float')
           _Map_df=pd.DataFrame(_Map, columns = ['_l_HitID','_r_HitID'])
           _Tot_Hits_df=pd.merge(_Hits_df, _Map_df, how="inner", on=['_l_HitID'])
           _Tot_Hits_df.drop_duplicates(keep='first', inplace=True)

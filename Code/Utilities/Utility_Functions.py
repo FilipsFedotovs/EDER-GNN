@@ -236,11 +236,11 @@ class HitCluster:
       def LinkHits(self,hits):
           self.HitLinks=hits.tolist()
           _TempClusterHits=[]
-          for ch in self.ClusterHits:
+          for ch in self.ClusterHitIDs:
               for h in range(len(self.HitLinks[0])):
                   print(ch)
-                  print(self.ClusterID)
-                  print(self.ClusterID[self.HitLinks[0][h]])
+                  print(self.ClusterHitIDs)
+                  print(self.ClusterHitIDs[self.HitLinks[0][h]])
                   print(self.ClusterSize)
                   exit()
                   if ch[0]==self.ClusterID[self.HitLinks[0][h]]:

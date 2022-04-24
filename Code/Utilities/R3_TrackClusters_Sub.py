@@ -100,8 +100,7 @@ lat_z = model.encode(data)
 RawClusters[0].LinkHits(model.decode_all(lat_z))
 
 
-print(RawClusters[0].ClusterHits)
-exit()
+
 print(RawClusters[0].HitLinks)
 exit()
 if args.Log=='Y':

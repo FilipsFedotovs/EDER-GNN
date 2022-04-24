@@ -242,9 +242,8 @@ class HitCluster:
                   print(self.ClusterHitIDs)
                   print(self.ClusterHitIDs[self.HitLinks[0][h]])
                   print(self.ClusterSize)
-                  exit()
                   if ch[0]==self.ClusterID[self.HitLinks[0][h]]:
-                      _TempClusterHits.append(ch.append(self.ClusterID.index[self.HitLinks[0][h]]))
+                      _TempClusterHits.append(ch.append(self.ClusterID[self.HitLinks[1][h]]))
                       print(_TempClusterHits)
                       exit()
 

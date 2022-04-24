@@ -244,7 +244,8 @@ class HitCluster:
           _Map_df=pd.DataFrame(_Map, columns = ['_l_HitID','_r_HitID'])
           _Tot_Hits_df=pd.merge(_Hits_df, _Map_df, how="inner", on=['_l_HitID'])
           _Tot_Hits_df.drop_duplicates(keep='first', inplace=True)
-
+          _Tot_Hits_df.drop(_Tot_Hits_df.index[_Tot_Hits_df['_l_HitID'] == _Tot_Hits_df['_r_HitID']], inplace = True)
+          print(_Tot_Hits_df)
           if GiveStats:
             _MCClusterHits=[]
             StatFakeValues=[]

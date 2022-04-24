@@ -242,9 +242,8 @@ class HitCluster:
           import pandas as pd
           _Hits_df=pd.DataFrame(self.ClusterHits, columns = ['_l_HitID','x','y','z','tx','ty'])
           _Map_df=pd.DataFrame(_Map, columns = ['_l_HitID','_r_HitID'])
-          print(_Hits_df)
-          print(_Map_df)
           _Tot_Hits_df=pd.merge(_Hits_df, _Map_df, how="inner", on=['_l_HitID'])
+          _Tot_Hits_df.drop_duplicates(keep='first', inplace=True)
           print(_Tot_Hits_df)
           exit()
 

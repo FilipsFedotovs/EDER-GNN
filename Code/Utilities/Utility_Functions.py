@@ -233,7 +233,7 @@ class HitCluster:
 
 
            self.Stats=[StatLabels,StatFakeValues,StatTruthValues]
-      def LinkHits(self,hits,GiveStats,MCHits):
+      def LinkHits(self,hits,GiveStats,MCHits,MaxHits):
           self.HitLinks=hits
           _Map=[]
           for h in range(len(self.HitLinks[0])):
@@ -249,9 +249,7 @@ class HitCluster:
           _Map_df=pd.DataFrame(_Map, columns = ['_l_HitID','_r_HitID','link_strength'])
           _Tot_Hits_df=pd.merge(_Hits_df, _Map_df, how="inner", on=['_l_HitID'])
           _Tot_Hits_df.drop_duplicates(keep='first', inplace=True)
-          _Tot_Hits_df.drop(_Tot_Hits_df.index[_Tot_Hits_df['_l_HitID'] == _Tot_Hits_df['_r_HitID']], inplace = True)
-          print(_Tot_Hits_df)
-          exit()
+          #_Tot_Hits_df.drop(_Tot_Hits_df.index[_Tot_Hits_df['_l_HitID'] == _Tot_Hits_df['_r_HitID']], inplace = True)
           if GiveStats:
             _MCClusterHits=[]
             StatFakeValues=[]
@@ -267,13 +265,15 @@ class HitCluster:
             _l_Hits=_Tot_Hits_df.rename(columns={"x": "l_x", "y": "l_y", "z": "l_z", "tx": "l_tx","ty": "l_ty","_r_HitID": "_link_HitID" })
             #Join hits + MC truth
             _l_Tot_Hits=pd.merge(_l_MCHits, _l_Hits, how="left", on=['_l_HitID'])
-
+            print(_l_Tot_Hits)
+            exit()
             #Preparing Raw and MC combined data 2
             _r_MCHits=pd.DataFrame(_MCClusterHits, columns = ['_r_HitID','r_MC_ID'])
             _r_Hits=_Tot_Hits_df[['_l_HitID', 'x', 'y', 'z', 'tx', 'ty']].rename(columns={"x": "r_x", "y": "r_y", "z": "r_z", "tx": "r_tx","ty": "r_ty","_l_HitID": "_r_HitID" })
             #Join hits + MC truth
             _r_Tot_Hits=pd.merge(_r_MCHits, _r_Hits, how="right", on=['_r_HitID'])
             #Combining data 1 and 2
+            No_Cycles=math.ceil(len(_l_Tot_Hits))
             _Tot_Hits=pd.merge(_l_Tot_Hits, _r_Tot_Hits, how="inner", left_on=["_link_HitID"], right_on=["_r_HitID"])
             print(_Tot_Hits)
           # exit()

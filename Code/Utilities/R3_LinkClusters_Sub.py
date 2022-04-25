@@ -88,9 +88,8 @@ class Net(torch.nn.Module):
                          for i in range(len(output_matrix[0])):
                             element=prob_adj[output_matrix[0][i]][output_matrix[1][i]].item()
                             strength_matrix.append(element)
-                         print(strength_matrix)
-                         exit()
-                         return (prob_adj > 0).nonzero(as_tuple=False).t() # get predicted edge_list
+                         output_matrix.append(strength_matrix)
+                         return output_matrix # get predicted edge_list
 data=RawClusters[0].ClusterGraph
 
 model = Net(5).to(device)

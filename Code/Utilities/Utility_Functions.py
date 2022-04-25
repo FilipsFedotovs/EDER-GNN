@@ -234,11 +234,11 @@ class HitCluster:
 
            self.Stats=[StatLabels,StatFakeValues,StatTruthValues]
       def LinkHits(self,hits,GiveStats,MCHits):
-          self.HitLinks=hits.tolist()
+          self.HitLinks=hits
           _Map=[]
           for h in range(len(self.HitLinks[0])):
-              _Map.append([self.ClusterHitIDs[self.HitLinks[0][h]],self.ClusterHitIDs[self.HitLinks[1][h]]])
-              _Map.append([self.ClusterHitIDs[self.HitLinks[1][h]],self.ClusterHitIDs[self.HitLinks[0][h]]])
+              _Map.append([self.ClusterHitIDs[self.HitLinks[0][h]],self.ClusterHitIDs[self.HitLinks[1][h]],self.ClusterHitIDs[self.HitLinks[2][h]]])
+              _Map.append([self.ClusterHitIDs[self.HitLinks[1][h]],self.ClusterHitIDs[self.HitLinks[0][h]],self.ClusterHitIDs[self.HitLinks[2][h]]])
           import pandas as pd
           _Hits_df=pd.DataFrame(self.ClusterHits, columns = ['_l_HitID','x','y','z','tx','ty'])
           _Hits_df["x"] = pd.to_numeric(_Hits_df["x"],downcast='float')
@@ -246,11 +246,12 @@ class HitCluster:
           _Hits_df["z"] = pd.to_numeric(_Hits_df["z"],downcast='float')
           _Hits_df["tx"] = pd.to_numeric(_Hits_df["tx"],downcast='float')
           _Hits_df["ty"] = pd.to_numeric(_Hits_df["ty"],downcast='float')
-          _Map_df=pd.DataFrame(_Map, columns = ['_l_HitID','_r_HitID'])
+          _Map_df=pd.DataFrame(_Map, columns = ['_l_HitID','_r_HitID','link_strength'])
           _Tot_Hits_df=pd.merge(_Hits_df, _Map_df, how="inner", on=['_l_HitID'])
           _Tot_Hits_df.drop_duplicates(keep='first', inplace=True)
           _Tot_Hits_df.drop(_Tot_Hits_df.index[_Tot_Hits_df['_l_HitID'] == _Tot_Hits_df['_r_HitID']], inplace = True)
           print(_Tot_Hits_df)
+          exit()
           if GiveStats:
             _MCClusterHits=[]
             StatFakeValues=[]

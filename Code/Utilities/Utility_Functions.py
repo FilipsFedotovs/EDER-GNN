@@ -280,6 +280,7 @@ class HitCluster:
             #Combining data 1 and 2
             No_Cycles=math.ceil(len(_l_Tot_Hits)/MaxHits)
             for i in range(0,No_Cycles):
+                    print('Merging data sets, cycle:',i)
                     _Temp_l_df=_l_Tot_Hits.iloc[i*MaxHits:(i+1)*MaxHits]
                     _Tot_Hits=pd.merge(_Temp_l_df, _r_Tot_Hits, how="inner", left_on=["_link_HitID"], right_on=["_r_HitID"])
                     _Tot_Hits.l_MC_ID= _Tot_Hits.l_MC_ID.fillna(_Tot_Hits._l_HitID)

@@ -272,11 +272,13 @@ class HitCluster:
             #Join hits + MC truth
             _r_Tot_Hits=pd.merge(_r_MCHits, _r_Hits, how="right", on=['_r_HitID'])
             print(_r_Tot_Hits)
-            exit()
             #Combining data 1 and 2
-            No_Cycles=math.ceil(len(_l_Tot_Hits))
-            _Tot_Hits=pd.merge(_l_Tot_Hits, _r_Tot_Hits, how="inner", left_on=["_link_HitID"], right_on=["_r_HitID"])
-            print(_Tot_Hits)
+            No_Cycles=math.ceil(len(_l_Tot_Hits)/MaxHits)
+            for i in range(0,No_Cycles):
+                _Temp_l_df=_l_Tot_Hits.iloc[i*MaxHits:(i+1)*MaxHits]
+                _Tot_Hits=pd.merge(_Temp_l_df, _r_Tot_Hits, how="inner", left_on=["_link_HitID"], right_on=["_r_HitID"])
+                print(_Tot_Hits)
+                exit()
           # exit()
 
       @staticmethod

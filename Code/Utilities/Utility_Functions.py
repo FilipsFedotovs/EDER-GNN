@@ -278,7 +278,6 @@ class HitCluster:
             _r_Hits=_Tot_Hits_df[['_l_HitID', 'x', 'y', 'z', 'tx', 'ty']].rename(columns={"x": "r_x", "y": "r_y", "z": "r_z", "tx": "r_tx","ty": "r_ty","_l_HitID": "_r_HitID" })
             #Join hits + MC truth
             _r_Tot_Hits=pd.merge(_r_MCHits, _r_Hits, how="right", on=['_r_HitID'])
-            _r_Tot_Hits=_r_Tot_Hits.loc[_r_Tot_Hits['_r_HitID'] == '5532157']
             print(_r_Tot_Hits)
             #Combining data 1 and 2
             No_Cycles=math.ceil(len(_l_Tot_Hits)/MaxHits)

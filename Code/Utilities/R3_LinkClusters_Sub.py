@@ -85,7 +85,7 @@ class Net(torch.nn.Module):
                          prob_adj = z @ z.t() # get adj NxN
                          output_matrix=(prob_adj > 0).nonzero(as_tuple=False).t().tolist()
                          strength_matrix=[]
-                         for i in range(output_matrix[0]):
+                         for i in range(len(output_matrix[0])):
                             element=prob_adj[output_matrix[0][i]][output_matrix[1][i]].item()
                             strength_matrix.append(element)
                          print(strength_matrix)

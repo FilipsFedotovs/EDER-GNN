@@ -83,7 +83,12 @@ class Net(torch.nn.Module):
 
                     def decode_all(self, z):
                          prob_adj = z @ z.t() # get adj NxN
-                         print(prob_adj[0][0].item())
+                         output_matrix=(prob_adj > 0).nonzero(as_tuple=False).t().tolist()
+                         strength_matrix=[]
+                         for i in range(output_matrix[0]):
+                            element=prob_adj[output_matrix[0][i]][output_matrix[1][i]].item()
+                            strength_matrix.append(element)
+                         print(strength_matrix)
                          exit()
                          return (prob_adj > 0).nonzero(as_tuple=False).t() # get predicted edge_list
 data=RawClusters[0].ClusterGraph

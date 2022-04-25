@@ -237,8 +237,8 @@ class HitCluster:
           self.HitLinks=hits
           _Map=[]
           for h in range(len(self.HitLinks[0])):
-              _Map.append([self.ClusterHitIDs[self.HitLinks[0][h]],self.ClusterHitIDs[self.HitLinks[1][h]],self.ClusterHitIDs[self.HitLinks[2][h]]])
-              _Map.append([self.ClusterHitIDs[self.HitLinks[1][h]],self.ClusterHitIDs[self.HitLinks[0][h]],self.ClusterHitIDs[self.HitLinks[2][h]]])
+              _Map.append([self.ClusterHitIDs[self.HitLinks[0][h]],self.ClusterHitIDs[self.HitLinks[1][h]],self.HitLinks[2][h]])
+              _Map.append([self.ClusterHitIDs[self.HitLinks[1][h]],self.ClusterHitIDs[self.HitLinks[0][h]],self.HitLinks[2][h]])
           import pandas as pd
           _Hits_df=pd.DataFrame(self.ClusterHits, columns = ['_l_HitID','x','y','z','tx','ty'])
           _Hits_df["x"] = pd.to_numeric(_Hits_df["x"],downcast='float')

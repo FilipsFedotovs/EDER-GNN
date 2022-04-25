@@ -231,7 +231,7 @@ class HitCluster:
 
 
            self.Stats=[StatLabels,StatFakeValues,StatTruthValues]
-      def LinkHits(self,hits,GiveStats,MCHits,MaxHits):
+      def LinkHits(self,hits,GiveStats,MCHits,MaxHits,cut_dt,cut_dr):
           self.HitLinks=hits
           _Map=[]
           for h in range(len(self.HitLinks[0])):

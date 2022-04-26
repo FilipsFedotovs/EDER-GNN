@@ -320,7 +320,7 @@ class HitCluster:
             StatFakeValues_5.append(len(_Tot_Hits.axes[0])-len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
             StatTruthValues_5.append(len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
             _Tot_Hits=_Tot_Hits.sort_values(by=['_r_HitID','l_z','_l_HitID','link_strength'], ascending=False)
-            _Tot_Hits.drop_duplicates(subset=['_r_HitID','l_z','_l_HitID'],keep='first', inplace=True)
+            _Tot_Hits.drop_duplicates(subset=['_r_HitID','l_z'],keep='first', inplace=True)
             StatFakeValues_6.append(len(_Tot_Hits.axes[0])-len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
             StatTruthValues_6.append(len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
             print(StatFakeValues_1)

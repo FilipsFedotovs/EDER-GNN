@@ -313,9 +313,9 @@ class HitCluster:
             print(StatFakeValues)
             print(StatTruthValues)
 
-
-            _Tot_Hits=_Tot_Hits[['_l_HitID','l_x','l_y','l_z','l_tx','l_ty','r_z','_r_HitID']].rename(columns={"l_x": "x", "l_y": "y", "l_z": "z", "l_tx": "tx","l_ty": "ty" })
             print(_Tot_Hits)
+            z_ind=_Tot_Hits.drop_duplicates(subset=['r_z'],keep='first').values.tolist()
+            print(z_ind)
             exit()
 
 

@@ -333,6 +333,8 @@ class HitCluster:
             print(StatTruthValues_4)
             print(StatFakeValues_5)
             print(StatTruthValues_5)
+            print(StatFakeValues_6)
+            print(StatTruthValues_6)
             exit()
 
 

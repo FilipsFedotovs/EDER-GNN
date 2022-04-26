@@ -322,7 +322,8 @@ class HitCluster:
                 temp_s_hits['Segment_ID']=temp_s_hits['_r_HitID']
                 print(temp_s_hits)
                 for zz in range(z,len(z_ind)):
-                    temp_m_hits=pd.merge(temp_s_hits[['_l_HitID','Segment_ID']].rename(columns={"_l_HitID": "_r_HitID" }), _Tot_Hits, how="inner", on=['_r_HitID'])
+                    temp_m_hits=pd.merge(temp_s_hits[['_l_HitID','Segment_ID']].rename(columns={"_l_HitID": "_r_HitID" }), _Tot_Hits, how="right", on=['_r_HitID'])
+                    #frames = [temp_s_hits, , df3]
                     print(temp_m_hits)
                     exit()
             exit()

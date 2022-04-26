@@ -316,13 +316,15 @@ class HitCluster:
             print(_Tot_Hits)
             z_ind=_Tot_Hits.sort_values(by=['r_z'], ascending=True)[['r_z']].drop_duplicates(subset=['r_z'],keep='first').values.tolist()
             print(z_ind)
-            for z in z_ind:
-                temp_s_hits=_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['r_z'] != z[0]])
-                _Tot_Hits=_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['r_z'] != z[0]])
+            for z in range(0,len(z_ind)):
+                temp_s_hits=_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['r_z'] != z_ind[z][0]])
+                _Tot_Hits=_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['r_z'] != z_ind[z][0]])
                 temp_s_hits['Segment_ID']=temp_s_hits['_r_HitID']
                 print(temp_s_hits)
-
-                exit()
+                for zz in range(z,len(z_ind)):
+                    temp_m_hits=pd.merge(temp_s_hits[['_l_HitID']], _Tot_Hits, how="inner", left_on=['_l_HitID'], right_on=['_r_HitID'])
+                    print(temp_m_hits)
+                    exit()
             exit()
 
 

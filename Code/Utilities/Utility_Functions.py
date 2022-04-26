@@ -282,7 +282,7 @@ class HitCluster:
             #No_Cycles=math.ceil(len(_l_Tot_Hits)/MaxHits)
             #for i in range(0,No_Cycles):
             #print('Merging data sets, cycle:',i)
-            _#Temp_l_df=_l_Tot_Hits.iloc[i*MaxHits:(i+1)*MaxHits]
+            #Temp_l_df=_l_Tot_Hits.iloc[i*MaxHits:(i+1)*MaxHits]
             _Tot_Hits=pd.merge(_l_Tot_Hits, _r_Tot_Hits, how="inner", left_on=["_link_HitID"], right_on=["_r_HitID"])
             _Tot_Hits.l_MC_ID= _Tot_Hits.l_MC_ID.fillna(_Tot_Hits._l_HitID)
             _Tot_Hits.r_MC_ID= _Tot_Hits.r_MC_ID.fillna(_Tot_Hits._r_HitID)

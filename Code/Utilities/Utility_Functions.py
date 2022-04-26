@@ -331,10 +331,10 @@ class HitCluster:
                     frames = [temp_s_hits, temp_m_hits]
 
                     temp_s_hits = pd.concat(frames)
-                    print(temp_m_hits)
-                    print(temp_s_hits)
-                    print(_Tot_Hits)
-                    exit()
+                print(temp_m_hits)
+                print(temp_s_hits)
+                print(_Tot_Hits)
+                exit()
             exit()
 
 

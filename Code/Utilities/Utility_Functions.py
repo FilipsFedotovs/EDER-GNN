@@ -318,7 +318,9 @@ class HitCluster:
             print(z_ind)
             for z in z_ind:
                 temp_s_hits=_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['r_z'] != z[0]])
+                temp_s_hits['Segment_ID']=str(self.ClusterID[0])+'-'+str(self.ClusterID[1])+'-'+str(self.ClusterID[2])+str(temp_s_hits['_r_HitID'])
                 print(temp_s_hits)
+
                 exit()
             exit()
 

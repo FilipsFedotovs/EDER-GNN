@@ -313,9 +313,7 @@ class HitCluster:
             print(StatFakeValues)
             print(StatTruthValues)
             _Tot_Hits=_Tot_Hits[['_l_HitID','_r_HitID','r_z']]
-            print(_Tot_Hits)
             z_ind=_Tot_Hits.sort_values(by=['r_z'], ascending=True)[['r_z']].drop_duplicates(subset=['r_z'],keep='first').values.tolist()
-            print(z_ind)
             for z in range(0,len(z_ind)):
                 temp_s_hits=_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['r_z'] != z_ind[z][0]])
                 _Tot_Hits=_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['r_z'] == z_ind[z][0]])
@@ -331,10 +329,15 @@ class HitCluster:
                     frames = [temp_s_hits, temp_m_hits]
 
                     temp_s_hits = pd.concat(frames)
-                print(temp_m_hits)
-                print(temp_s_hits)
-                print(_Tot_Hits)
-                exit()
+                if z==0:
+                    f_result=temp_s_hits[['_r_HitID','Segment_ID']]
+                else:
+                    im_result=temp_s_hits[['_r_HitID','Segment_ID']]
+                    f_frames=[f_result,im_result]
+                    f_result=pd.concat(f_frames)
+            f_result=f_result.rename(columns={"_l_HitID": "HitID" })
+            f_result=f_result.drop_duplicates(keep='first')
+            print(f_result)
             exit()
 
 

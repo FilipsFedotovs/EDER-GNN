@@ -270,6 +270,8 @@ class HitCluster:
             _l_MCHits=pd.DataFrame(_MCClusterHits, columns = ['_l_HitID','l_MC_ID'])
             _r_MCHits=pd.DataFrame(_MCClusterHits, columns = ['_r_HitID','l_MC_ID'])
             _c_MCHits=pd.merge(_l_MCHits, _r_MCHits, how="inner", on=['l_MC_ID'])
+
+            _c_MCHits.drop(_c_MCHits.index[_c_MCHits['_l_HitID'] == _c_MCHits['_r_HitID']], inplace = True)
             print(_c_MCHits)
             exit()
             _l_Hits=_Tot_Hits_df.rename(columns={"x": "l_x", "y": "l_y", "z": "l_z", "tx": "l_tx","ty": "l_ty","_r_HitID": "_link_HitID" })

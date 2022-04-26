@@ -268,6 +268,10 @@ class HitCluster:
                           _MCClusterHits.append([s[0],s[6]])
            #Preparing Raw and MC combined data 1
             _l_MCHits=pd.DataFrame(_MCClusterHits, columns = ['_l_HitID','l_MC_ID'])
+            _r_MCHits=pd.DataFrame(_MCClusterHits, columns = ['_r_HitID','l_MC_ID'])
+            _c_MCHits=pd.merge(_l_MCHits, _r_MCHits, how="inner", on=['l_MC_ID'])
+            print(_c_MCHits)
+            exit()
             _l_Hits=_Tot_Hits_df.rename(columns={"x": "l_x", "y": "l_y", "z": "l_z", "tx": "l_tx","ty": "l_ty","_r_HitID": "_link_HitID" })
             #Join hits + MC truth
             _l_Tot_Hits=pd.merge(_l_MCHits, _l_Hits, how="left", on=['_l_HitID'])

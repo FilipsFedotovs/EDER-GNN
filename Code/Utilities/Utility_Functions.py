@@ -281,11 +281,7 @@ class HitCluster:
             #Join hits + MC truth
             _r_Tot_Hits=pd.merge(_r_MCHits, _r_Hits, how="right", on=['_r_HitID'])
             _r_Tot_Hits.drop_duplicates(subset=['_r_HitID'],keep='first', inplace=True)
-            #Combining data 1 and 2
-            #No_Cycles=math.ceil(len(_l_Tot_Hits)/MaxHits)
-            #for i in range(0,No_Cycles):
-            #print('Merging data sets, cycle:',i)
-            #Temp_l_df=_l_Tot_Hits.iloc[i*MaxHits:(i+1)*MaxHits]
+
             _Tot_Hits=pd.merge(_l_Tot_Hits, _r_Tot_Hits, how="inner", left_on=["_link_HitID"], right_on=["_r_HitID"])
             _Tot_Hits.l_MC_ID= _Tot_Hits.l_MC_ID.fillna(_Tot_Hits._l_HitID)
             _Tot_Hits.r_MC_ID= _Tot_Hits.r_MC_ID.fillna(_Tot_Hits._r_HitID)
@@ -335,6 +331,9 @@ class HitCluster:
             print(StatTruthValues_5)
             print(StatFakeValues_6)
             print(StatTruthValues_6)
+
+            _Tot_Hits=_Tot_Hits[['_l_HitID','l_x','l_y','l_z','l_x','l_tx','l_ty','_r_HitID']].rename(columns={"l_x": "x", "l_y": "y", "l_z": "z", "l_tx": "tx","l_ty": "ty" })
+            print(_Tot_Hits)
             exit()
 
 

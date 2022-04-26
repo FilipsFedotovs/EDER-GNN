@@ -335,16 +335,14 @@ class HitCluster:
 
                     temp_s_hits = pd.concat(frames)
                     print(temp_s_hits)
-                    exit()
+
                 if z==0:
-                    f_result=temp_s_hits[['_r_HitID','Segment_ID']]
+                    f_result=temp_s_hits[['HitID','Segment_ID']]
                     print(f_result)
-                    exit()
                 else:
-                    im_result=temp_s_hits[['_r_HitID','Segment_ID']]
+                    im_result=temp_s_hits[['HitID','Segment_ID']]
                     f_frames=[f_result,im_result]
                     f_result=pd.concat(f_frames)
-            f_result=f_result.rename(columns={"_l_HitID": "HitID" })
             f_result=f_result.drop_duplicates(keep='first')
             print(f_result)
             exit()

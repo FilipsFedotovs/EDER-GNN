@@ -318,7 +318,7 @@ class HitCluster:
             print(z_ind)
             for z in range(0,len(z_ind)):
                 temp_s_hits=_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['r_z'] != z_ind[z][0]])
-                _Tot_Hits=_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['r_z'] != z_ind[z][0]])
+                _Tot_Hits=_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['r_z'] == z_ind[z][0]])
                 temp_s_hits['Segment_ID']=temp_s_hits['_r_HitID']
                 print(temp_s_hits)
                 for zz in range(z,len(z_ind)):

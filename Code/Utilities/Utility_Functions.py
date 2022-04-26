@@ -260,6 +260,8 @@ class HitCluster:
             StatTruthValues_4=[]
             StatFakeValues_5=[]
             StatTruthValues_5=[]
+            StatFakeValues_6=[]
+            StatTruthValues_6=[]
             StatLabels=['Initial # of combinations','Delete self-permutations','Enforce positive directionality','Cut on delta t', 'Cut on delta x']
             for s in MCHits:
                if s[1]>=self.ClusterID[0]*self.Step[0] and s[1]<((self.ClusterID[0]+1)*self.Step[0]):
@@ -318,7 +320,9 @@ class HitCluster:
             StatFakeValues_5.append(len(_Tot_Hits.axes[0])-len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
             StatTruthValues_5.append(len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
             _Tot_Hits=_Tot_Hits.sort_values(by=['_r_HitID','l_z','_l_HitID','link_strength'], ascending=False)
-            print(_Tot_Hits[['_r_HitID','l_z','r_z','_l_HitID','link_strength','l_MC_ID','r_MC_ID']].drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] == _Tot_Hits['r_MC_ID']]))
+            _Tot_Hits.drop_duplicates(subset=['_r_HitID','l_z','_l_HitID','link_strength'],keep='first', inplace=True)
+            StatFakeValues_6.append(len(_Tot_Hits.axes[0])-len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
+            StatTruthValues_6.append(len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
             print(StatFakeValues_1)
             print(StatTruthValues_1)
             print(StatFakeValues_2)

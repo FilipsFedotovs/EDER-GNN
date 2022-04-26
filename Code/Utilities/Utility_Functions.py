@@ -332,7 +332,7 @@ class HitCluster:
             print(StatFakeValues_6)
             print(StatTruthValues_6)
 
-            _Tot_Hits=_Tot_Hits[['_l_HitID','l_x','l_y','l_z','l_x','l_tx','l_ty','_r_HitID']].rename(columns={"l_x": "x", "l_y": "y", "l_z": "z", "l_tx": "tx","l_ty": "ty" })
+            _Tot_Hits=_Tot_Hits[['_l_HitID','l_x','l_y','l_z','l_tx','l_ty','_r_HitID']].rename(columns={"l_x": "x", "l_y": "y", "l_z": "z", "l_tx": "tx","l_ty": "ty" })
             print(_Tot_Hits)
             exit()
 

@@ -312,7 +312,7 @@ class HitCluster:
             StatTruthValues.append(len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
             print(StatFakeValues)
             print(StatTruthValues)
-
+            _Tot_Hits=_Tot_Hits[['_l_HitID','_r_HitID','r_z','l_MC_ID','r_MC_ID']]
             print(_Tot_Hits)
             z_ind=_Tot_Hits.sort_values(by=['r_z'], ascending=True)[['r_z']].drop_duplicates(subset=['r_z'],keep='first').values.tolist()
             print(z_ind)

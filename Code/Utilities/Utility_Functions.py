@@ -328,11 +328,14 @@ class HitCluster:
                     _Tot_Hits=_Tot_Hits[['_l_HitID','_r_HitID','r_z']]
                     print(_Tot_Hits)
                     temp_m_hits=temp_m_hits.dropna(subset=['Segment_ID'])
+                    temp_m_hits=temp_m_hits.rename(columns={"_r_HitID": "HitID","_l_HitID": "_r_HitID" })
                     print(temp_m_hits)
-                    
+
                     frames = [temp_s_hits, temp_m_hits]
 
                     temp_s_hits = pd.concat(frames)
+                    print(temp_m_hits)
+                    exit()
                 if z==0:
                     f_result=temp_s_hits[['_r_HitID','Segment_ID']]
                     print(f_result)

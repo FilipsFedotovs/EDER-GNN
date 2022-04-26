@@ -314,7 +314,7 @@ class HitCluster:
             print(StatTruthValues)
 
             print(_Tot_Hits)
-            z_ind=_Tot_Hits[['r_z']].drop_duplicates(subset=['r_z'],keep='first').values.tolist()
+            z_ind=_Tot_Hits.sort_values(by=['r_z'], ascending=True)[['r_z']].drop_duplicates(subset=['r_z'],keep='first').values.tolist()
             print(z_ind)
             exit()
 

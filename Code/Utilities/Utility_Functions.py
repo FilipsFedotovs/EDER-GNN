@@ -277,7 +277,7 @@ class HitCluster:
             _Tot_Hits.l_MC_ID= _Tot_Hits.l_MC_ID.fillna(_Tot_Hits._l_HitID)
             _Tot_Hits.r_MC_ID= _Tot_Hits.r_MC_ID.fillna(_Tot_Hits._r_HitID)
 
-            _Tot_Hits=_Tot_Hits[(_Tot_Hits['l_MC_ID']== '54703-0')]
+            #_Tot_Hits=_Tot_Hits[(_Tot_Hits['l_MC_ID']== '54703-0')]
 
             StatFakeValues.append(len(_Tot_Hits.axes[0])-len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
             StatTruthValues.append(len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
@@ -318,7 +318,7 @@ class HitCluster:
 
             print(StatFakeValues)
             print(StatTruthValues)
-            _Tot_Hits=_Tot_Hits[(_Tot_Hits['l_MC_ID']== '54703-0')]
+            #_Tot_Hits=_Tot_Hits[(_Tot_Hits['l_MC_ID']== '54703-0')]
             #print(_Tot_Hits.sort_values(by=['l_MC_ID','r_MC_ID'], ascending=False))
             #93735-3975
             #exit()

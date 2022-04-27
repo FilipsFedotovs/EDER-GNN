@@ -365,7 +365,7 @@ class HitCluster:
             f_result_sl=f_result_sl.rename(columns={"HitID": "Segment_Fit"})
             f_result=pd.merge(f_result, f_result_sl, how="inner", on=['Segment_ID'])
             f_result=f_result.sort_values(by=['HitID','Segment_Fit'], ascending=False)
-            f_result=f_result.drop_duplicates(keep='first')
+            f_result=f_result.drop_duplicates(subset='HitID',keep='first')
             print(f_result)
             f_result=f_result[['HitID','Segment_ID']]
             _l_fHits= f_result.rename(columns={"HitID": "_l_HitID"})

@@ -360,11 +360,15 @@ class HitCluster:
             l_r_frames=[r_f_result,l_f_result]
             f_result=pd.concat(l_r_frames)
             f_result=f_result.drop_duplicates(keep='first')
+            print(f_result.groupby('Segment_ID').size())
+            exit()
+            #f_result_sl=
             print(f_result.sort_values(by=['Segment_ID','HitID'], ascending=False))
             print(_Tot_Hits)
             _l_fHits= f_result.rename(columns={"HitID": "_l_HitID"})
             _l_Tot_fHits=pd.merge(_l_MCHits, _l_fHits, how="left", on=['_l_HitID'])
             _r_fHits= f_result.rename(columns={"HitID": "_r_HitID"})
+
             #Join hits + MC truth
             _r_Tot_fHits=pd.merge(_r_MCHits, _r_fHits, how="right", on=['_r_HitID'])
             _r_Tot_fHits.drop_duplicates(subset=['_r_HitID'],keep='first', inplace=True)

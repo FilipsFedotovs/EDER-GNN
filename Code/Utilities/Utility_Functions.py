@@ -382,7 +382,7 @@ class HitCluster:
             _Tot_fHits.drop(_Tot_fHits.index[_Tot_fHits['_l_HitID'] == _Tot_fHits['_r_HitID']], inplace = True)
             _Tot_fHits["Pair_ID"]= ['-'.join(sorted(tup)) for tup in zip(_Tot_fHits['_l_HitID'], _Tot_fHits['_r_HitID'])]
             _Tot_fHits.drop_duplicates(subset="Pair_ID",keep='first',inplace=True)
-            print(_Tot_Hits[(_Tot_Hits['l_MC_ID']!= _Tot_fHits['r_MC_ID'])])
+            print(_Tot_fHits[(_Tot_fHits['l_MC_ID']!= _Tot_fHits['r_MC_ID'])])
             exit()
             StatFakeValues.append(len(_Tot_fHits.axes[0])-len(_Tot_fHits.drop(_Tot_fHits.index[_Tot_fHits['l_MC_ID'] != _Tot_fHits['r_MC_ID']]).axes[0]))
             StatTruthValues.append(len(_Tot_fHits.drop(_Tot_fHits.index[_Tot_fHits['l_MC_ID'] != _Tot_fHits['r_MC_ID']]).axes[0]))

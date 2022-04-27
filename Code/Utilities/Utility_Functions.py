@@ -349,6 +349,11 @@ class HitCluster:
                     im_result=temp_s_hits[['HitID','Segment_ID']]
                     f_frames=[f_result,im_result]
                     f_result=pd.concat(f_frames)
+            l_f_result=f_result[['HitID','Segment_ID']]
+            r_f_result=f_result[['_r_HitID','Segment_ID']]
+            r_f_result= r_f_result.rename(columns={'_r_HitID': "HitID"})
+            l_r_frames=[r_f_result,l_f_result]
+            f_result=pd.concat(l_r_frames)
             f_result=f_result.drop_duplicates(keep='first')
             print(f_result.sort_values(by=['Segment_ID','HitID'], ascending=False))
             print(_Tot_Hits)

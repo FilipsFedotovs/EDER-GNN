@@ -360,7 +360,7 @@ class HitCluster:
             l_r_frames=[r_f_result,l_f_result]
             f_result=pd.concat(l_r_frames)
             f_result=f_result.drop_duplicates(keep='first')
-            print(f_result.groupby('Segment_ID').size())
+            print(f_result.groupby(by=['Segment_ID'])['Hit_ID'].count().reset_index())
             exit()
             #f_result_sl=
             print(f_result.sort_values(by=['Segment_ID','HitID'], ascending=False))

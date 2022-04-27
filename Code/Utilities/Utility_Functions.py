@@ -354,6 +354,9 @@ class HitCluster:
                     im_result=temp_s_hits[['HitID','Segment_ID',"_r_HitID"]]
                     f_frames=[f_result,im_result]
                     f_result=pd.concat(f_frames)
+            f_result=f_result[(f_result['Segment_ID']== '6571126')]
+            print( f_result)
+            exit()
             l_f_result=f_result[['HitID','Segment_ID']]
             r_f_result=f_result[['_r_HitID','Segment_ID']]
             r_f_result= r_f_result.rename(columns={'_r_HitID': "HitID"})

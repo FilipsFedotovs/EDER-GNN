@@ -314,10 +314,11 @@ class HitCluster:
             print(StatFakeValues)
             print(StatTruthValues)
             _Tot_Hits=_Tot_Hits[(_Tot_Hits['l_MC_ID']== '54703-0')]
-            print(_Tot_Hits.sort_values(by=['l_MC_ID','r_MC_ID'], ascending=False))
+            #print(_Tot_Hits.sort_values(by=['l_MC_ID','r_MC_ID'], ascending=False))
             #93735-3975
-            exit()
+            #exit()
             _Tot_Hits=_Tot_Hits[['_l_HitID','_r_HitID','r_z']]
+            print(_Tot_Hits)
             z_ind=_Tot_Hits.sort_values(by=['r_z'], ascending=True)[['r_z']].drop_duplicates(subset=['r_z'],keep='first').values.tolist()
             for z in range(0,len(z_ind)):
                 temp_s_hits=_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['r_z'] != z_ind[z][0]])

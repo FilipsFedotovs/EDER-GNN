@@ -277,6 +277,8 @@ class HitCluster:
             _Tot_Hits.l_MC_ID= _Tot_Hits.l_MC_ID.fillna(_Tot_Hits._l_HitID)
             _Tot_Hits.r_MC_ID= _Tot_Hits.r_MC_ID.fillna(_Tot_Hits._r_HitID)
 
+            _Tot_Hits=_Tot_Hits[(_Tot_Hits['l_MC_ID']== '54703-0')]
+
             StatFakeValues.append(len(_Tot_Hits.axes[0])-len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
             StatTruthValues.append(len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
             _Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['_l_HitID'] == _Tot_Hits['_r_HitID']], inplace = True)
@@ -306,8 +308,11 @@ class HitCluster:
 
             StatFakeValues.append(len(_Tot_Hits.axes[0])-len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
             StatTruthValues.append(len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
+            print(_Tot_Hits)
             _Tot_Hits=_Tot_Hits.sort_values(by=['_r_HitID','l_z','_l_HitID','link_strength'], ascending=False)
             _Tot_Hits.drop_duplicates(subset=['_r_HitID','l_z'],keep='first', inplace=True)
+            print(_Tot_Hits)
+            exit()
             StatFakeValues.append(len(_Tot_Hits.axes[0])-len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
             StatTruthValues.append(len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
 
@@ -364,7 +369,6 @@ class HitCluster:
             _r_Tot_fHits=pd.merge(_r_MCHits, _r_fHits, how="right", on=['_r_HitID'])
             _r_Tot_fHits.drop_duplicates(subset=['_r_HitID'],keep='first', inplace=True)
             _l_Tot_fHits.drop_duplicates(subset=['_l_HitID'],keep='first', inplace=True)
-
             _Tot_fHits=pd.merge(_l_Tot_fHits, _r_Tot_fHits, how="inner",on=["Segment_ID"])
             _Tot_fHits.l_MC_ID= _Tot_fHits.l_MC_ID.fillna(_Tot_fHits._l_HitID)
             _Tot_fHits.r_MC_ID= _Tot_fHits.r_MC_ID.fillna(_Tot_fHits._r_HitID)

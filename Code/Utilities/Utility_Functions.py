@@ -313,6 +313,7 @@ class HitCluster:
 
             print(StatFakeValues)
             print(StatTruthValues)
+            _Tot_Hits=_Tot_Hits[(_Tot_Hits['l_MC_ID']== '9796888') & (_Tot_Hits['r_MC_ID'] == '9796888') ]
             print(_Tot_Hits.sort_values(by=['l_MC_ID','r_MC_ID'], ascending=False))
             exit()
             _Tot_Hits=_Tot_Hits[['_l_HitID','_r_HitID','r_z']]

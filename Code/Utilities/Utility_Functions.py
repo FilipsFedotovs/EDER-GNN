@@ -310,6 +310,7 @@ class HitCluster:
             _Tot_Hits.drop_duplicates(subset=['_r_HitID','l_z'],keep='first', inplace=True)
             StatFakeValues.append(len(_Tot_Hits.axes[0])-len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
             StatTruthValues.append(len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
+
             print(StatFakeValues)
             print(StatTruthValues)
             _Tot_Hits=_Tot_Hits[['_l_HitID','_r_HitID','r_z']]
@@ -345,6 +346,7 @@ class HitCluster:
                     f_result=pd.concat(f_frames)
             f_result=f_result.drop_duplicates(keep='first')
             print(f_result.sort_values(by=['Segment_ID','HitID'], ascending=False))
+            print(_Tot_Hits)
             _l_fHits= f_result.rename(columns={"HitID": "_l_HitID"})
             _l_Tot_fHits=pd.merge(_l_MCHits, _l_fHits, how="left", on=['_l_HitID'])
             _r_fHits= f_result.rename(columns={"HitID": "_r_HitID"})

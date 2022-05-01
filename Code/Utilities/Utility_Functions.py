@@ -358,64 +358,49 @@ class HitCluster:
                     temp_s_hits=temp_s_hits.drop(["_r_HitID",'r_z'], axis=1)
                     print(temp_s_hits)
                     input("Press Enter ed to continue...")
-                    _Tot_Hits=temp_m_hits[temp_m_hits['Segment_ID'].isnull()]
-                    _Tot_Hits=_Tot_Hits[['_l_HitID','_r_HitID','r_z']]
-                    print(_Tot_Hits)
-                    temp_m_hits=temp_m_hits.dropna(subset=['Segment_ID'])
-                    temp_m_hits=temp_m_hits.rename(columns={"_r_HitID": "HitID","_l_HitID": "_r_HitID" })
-                    print(temp_m_hits)
 
-                    frames = [temp_s_hits, temp_m_hits]
-
-                    temp_s_hits = pd.concat(frames)
-                    print(temp_s_hits)
-
-                if z==0:
-                    f_result=temp_s_hits[['HitID','Segment_ID',"_r_HitID"]]
-                    print(f_result)
-                else:
-                    im_result=temp_s_hits[['HitID','Segment_ID',"_r_HitID"]]
-                    f_frames=[f_result,im_result]
-                    f_result=pd.concat(f_frames)
-            f_result=f_result[(f_result['Segment_ID']== '6571126')]
-            print( f_result)
+            print(temp_s_hits)
+            print(_Tot_Hits)
             exit()
-            l_f_result=f_result[['HitID','Segment_ID']]
-            r_f_result=f_result[['_r_HitID','Segment_ID']]
-            r_f_result= r_f_result.rename(columns={'_r_HitID': "HitID"})
-            l_r_frames=[r_f_result,l_f_result]
-            f_result=pd.concat(l_r_frames)
-            f_result=f_result.drop_duplicates(keep='first')
-
-            f_result_sl=f_result.groupby(by=['Segment_ID'])['HitID'].count().reset_index()
-            f_result_sl=f_result_sl.rename(columns={"HitID": "Segment_Fit"})
-            f_result=pd.merge(f_result, f_result_sl, how="inner", on=['Segment_ID'])
-            f_result=f_result.sort_values(by=['HitID','Segment_Fit'], ascending=False)
-            f_result=f_result.drop_duplicates(subset='HitID',keep='first')
-            print(f_result)
-            f_result=f_result[['HitID','Segment_ID']]
-            _l_fHits= f_result.rename(columns={"HitID": "_l_HitID"})
-            _l_Tot_fHits=pd.merge(_l_MCHits, _l_fHits, how="left", on=['_l_HitID'])
-            _r_fHits= f_result.rename(columns={"HitID": "_r_HitID"})
-
-            #Join hits + MC truth
-            _r_Tot_fHits=pd.merge(_r_MCHits, _r_fHits, how="right", on=['_r_HitID'])
-            _r_Tot_fHits.drop_duplicates(subset=['_r_HitID'],keep='first', inplace=True)
-            _l_Tot_fHits.drop_duplicates(subset=['_l_HitID'],keep='first', inplace=True)
-            _Tot_fHits=pd.merge(_l_Tot_fHits, _r_Tot_fHits, how="inner",on=["Segment_ID"])
-            _Tot_fHits.l_MC_ID= _Tot_fHits.l_MC_ID.fillna(_Tot_fHits._l_HitID)
-            _Tot_fHits.r_MC_ID= _Tot_fHits.r_MC_ID.fillna(_Tot_fHits._r_HitID)
-            _Tot_fHits.drop(_Tot_fHits.index[_Tot_fHits['_l_HitID'] == _Tot_fHits['_r_HitID']], inplace = True)
-            _Tot_fHits["Pair_ID"]= ['-'.join(sorted(tup)) for tup in zip(_Tot_fHits['_l_HitID'], _Tot_fHits['_r_HitID'])]
-            _Tot_fHits.drop_duplicates(subset="Pair_ID",keep='first',inplace=True)
-            print(_Tot_fHits[(_Tot_fHits['l_MC_ID']!= _Tot_fHits['r_MC_ID'])])
-            exit()
-            StatFakeValues.append(len(_Tot_fHits.axes[0])-len(_Tot_fHits.drop(_Tot_fHits.index[_Tot_fHits['l_MC_ID'] != _Tot_fHits['r_MC_ID']]).axes[0]))
-            StatTruthValues.append(len(_Tot_fHits.drop(_Tot_fHits.index[_Tot_fHits['l_MC_ID'] != _Tot_fHits['r_MC_ID']]).axes[0]))
-            print(StatFakeValues)
-            print(StatTruthValues)
-            exit()
+            # f_result=f_result[(f_result['Segment_ID']== '6571126')]
+            # print( f_result)
             # exit()
+            # l_f_result=f_result[['HitID','Segment_ID']]
+            # r_f_result=f_result[['_r_HitID','Segment_ID']]
+            # r_f_result= r_f_result.rename(columns={'_r_HitID': "HitID"})
+            # l_r_frames=[r_f_result,l_f_result]
+            # f_result=pd.concat(l_r_frames)
+            # f_result=f_result.drop_duplicates(keep='first')
+            #
+            # f_result_sl=f_result.groupby(by=['Segment_ID'])['HitID'].count().reset_index()
+            # f_result_sl=f_result_sl.rename(columns={"HitID": "Segment_Fit"})
+            # f_result=pd.merge(f_result, f_result_sl, how="inner", on=['Segment_ID'])
+            # f_result=f_result.sort_values(by=['HitID','Segment_Fit'], ascending=False)
+            # f_result=f_result.drop_duplicates(subset='HitID',keep='first')
+            # print(f_result)
+            # f_result=f_result[['HitID','Segment_ID']]
+            # _l_fHits= f_result.rename(columns={"HitID": "_l_HitID"})
+            # _l_Tot_fHits=pd.merge(_l_MCHits, _l_fHits, how="left", on=['_l_HitID'])
+            # _r_fHits= f_result.rename(columns={"HitID": "_r_HitID"})
+            #
+            # #Join hits + MC truth
+            # _r_Tot_fHits=pd.merge(_r_MCHits, _r_fHits, how="right", on=['_r_HitID'])
+            # _r_Tot_fHits.drop_duplicates(subset=['_r_HitID'],keep='first', inplace=True)
+            # _l_Tot_fHits.drop_duplicates(subset=['_l_HitID'],keep='first', inplace=True)
+            # _Tot_fHits=pd.merge(_l_Tot_fHits, _r_Tot_fHits, how="inner",on=["Segment_ID"])
+            # _Tot_fHits.l_MC_ID= _Tot_fHits.l_MC_ID.fillna(_Tot_fHits._l_HitID)
+            # _Tot_fHits.r_MC_ID= _Tot_fHits.r_MC_ID.fillna(_Tot_fHits._r_HitID)
+            # _Tot_fHits.drop(_Tot_fHits.index[_Tot_fHits['_l_HitID'] == _Tot_fHits['_r_HitID']], inplace = True)
+            # _Tot_fHits["Pair_ID"]= ['-'.join(sorted(tup)) for tup in zip(_Tot_fHits['_l_HitID'], _Tot_fHits['_r_HitID'])]
+            # _Tot_fHits.drop_duplicates(subset="Pair_ID",keep='first',inplace=True)
+            # print(_Tot_fHits[(_Tot_fHits['l_MC_ID']!= _Tot_fHits['r_MC_ID'])])
+            # exit()
+            # StatFakeValues.append(len(_Tot_fHits.axes[0])-len(_Tot_fHits.drop(_Tot_fHits.index[_Tot_fHits['l_MC_ID'] != _Tot_fHits['r_MC_ID']]).axes[0]))
+            # StatTruthValues.append(len(_Tot_fHits.drop(_Tot_fHits.index[_Tot_fHits['l_MC_ID'] != _Tot_fHits['r_MC_ID']]).axes[0]))
+            # print(StatFakeValues)
+            # print(StatTruthValues)
+            # exit()
+            # # exit()
 
 
       @staticmethod

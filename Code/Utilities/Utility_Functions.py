@@ -353,6 +353,7 @@ class HitCluster:
 
                     temp_s_hits['Segment_'+str(zz)]=temp_s_hits['_r_HitID']
                     print(temp_s_hits)
+                    print(_Tot_Hits)
                     _Tot_Hits=pd.merge(_Tot_Hits, temp_s_hits['_r_HitID','Segment_'+str(zz)], how="left", on=['_r_HitID'])
                     print(_Tot_Hits)
                     exit()

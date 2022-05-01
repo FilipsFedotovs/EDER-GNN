@@ -377,10 +377,20 @@ class HitCluster:
                 print(_Tot_Hits)
                 temp_s_hits['join_key']='join_key'
                 _Tot_Hits['join_key']='join_key'
+                temp_s_hits['left_hit']=False
+                temp_s_hits['right_hit']=False
                 temp_s_hits=pd.merge(temp_s_hits, _Tot_Hits, how="left", on=['join_key'])
                 print(temp_s_hits)
                 columns=[col for col in temp_s_hits.columns if 'Segment' in col]
                 print(columns)
+                def Check_lOverlap(row,l_c,columns):
+                    for c in columns:
+                      if row[c]==row[l_c]:
+                         return True
+                    return False
+
+                temp_s_hits['left_hit'] = temp_s_hits.apply(Check_lOverlap("_r_HitID",columns),axis=1)
+                print(temp_s_hits)
             # f_result=f_result[(f_result['Segment_ID']== '6571126')]
             # print( f_result)
             # exit()

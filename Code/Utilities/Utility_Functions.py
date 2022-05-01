@@ -337,11 +337,13 @@ class HitCluster:
                 temp_s_hits['Segment_0']=temp_s_hits['_r_HitID']
                 temp_s_hits['Segment_ID']=temp_s_hits['_r_HitID']
                 #(temp_s_hits)
-                temp_s_hits['Fit']= temp_s_hits['link_strength']
+                temp_s_hits=temp_s_hits.rename(columns={"link_strength": "Fit"})
                 temp_s_hits['DoF']=2
-                temp_s_hits=temp_s_hits.rename(columns={"_r_HitID": "HitID","_l_HitID": "_r_HitID" })
+                temp_s_hits=temp_s_hits.drop(["_r_HitID",'r_z'], axis=1)
+                temp_s_hits=temp_s_hits.rename(columns={"_l_HitID": "_r_HitID" })
+                print(temp_s_hits)
 
-                #input("Press Enter to continue...")
+                input("Press Enter to continue...")
                 #temp_s_hits=temp_s_hits.loc[temp_s_hits['Segment_ID'] == '9796888']
 
                 for zz in range(z+1,len(z_ind)):

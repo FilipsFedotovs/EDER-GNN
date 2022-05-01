@@ -345,7 +345,7 @@ class HitCluster:
                 #temp_s_hits=temp_s_hits.loc[temp_s_hits['Segment_ID'] == '9796888']
 
                 for zz in range(z+1,len(z_ind)):
-                    temp_m_hits=_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['r_z'] != z_ind[z][0]])
+                    temp_m_hits=_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['r_z'] != z_ind[zz][0]])
                     print(temp_m_hits)
                     input("Press Enter to continue...")
                     temp_m_hits=pd.merge(temp_s_hits[['_r_HitID','Segment_ID']], _Tot_Hits, how="right", on=['_r_HitID'])

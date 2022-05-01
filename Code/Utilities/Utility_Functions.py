@@ -352,6 +352,9 @@ class HitCluster:
                     temp_s_hits=pd.merge(temp_s_hits, temp_m_hits, how="right", on=['_r_HitID'])
 
                     temp_s_hits['Segment_'+str(zz)]=temp_s_hits['_r_HitID']
+                    _Tot_Hits=pd.merge(_Tot_Hits, temp_s_hits['_r_HitID','Segment_'+str(zz)], how="left", on=['_r_HitID'])
+                    print(_Tot_Hits)
+                    exit()
                     temp_s_hits['Segment_ID']+=('-'+temp_s_hits['_r_HitID'])
                     temp_s_hits['DoF']+=1
                     temp_s_hits['Fit']+=temp_s_hits['link_strength']

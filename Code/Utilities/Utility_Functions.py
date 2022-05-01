@@ -383,13 +383,13 @@ class HitCluster:
                 print(temp_s_hits)
                 columns=[col for col in temp_s_hits.columns if 'Segment' in col]
                 print(columns)
-                def Check_lOverlap(row,l_c,columns):
+                def Check_lOverlap(row):
                     for c in columns:
-                      if row[c]==row[l_c]:
+                      if row[c]==row["_r_HitID"]:
                          return True
                     return False
 
-                temp_s_hits['left_hit'] = temp_s_hits.apply(Check_lOverlap("_r_HitID",columns),axis=1)
+                temp_s_hits['left_hit'] = temp_s_hits.apply(Check_lOverlap,axis=1)
                 print(temp_s_hits)
             # f_result=f_result[(f_result['Segment_ID']== '6571126')]
             # print( f_result)

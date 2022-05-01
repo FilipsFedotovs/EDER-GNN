@@ -359,10 +359,10 @@ class HitCluster:
                     temp_s_hits=temp_s_hits.rename(columns={"_l_HitID": "_r_HitID" })
                     print(temp_s_hits)
                     input("Press Enter ed to continue...")
+                print(temp_s_hits)
+                print(_Tot_Hits)
+                exit()
 
-            print(temp_s_hits)
-            print(_Tot_Hits)
-            exit()
             # f_result=f_result[(f_result['Segment_ID']== '6571126')]
             # print( f_result)
             # exit()

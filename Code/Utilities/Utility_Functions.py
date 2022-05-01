@@ -350,6 +350,12 @@ class HitCluster:
                     temp_m_hits=_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['r_z'] != z_ind[zz][0]])
 
                     temp_s_hits=pd.merge(temp_s_hits, temp_m_hits, how="right", on=['_r_HitID'])
+
+                    temp_s_hits['Segment_'+zz]=temp_s_hits['_r_HitID']
+                    temp_s_hits['Segment_ID']+=('-'+temp_s_hits['_r_HitID'])
+                    temp_s_hits['DoF']+=1
+                    temp_s_hits['Fit']+=temp_s_hits['link_strength']
+                    temp_s_hits=temp_s_hits.drop(["_r_HitID",'r_z'], axis=1)
                     print(temp_s_hits)
                     input("Press Enter ed to continue...")
                     _Tot_Hits=temp_m_hits[temp_m_hits['Segment_ID'].isnull()]

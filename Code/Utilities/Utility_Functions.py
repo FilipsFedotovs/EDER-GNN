@@ -334,22 +334,22 @@ class HitCluster:
             for z in range(0,len(z_ind)):
                 temp_s_hits=_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['r_z'] != z_ind[z][0]])
                 _Tot_Hits=_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['r_z'] == z_ind[z][0]])
-                temp_s_hits['Segment_1']=temp_s_hits['_r_HitID']
+                temp_s_hits['Segment_0']=temp_s_hits['_r_HitID']
                 temp_s_hits['Segment_ID']=temp_s_hits['_r_HitID']
-                print(temp_s_hits)
+                #(temp_s_hits)
                 temp_s_hits['Fit']= temp_s_hits['link_strength']
                 temp_s_hits['DoF']=2
                 temp_s_hits=temp_s_hits.rename(columns={"_r_HitID": "HitID","_l_HitID": "_r_HitID" })
 
-                input("Press Enter to continue...")
+                #input("Press Enter to continue...")
                 #temp_s_hits=temp_s_hits.loc[temp_s_hits['Segment_ID'] == '9796888']
 
                 for zz in range(z+1,len(z_ind)):
                     temp_m_hits=_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['r_z'] != z_ind[zz][0]])
-                    print(temp_m_hits)
-                    input("Press Enter to continue...")
-                    temp_m_hits=pd.merge(temp_s_hits[['_r_HitID','Segment_ID']], _Tot_Hits, how="right", on=['_r_HitID'])
 
+                    temp_s_hits=pd.merge(temp_s_hits[['_r_HitID','Segment_ID']], temp_m_hits, how="right", on=['_r_HitID'])
+                    print(temp_s_hits)
+                    input("Press Enter to continue...")
                     _Tot_Hits=temp_m_hits[temp_m_hits['Segment_ID'].isnull()]
                     _Tot_Hits=_Tot_Hits[['_l_HitID','_r_HitID','r_z']]
                     print(_Tot_Hits)

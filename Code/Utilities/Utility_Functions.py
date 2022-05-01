@@ -231,6 +231,11 @@ class HitCluster:
 
 
            self.Stats=[StatLabels,StatFakeValues,StatTruthValues]
+
+
+
+
+
       def LinkHits(self,hits,GiveStats,MCHits,MaxHits,cut_dt,cut_dr):
           self.HitLinks=hits
           _Map=[]
@@ -277,8 +282,8 @@ class HitCluster:
             _Tot_Hits.l_MC_ID= _Tot_Hits.l_MC_ID.fillna(_Tot_Hits._l_HitID)
             _Tot_Hits.r_MC_ID= _Tot_Hits.r_MC_ID.fillna(_Tot_Hits._r_HitID)
 
-            #_Tot_Hits=_Tot_Hits[(_Tot_Hits['l_MC_ID']== '54703-0')]
-
+            _Tot_Hits=_Tot_Hits[(_Tot_Hits['l_MC_ID']== '55281-1') | (_Tot_Hits['r_MC_ID']== '55281-1') |(_Tot_Hits['l_MC_ID']== '55281-0') | (_Tot_Hits['r_MC_ID']== '55281-0')]
+            print(_Tot_Hits)
             StatFakeValues.append(len(_Tot_Hits.axes[0])-len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
             StatTruthValues.append(len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
             _Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['_l_HitID'] == _Tot_Hits['_r_HitID']], inplace = True)

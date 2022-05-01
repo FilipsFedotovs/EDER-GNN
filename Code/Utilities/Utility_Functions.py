@@ -368,13 +368,17 @@ class HitCluster:
 
                     temp_s_hits=temp_s_hits.drop(["_r_HitID",'r_z','link_strength'], axis=1)
                     temp_s_hits=temp_s_hits.rename(columns={"_l_HitID": "_r_HitID" })
-
+                    if zz==len(z_ind)-1:
+                        print(temp_s_hits)
+                        temp_s_hits=temp_s_hits.drop(["_r_HitID"], axis=1)
                     print(temp_s_hits)
                     input("Press Enter ed to continue...")
                 print(temp_s_hits)
                 print(_Tot_Hits)
-                exit()
-
+                temp_s_hits['join_key']='join_key'
+                _Tot_Hits['join_key']='join_key'
+                temp_s_hits=pd.merge(temp_s_hits, _Tot_Hits, how="left", on=['join_key'])
+                print(temp_s_hits)
             # f_result=f_result[(f_result['Segment_ID']== '6571126')]
             # print( f_result)
             # exit()

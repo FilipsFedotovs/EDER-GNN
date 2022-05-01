@@ -313,13 +313,13 @@ class HitCluster:
 
             StatFakeValues.append(len(_Tot_Hits.axes[0])-len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
             StatTruthValues.append(len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
-            print(_Tot_Hits[['_r_HitID', 'r_z','_l_HitID','l_z','link_strength']])
-            _Tot_Hits=_Tot_Hits.sort_values(by=['_l_HitID','r_z','link_strength'], ascending=False)
-            print(_Tot_Hits[['_r_HitID', 'r_z','_l_HitID','l_z','link_strength']])
-            _Tot_Hits.drop_duplicates(subset=['_l_HitID','r_z'],keep='first', inplace=True)
-            print(_Tot_Hits[['_r_HitID', 'r_z','_l_HitID','l_z','link_strength']])
-            StatFakeValues.append(len(_Tot_Hits.axes[0])-len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
-            StatTruthValues.append(len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
+            # print(_Tot_Hits[['_r_HitID', 'r_z','_l_HitID','l_z','link_strength']])
+            # _Tot_Hits=_Tot_Hits.sort_values(by=['_l_HitID','r_z','link_strength'], ascending=False)
+            # print(_Tot_Hits[['_r_HitID', 'r_z','_l_HitID','l_z','link_strength']])
+            # _Tot_Hits.drop_duplicates(subset=['_l_HitID','r_z'],keep='first', inplace=True)
+            # print(_Tot_Hits[['_r_HitID', 'r_z','_l_HitID','l_z','link_strength']])
+            # StatFakeValues.append(len(_Tot_Hits.axes[0])-len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
+            # StatTruthValues.append(len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
 
             print(StatFakeValues)
             print(StatTruthValues)
@@ -327,14 +327,17 @@ class HitCluster:
             #print(_Tot_Hits.sort_values(by=['l_MC_ID','r_MC_ID'], ascending=False))
             #93735-3975
             #exit()
-            _Tot_Hits=_Tot_Hits[['_l_HitID','_r_HitID','r_z']]
+            _Tot_Hits=_Tot_Hits[['_l_HitID','_r_HitID','r_z','link_strength']]
             print(_Tot_Hits)
+            input("Press Enter to continue...")
             z_ind=_Tot_Hits.sort_values(by=['r_z'], ascending=True)[['r_z']].drop_duplicates(subset=['r_z'],keep='first').values.tolist()
             for z in range(0,len(z_ind)):
                 temp_s_hits=_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['r_z'] != z_ind[z][0]])
                 _Tot_Hits=_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['r_z'] == z_ind[z][0]])
                 temp_s_hits['Segment_ID']=temp_s_hits['_r_HitID']
                 temp_s_hits=temp_s_hits.rename(columns={"_r_HitID": "HitID","_l_HitID": "_r_HitID" })
+                print(_Tot_Hits)
+                input("Press Enter to continue...")
                 #temp_s_hits=temp_s_hits.loc[temp_s_hits['Segment_ID'] == '9796888']
 
                 for zz in range(z,len(z_ind)):

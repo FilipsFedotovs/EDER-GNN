@@ -336,7 +336,7 @@ class HitCluster:
                 _Tot_Hits=_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['r_z'] == z_ind[z][0]])
                 temp_s_hits['Segment_1']=temp_s_hits['_r_HitID']
                 temp_s_hits['Segment_ID']=temp_s_hits['_r_HitID']
-                temp_s_hits['Fit']='link_strength'
+                temp_s_hits['Fit']= temp_s_hits['link_strength']
                 temp_s_hits['DoF']=2
                 temp_s_hits=temp_s_hits.rename(columns={"_r_HitID": "HitID","_l_HitID": "_r_HitID" })
                 print(_Tot_Hits)

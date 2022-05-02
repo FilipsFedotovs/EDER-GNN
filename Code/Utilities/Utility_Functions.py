@@ -331,11 +331,10 @@ class HitCluster:
             Trigger=False
             print(_Tot_Hits)
             while(len(_Tot_Hits)>0):
-                _Tot_Hits_Pool=_Tot_Hits
+                    _Tot_Hits_Pool=_Tot_Hits
 
-                z_ind=_Tot_Hits_Pool.sort_values(by=['r_z'], ascending=True)[['r_z']].drop_duplicates(subset=['r_z'],keep='first').values.tolist()
-                for z in range(0,len(z_ind)):
-                    temp_s_hits=_Tot_Hits_Pool.drop(_Tot_Hits_Pool.index[_Tot_Hits_Pool['r_z'] != z_ind[z][0]])
+                    z_ind=_Tot_Hits_Pool.sort_values(by=['r_z'], ascending=True)[['r_z']].drop_duplicates(subset=['r_z'],keep='first').values.tolist()
+                    temp_s_hits=_Tot_Hits_Pool.drop(_Tot_Hits_Pool.index[_Tot_Hits_Pool['r_z'] != z_ind[0][0]])
                     #_Tot_Hits_Pool=_Tot_Hits_Pool.drop(_Tot_Hits_Pool.index[_Tot_Hits_Pool['r_z'] == z_ind[z][0]])
                     temp_s_hits['Segment_0']=temp_s_hits['_r_HitID']
                     temp_s_hits['Track_ID']=temp_s_hits['_r_HitID']
@@ -349,7 +348,7 @@ class HitCluster:
                     input("Press Enter to continue...")
                     #temp_s_hits=temp_s_hits.loc[temp_s_hits['Track_ID'] == '9796888']
 
-                    for zz in range(z+1,len(z_ind)):
+                    for zz in range(1,len(z_ind)):
                         temp_m_hits=_Tot_Hits_Pool.drop(_Tot_Hits_Pool.index[_Tot_Hits_Pool['r_z'] != z_ind[zz][0]])
 
                         temp_s_hits=pd.merge(temp_s_hits, temp_m_hits, how="right", on=['_r_HitID'])
@@ -432,6 +431,8 @@ class HitCluster:
                     _Tot_Hits=_Tot_Hits[['_l_HitID','_r_HitID','r_z','link_strength']]
                     print(_Tot_Hits)
                     print(f_result)
+                    if len(_Tot_Hits)==0:
+                        break
                     input("Press Enter to continue...")
                 #
                 #

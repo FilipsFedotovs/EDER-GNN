@@ -282,7 +282,7 @@ class HitCluster:
             _Tot_Hits.l_MC_ID= _Tot_Hits.l_MC_ID.fillna(_Tot_Hits._l_HitID)
             _Tot_Hits.r_MC_ID= _Tot_Hits.r_MC_ID.fillna(_Tot_Hits._r_HitID)
 
-            #_Tot_Hits=_Tot_Hits[(_Tot_Hits['l_MC_ID']== '46674-397') | (_Tot_Hits['r_MC_ID']== '46674-397') |(_Tot_Hits['l_MC_ID']== '46674-2132') | (_Tot_Hits['r_MC_ID']== '46674-2132')]
+            _Tot_Hits=_Tot_Hits[(_Tot_Hits['l_MC_ID']== '46674-397') | (_Tot_Hits['r_MC_ID']== '46674-397') |(_Tot_Hits['l_MC_ID']== '46674-2132') | (_Tot_Hits['r_MC_ID']== '46674-2132')]
             print(_Tot_Hits)
             StatFakeValues.append(len(_Tot_Hits.axes[0])-len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
             StatTruthValues.append(len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
@@ -344,7 +344,7 @@ class HitCluster:
                     temp_s_hits=temp_s_hits.drop(["_r_HitID",'r_z'], axis=1)
                     temp_s_hits=temp_s_hits.rename(columns={"_l_HitID": "_r_HitID" })
                     print(temp_s_hits)
-
+                    temp_s_hits['lls']=temp_s_hits['Fit']
                     input("Press Enter to continue...")
                     #temp_s_hits=temp_s_hits.loc[temp_s_hits['Track_ID'] == '9796888']
 
@@ -352,13 +352,13 @@ class HitCluster:
                         temp_m_hits=_Tot_Hits_Pool.drop(_Tot_Hits_Pool.index[_Tot_Hits_Pool['r_z'] != z_ind[zz][0]])
 
                         temp_s_hits=pd.merge(temp_s_hits, temp_m_hits, how="left", on=['_r_HitID'])
-
+                        temp_s_hits=temp_s_hits.rename(columns={"link_strength": "lls" })
                         temp_s_hits['Segment_'+str(zz)]=temp_s_hits['_r_HitID']
                         temp_s_hits._l_HitID= temp_s_hits._l_HitID.fillna(temp_s_hits._r_HitID)
-                        temp_s_hits.link_strength= temp_s_hits.link_strength.fillna(temp_s_hits.link_strength)
+                        temp_s_hits.link_strength= temp_s_hits.link_strength.fillna(temp_s_hits.lls)
                         print(temp_s_hits)
                         print(_Tot_Hits_Pool)
-
+                        exit()
                         _Tot_Hits_Pool=pd.merge(_Tot_Hits_Pool, temp_s_hits[['_r_HitID','_l_HitID','Segment_'+str(zz)]], how="left", on=['_r_HitID','_l_HitID'])
                         _Tot_Hits_Pool=_Tot_Hits_Pool[_Tot_Hits_Pool['Segment_'+str(zz)].isnull()]
                         _Tot_Hits_Pool=_Tot_Hits_Pool.drop(['Segment_'+str(zz)], axis=1)

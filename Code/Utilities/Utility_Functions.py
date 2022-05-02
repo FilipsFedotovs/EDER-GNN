@@ -395,7 +395,15 @@ class HitCluster:
                     return False
                 temp_s_hits['left_hit'] = temp_s_hits.apply(Check_lOverlap,axis=1)
                 temp_s_hits['right_hit'] = temp_s_hits.apply(Check_rOverlap,axis=1)
-                temp_s_hits['both_hit']=(temp_s_hits['left_hit'] | temp_s_hits['right_hit'])
+
+                def Check_bOverlap(row):
+
+                         if row['left_hit']==row['right_hit']==True:
+                             return row['link_strength']
+                         else:
+                             return 0.0
+
+                temp_s_hits['link_strength']=temp_s_hits.apply(Check_bOverlap,axis=1)
                 print(temp_s_hits)
 
             # f_result=f_result[(f_result['Segment_ID']== '6571126')]

@@ -384,7 +384,7 @@ class HitCluster:
                     _Tot_Hits_Pool['join_key']='join_key'
                     temp_s_hits['left_hit']=False
                     temp_s_hits['right_hit']=False
-                    temp_e_hits=pd.merge(temp_s_hits, _Tot_Hits_Pool, how="left", on=['join_key'])
+                    temp_e_hits=pd.merge(temp_s_hits, _Tot_Hits_Pool, how="inner", on=['join_key'])
                     print(temp_e_hits)
                     columns=[col for col in temp_e_hits.columns if 'Segment' in col]
                     print(columns)

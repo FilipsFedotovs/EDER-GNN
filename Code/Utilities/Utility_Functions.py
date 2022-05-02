@@ -404,7 +404,7 @@ class HitCluster:
                              return 0.0
 
                 temp_e_hits['link_strength']=temp_e_hits.apply(Check_bOverlap,axis=1)
-                temp_e_hits=temp_e_hits.groupby(['Track_ID','DOF','Fit'])['link_strength'].sum().reset_index()
+                temp_e_hits=temp_e_hits.groupby(['Track_ID','DoF','Fit'])['link_strength'].sum().reset_index()
 
                 print(temp_e_hits)
 

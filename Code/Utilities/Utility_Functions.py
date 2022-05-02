@@ -400,7 +400,7 @@ class HitCluster:
                         return False
                     temp_e_hits['left_hit'] = temp_e_hits.apply(Check_lOverlap,axis=1)
                     temp_e_hits['right_hit'] = temp_e_hits.apply(Check_rOverlap,axis=1)
-
+                    temp_e_hits=temp_e_hits.drop(["r_z",'join_key'], axis=1)
                     def Check_bOverlap(row):
 
                              if row['left_hit']==row['right_hit']==True:

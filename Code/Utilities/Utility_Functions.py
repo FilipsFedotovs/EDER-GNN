@@ -424,6 +424,12 @@ class HitCluster:
                     f_result=temp_e_hits
                     Trigger=True
                 _Tot_Hits=pd.merge(_Tot_Hits, temp_e_hits, how="left", left_on=['_l_HitID'], right_on=['HitID'])
+                _Tot_Hits=_Tot_Hits[_Tot_Hits['Segment_ID'].isnull()]
+                _Tot_Hits=_Tot_Hits[['_l_HitID','_r_HitID','r_z','link_strength']]
+
+                _Tot_Hits=pd.merge(_Tot_Hits, temp_e_hits, how="left", left_on=['_r_HitID'], right_on=['HitID'])
+                _Tot_Hits=_Tot_Hits[_Tot_Hits['Segment_ID'].isnull()]
+                _Tot_Hits=_Tot_Hits[['_l_HitID','_r_HitID','r_z','link_strength']]
                 print(_Tot_Hits)
                 exit()
                 #

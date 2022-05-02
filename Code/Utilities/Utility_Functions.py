@@ -401,15 +401,11 @@ class HitCluster:
                     temp_e_hits['left_hit'] = temp_e_hits.apply(Check_lOverlap,axis=1)
                     temp_e_hits['right_hit'] = temp_e_hits.apply(Check_rOverlap,axis=1)
                     temp_e_hits=temp_e_hits.drop(["r_z",'join_key','_l_HitID','_r_HitID'], axis=1)
-
-                    def Check_bOverlap(row):
-
-                             if row['left_hit']==row['right_hit']==True:
-                                 return row['link_strength']
-                             else:
-                                 return 0.0
-
-                    temp_e_hits['link_strength']=temp_e_hits.apply(Check_bOverlap,axis=1)
+                    temp_e_hits.drop(temp_e_hits.index[temp_e_hits['left_hit'] ==False], inplace = True)
+                    temp_e_hits.drop(temp_e_hits.index[temp_e_hits['right_hit'] ==False], inplace = True)
+                    print(temp_e_hits)
+                    print(temp_s_hits)
+                    exit()
                     temp_e_hits=temp_e_hits.groupby(['Track_ID','DoF','Fit'])['link_strength'].sum().reset_index()
                     temp_e_hits['Fit/DOF']=(temp_e_hits['link_strength']+temp_e_hits['Fit'])/(temp_e_hits['DoF']-1)
                     temp_e_hits=temp_e_hits.sort_values(by=['Fit/DOF'], ascending=False)

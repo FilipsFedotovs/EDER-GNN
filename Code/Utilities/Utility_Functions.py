@@ -355,6 +355,7 @@ class HitCluster:
 
                         temp_s_hits['Segment_'+str(zz)]=temp_s_hits['_r_HitID']
                         temp_s_hits._l_HitID= temp_s_hits._l_HitID.fillna(temp_s_hits._r_HitID)
+                        temp_s_hits.link_strength= temp_s_hits.link_strength.fillna(temp_s_hits.link_strength)
                         print(temp_s_hits)
                         print(_Tot_Hits_Pool)
 

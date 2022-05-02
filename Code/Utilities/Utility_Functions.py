@@ -356,6 +356,7 @@ class HitCluster:
                         temp_s_hits['Segment_'+str(zz)]=temp_s_hits['_r_HitID']
                         print(temp_s_hits)
                         print(_Tot_Hits_Pool)
+                        exit()
                         _Tot_Hits_Pool=pd.merge(_Tot_Hits_Pool, temp_s_hits[['_r_HitID','_l_HitID','Segment_'+str(zz)]], how="left", on=['_r_HitID','_l_HitID'])
                         _Tot_Hits_Pool=_Tot_Hits_Pool[_Tot_Hits_Pool['Segment_'+str(zz)].isnull()]
                         _Tot_Hits_Pool=_Tot_Hits_Pool.drop(['Segment_'+str(zz)], axis=1)

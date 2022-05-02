@@ -282,7 +282,7 @@ class HitCluster:
             _Tot_Hits.l_MC_ID= _Tot_Hits.l_MC_ID.fillna(_Tot_Hits._l_HitID)
             _Tot_Hits.r_MC_ID= _Tot_Hits.r_MC_ID.fillna(_Tot_Hits._r_HitID)
 
-            _Tot_Hits=_Tot_Hits[(_Tot_Hits['l_MC_ID']== '46674-397') | (_Tot_Hits['r_MC_ID']== '46674-397') |(_Tot_Hits['l_MC_ID']== '46674-2132') | (_Tot_Hits['r_MC_ID']== '46674-2132')]
+            #_Tot_Hits=_Tot_Hits[(_Tot_Hits['l_MC_ID']== '46674-397') | (_Tot_Hits['r_MC_ID']== '46674-397') |(_Tot_Hits['l_MC_ID']== '46674-2132') | (_Tot_Hits['r_MC_ID']== '46674-2132')]
             print(_Tot_Hits)
             StatFakeValues.append(len(_Tot_Hits.axes[0])-len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
             StatTruthValues.append(len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
@@ -432,6 +432,7 @@ class HitCluster:
                     _Tot_Hits=pd.merge(_Tot_Hits, temp_e_hits, how="left", left_on=['_r_HitID'], right_on=['HitID'])
                     _Tot_Hits=_Tot_Hits[_Tot_Hits['Segment_ID'].isnull()]
                     _Tot_Hits=_Tot_Hits[['_l_HitID','_r_HitID','r_z','link_strength']]
+                    _Tot_Hits=_Tot_Hits.drop_duplicates(keep='first')
                     print(_Tot_Hits)
                     print(f_result)
                     if len(_Tot_Hits)==0:

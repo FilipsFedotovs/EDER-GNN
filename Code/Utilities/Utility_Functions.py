@@ -377,7 +377,7 @@ class HitCluster:
                             print(temp_s_hits)
                             temp_s_hits=temp_s_hits.drop(["_r_HitID"], axis=1)
                         print(temp_s_hits)
-
+                    temp_s_hits=temp_s_hits.drop(["lls"], axis=1)
                     print(temp_s_hits)
                     print(_Tot_Hits_Pool)
                     temp_s_hits['join_key']='join_key'

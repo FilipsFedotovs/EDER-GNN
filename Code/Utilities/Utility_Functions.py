@@ -409,6 +409,8 @@ class HitCluster:
                 temp_e_hits=temp_e_hits.sort_values(by=['Fit/DOF'], ascending=False)
                 temp_e_hits=temp_e_hits[['Track_ID']].iloc[:1]
                 temp_e_hits=pd.merge(temp_e_hits, temp_s_hits, how="inner", on=['Track_ID'])
+                temp_e_hits=temp_e_hits.drop(["Fit",'DoF','join_key','left_hit','right_hit'], axis=1)
+                temp_e_hits=pd.melt(temp_e_hits, id_vars=['Track_ID'])
                 print(temp_e_hits)
 
             # f_result=f_result[(f_result['Segment_ID']== '6571126')]

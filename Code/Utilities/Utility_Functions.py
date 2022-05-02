@@ -379,9 +379,9 @@ class HitCluster:
                 _Tot_Hits['join_key']='join_key'
                 temp_s_hits['left_hit']=False
                 temp_s_hits['right_hit']=False
-                temp_s_hits=pd.merge(temp_s_hits, _Tot_Hits, how="left", on=['join_key'])
-                print(temp_s_hits)
-                columns=[col for col in temp_s_hits.columns if 'Segment' in col]
+                temp_e_hits=pd.merge(temp_s_hits, _Tot_Hits, how="left", on=['join_key'])
+                print(temp_e_hits)
+                columns=[col for col in temp_e_hits.columns if 'Segment' in col]
                 print(columns)
                 def Check_lOverlap(row):
                     for c in columns:
@@ -393,8 +393,8 @@ class HitCluster:
                       if row[c]==row["_l_HitID"]:
                          return True
                     return False
-                temp_s_hits['left_hit'] = temp_s_hits.apply(Check_lOverlap,axis=1)
-                temp_s_hits['right_hit'] = temp_s_hits.apply(Check_rOverlap,axis=1)
+                temp_e_hits['left_hit'] = temp_e_hits.apply(Check_lOverlap,axis=1)
+                temp_e_hits['right_hit'] = temp_e_hits.apply(Check_rOverlap,axis=1)
 
                 def Check_bOverlap(row):
 
@@ -403,8 +403,10 @@ class HitCluster:
                          else:
                              return 0.0
 
-                temp_s_hits['link_strength']=temp_s_hits.apply(Check_bOverlap,axis=1)
-                print(temp_s_hits)
+                temp_e_hits['link_strength']=temp_e_hits.apply(Check_bOverlap,axis=1)
+                temp_e_hits=temp_e_hits.groupby(['Track_ID','DOF','Fit'])['link_strength'].sum().reset_index()
+
+                print(temp_e_hits)
 
             # f_result=f_result[(f_result['Segment_ID']== '6571126')]
             # print( f_result)

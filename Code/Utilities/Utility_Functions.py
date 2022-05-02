@@ -423,7 +423,7 @@ class HitCluster:
                 else:
                     f_result=temp_e_hits
                     Trigger=True
-                _Tot_Hits=pd.merge(_Tot_Hits, temp_e_hits, how="left", left_on=['_l_HitID'], right_on=['Hit_ID'])
+                _Tot_Hits=pd.merge(_Tot_Hits, temp_e_hits, how="left", left_on=['_l_HitID'], right_on=['HitID'])
                 print(_Tot_Hits)
                 exit()
                 #

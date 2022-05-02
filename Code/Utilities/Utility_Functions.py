@@ -388,6 +388,9 @@ class HitCluster:
                     print(temp_e_hits)
                     columns=[col for col in temp_e_hits.columns if 'Segment' in col]
                     print(columns)
+                    temp_e_hits=temp_e_hits[(temp_e_hits['Track_ID'].str.contains(temp_e_hits["_r_HitID"]))
+                    print(temp_e_hits)
+                    exit()
                     def Check_lOverlap(row):
                         for c in columns:
                           if row[c]==row["_r_HitID"]:

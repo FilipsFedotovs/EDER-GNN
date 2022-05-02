@@ -405,7 +405,7 @@ class HitCluster:
 
                 temp_e_hits['link_strength']=temp_e_hits.apply(Check_bOverlap,axis=1)
                 temp_e_hits=temp_e_hits.groupby(['Track_ID','DoF','Fit'])['link_strength'].sum().reset_index()
-
+                temp_e_hits['Fit/DOF']=(temp_e_hits['link_strength']+temp_e_hits['Fit'])/(temp_e_hits['DoF']-1)
                 print(temp_e_hits)
 
             # f_result=f_result[(f_result['Segment_ID']== '6571126')]

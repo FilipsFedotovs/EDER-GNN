@@ -386,7 +386,7 @@ class HitCluster:
                     t_count=0
                     for c1 in columns:
                         for c2 in columns:
-                            if c1!=c2:
+                            if c1!=c2 and abs(columns.index(c1)-columns.index(c2))>1:
                                 t_count+=1
                                 t_temp_e_hits=pd.merge(temp_s_hits, _Tot_Hits_Pool[["_r_HitID","_l_HitID",'link_strength']], how="inner", left_on=[c1,c2], right_on=["_r_HitID","_l_HitID"])
                                 if t_count==1:

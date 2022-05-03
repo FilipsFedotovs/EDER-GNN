@@ -103,18 +103,9 @@ class Net(torch.nn.Module):
                             strength_matrix.append(element)
                          output_matrix.append(strength_matrix)
                          return output_matrix # get predicted edge_list
-data=RawClusters[0].ClusterGraph
-
 model = Net(5).to(device)
-top=[]
-bottom=[]
-for i in range(RawClusters[0].ClusterSize):
-    top.append(i)
-    bottom.append(i)
-data.train_pos_edge_index=torch.tensor(np.array([top,bottom]))
 model.load_state_dict(torch.load(EOS_DIR+'/EDER-GNN/Models/DefaultModel'))
 model.eval()
-lat_z = model.encode(data)
 if args.Log=='Y':
     input_file_location=EOS_DIR+'/EDER-GNN/Data/TEST_SET/E1_HITS.csv'
     MCdata=pd.read_csv(input_file_location,header=0,
@@ -134,6 +125,14 @@ LoadedClusters=[]
 for j in range(0,Ysteps):
         progress=round((float(j)/float(Ysteps))*100,2)
         print(UF.TimeStamp(),"progress is ",progress,' %') #Progress display
+        data=RawClusters[j].ClusterGraph
+        top=[]
+        bottom=[]
+        for i in range(RawClusters[j].ClusterSize):
+            top.append(i)
+            bottom.append(i)
+        data.train_pos_edge_index=torch.tensor(np.array([top,bottom]))
+        lat_z = model.encode(data)
         if args.Log=='Y':
             RawClusters[j].LinkHits(model.decode_all(lat_z),True,MCdata_list,cut_dt,cut_dr)
         LoadedClusters.append(RawClusters[j])

@@ -63,7 +63,7 @@ print(UF.TimeStamp(),'Loading pre-selected data from ',input_file_location)
 data_file=open(input_file_location,'rb')
 RawClusters=pickle.load(data_file)
 data_file.close()
-
+Ysteps=math.ceil(y_max/stepY)  #Calculating number of cuts
 print(UF.TimeStamp(),'Loading the model... ')
 
 class Net(torch.nn.Module):

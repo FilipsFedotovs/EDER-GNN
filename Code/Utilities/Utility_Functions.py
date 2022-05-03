@@ -377,6 +377,7 @@ class HitCluster:
                                     m_frames=[temp_e_hits,t_temp_e_hits]
                                     temp_e_hits=pd.concat(m_frames)
                     if t_count==0:
+                        print(temp_s_hits)
                         print(temp_e_hits)
                         print(_Tot_Hits_Pool)
                         exit()

@@ -376,13 +376,17 @@ class HitCluster:
                                 else:
                                     m_frames=[temp_e_hits,t_temp_e_hits]
                                     temp_e_hits=pd.concat(m_frames)
-
-                    try:
-                      temp_e_hits=temp_e_hits.drop_duplicates(subset=["_r_HitID","_l_HitID",'link_strength'],keep='first')[['Track_ID','link_strength',"_r_HitID","_l_HitID"]]
-                    except:
+                    if t_count==0:
                         print(temp_e_hits)
-                        print(_Tot_Hits)
+                        print(_Tot_Hits_Pool)
                         exit()
+
+                    # try:
+                    temp_e_hits=temp_e_hits.drop_duplicates(subset=["_r_HitID","_l_HitID",'link_strength'],keep='first')[['Track_ID','link_strength',"_r_HitID","_l_HitID"]]
+                    # except:
+                    #     print(temp_e_hits)
+                    #     print(_Tot_Hits_Pool)
+                    #     exit()
                     temp_e_hits=temp_e_hits.groupby(['Track_ID'])['link_strength'].sum().reset_index()
                     temp_e_hits=pd.merge(temp_s_hits, temp_e_hits, how="left", on=['Track_ID'])
                     temp_e_hits.link_strength= temp_e_hits.link_strength.fillna(0.0)
@@ -419,8 +423,8 @@ class HitCluster:
 
                     if len(_Tot_Hits)==0:
                         break
-            print(_Tot_Hits)
-            print(f_result)
+            #print(_Tot_Hits)
+            #print(f_result)
             exit()
                 #
                 #

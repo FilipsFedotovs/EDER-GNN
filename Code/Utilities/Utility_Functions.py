@@ -372,8 +372,6 @@ class HitCluster:
                             temp_s_hits['Track_ID']+=('-'+temp_s_hits['_r_HitID'])
                             temp_s_hits['Segment_1']=temp_s_hits['_r_HitID']
                             temp_s_hits=temp_s_hits.drop(["_r_HitID"], axis=1)
-                    print(temp_s_hits)
-                    exit()
                     columns=[col for col in temp_s_hits.columns if 'Segment' in col]
                     t_count=0
                     for c1 in columns:
@@ -424,15 +422,13 @@ class HitCluster:
                         _Tot_Hits=_Tot_Hits.drop_duplicates(keep='first')
                     else:
                          temp_e_hits=temp_s_hits.sort_values(by=['Fit'], ascending=False)
-                         print(temp_e_hits)
-                         print(f_result)
-                         exit()
+
                          #temp_e_hits=temp_e_hits.iloc[:1]
 
                     if len(_Tot_Hits)==0:
                         break
-            #print(_Tot_Hits)
-            #print(f_result)
+            print(_Tot_Hits)
+            print(f_result)
             exit()
                 #
                 #

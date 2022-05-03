@@ -282,7 +282,7 @@ class HitCluster:
             _Tot_Hits.l_MC_ID= _Tot_Hits.l_MC_ID.fillna(_Tot_Hits._l_HitID)
             _Tot_Hits.r_MC_ID= _Tot_Hits.r_MC_ID.fillna(_Tot_Hits._r_HitID)
 
-            #_Tot_Hits=_Tot_Hits[(_Tot_Hits['l_MC_ID']== '46674-397') | (_Tot_Hits['r_MC_ID']== '46674-397') |(_Tot_Hits['l_MC_ID']== '46674-2132') | (_Tot_Hits['r_MC_ID']== '46674-2132')]
+            _Tot_Hits=_Tot_Hits[(_Tot_Hits['_r_HitID']== '7061813') | (_Tot_Hits['_l_HitID']== '7061894') |(_Tot_Hits['_l_HitID']== '7061893')]
             StatFakeValues.append(len(_Tot_Hits.axes[0])-len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
             StatTruthValues.append(len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
             _Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['_l_HitID'] == _Tot_Hits['_r_HitID']], inplace = True)
@@ -327,6 +327,7 @@ class HitCluster:
             #93735-3975
             #exit()
             _Tot_Hits=_Tot_Hits[['_l_HitID','_r_HitID','r_z','link_strength']]
+            print(_Tot_Hits)
             Trigger=False
             while(len(_Tot_Hits)>0):
                     _Tot_Hits_Pool=_Tot_Hits
@@ -353,17 +354,19 @@ class HitCluster:
                         _Tot_Hits_Pool=pd.merge(_Tot_Hits_Pool, temp_s_hits[['_r_HitID','_l_HitID','Segment_'+str(zz)]], how="left", on=['_r_HitID','_l_HitID'])
                         _Tot_Hits_Pool=_Tot_Hits_Pool[_Tot_Hits_Pool['Segment_'+str(zz)].isnull()]
                         _Tot_Hits_Pool=_Tot_Hits_Pool.drop(['Segment_'+str(zz)], axis=1)
-
                         temp_s_hits['Track_ID']+=('-'+temp_s_hits['_r_HitID'])
                         temp_s_hits['Fit']+=temp_s_hits['link_strength']
+                        print(temp_s_hits)
                         if zz==len(z_ind)-1:
                             temp_s_hits['Track_ID']+=('-'+temp_s_hits['_l_HitID'])
                             temp_s_hits['Segment_'+str(zz+1)]=temp_s_hits['_l_HitID']
-
+                        print(temp_s_hits)
                         temp_s_hits=temp_s_hits.drop(["_r_HitID",'r_z','link_strength'], axis=1)
                         temp_s_hits=temp_s_hits.rename(columns={"_l_HitID": "_r_HitID" })
                         if zz==len(z_ind)-1:
                             temp_s_hits=temp_s_hits.drop(["_r_HitID"], axis=1)
+                        print(temp_s_hits)
+                    exit()
                     columns=[col for col in temp_s_hits.columns if 'Segment' in col]
                     t_count=0
                     for c1 in columns:

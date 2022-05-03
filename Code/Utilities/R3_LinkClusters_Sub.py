@@ -117,25 +117,19 @@ if args.Log=='Y':
     MCdata.drop(MCdata.index[MCdata['z'] >= ((Set+1)*stepZ)], inplace = True)  #Keeping the relevant z slice
     MCdata.drop(MCdata.index[MCdata['z'] < (Set*stepZ)], inplace = True)  #Keeping the relevant z slice
     MCdata_list=MCdata.values.tolist()
-    RawClusters[0].LinkHits(model.decode_all(lat_z),True,MCdata_list,cut_dt,cut_dr)
-print(RawClusters[0].RecStats)
-exit()
 
-# for i in range(0,Xsteps):
-#     LoadedClusters=[]
-#     progress=round((float(i)/float(Xsteps))*100,2)
-#     print(UF.TimeStamp(),"progress is ",progress,' %') #Progress display
-#     for j in range(0,Ysteps):
-#         HC=UF.HitCluster([i,j,Set],[stepX,stepY,stepZ])
-#         HC.LoadClusterHits(data_list)
-#         if args.Log=='Y':
-#             HC.GiveStats(MCdata_list,cut_dt,cut_dr)
-#         LoadedClusters.append(HC)
-#     output_file_location=EOS_DIR+'/EDER-GNN/Data/REC_SET/R2_R2_SelectedClusters_'+str(Set)+'_'+str(i)+'.pkl'
-#     open_file = open(output_file_location, "wb")
-#     pickle.dump(LoadedClusters, open_file)
-# print(UF.TimeStamp(), "Cluster generation is finished...")
-# #End of the script
+LoadedClusters=[]
+for j in range(0,Ysteps):
+        progress=round((float(j)/float(Ysteps))*100,2)
+        print(UF.TimeStamp(),"progress is ",progress,' %') #Progress display
+        if args.Log=='Y':
+            RawClusters[j].LinkHits(model.decode_all(lat_z),True,MCdata_list,cut_dt,cut_dr)
+        LoadedClusters.append(RawClusters[j])
+output_file_location=EOS_DIR+'/EDER-GNN/Data/REC_SET/R3_R3_LinkedClusters_'+str(Set)+'_'+str(Subset)+'.pkl'
+open_file = open(output_file_location, "wb")
+pickle.dump(LoadedClusters, open_file)
+print(UF.TimeStamp(), "Cluster linking is finished...")
+#End of the script
 
 
 

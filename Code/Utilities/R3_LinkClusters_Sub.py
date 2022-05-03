@@ -136,7 +136,7 @@ for j in range(0,Ysteps):
         if args.Log=='Y':
             RawClusters[j].LinkHits(model.decode_all(lat_z),True,MCdata_list,cut_dt,cut_dr)
         LoadedClusters.append(RawClusters[j])
-output_file_location=EOS_DIR+'/EDER-GNN/Data/REC_SET/R3_R3_LinkedClusters_'+str(Set)+'_'+str(Subset)+'.pkl'
+output_file_location=EOS_DIR+'/EDER-GNN/Data/REC_SET/R3_R3_LinkedClusters_'+str(Set)+'_'+str(ClusterSet)+'.pkl'
 open_file = open(output_file_location, "wb")
 pickle.dump(LoadedClusters, open_file)
 print(UF.TimeStamp(), "Cluster linking is finished...")

@@ -400,6 +400,8 @@ class HitCluster:
                     print(temp_e_hits)
                     temp_e_hits=temp_e_hits.groupby(['Track_ID'])['link_strength'].sum().reset_index()
                     print(temp_e_hits)
+                    temp_e_hits=pd.merge(temp_s_hits, temp_e_hits, how="left", on=['Track_ID'])
+                    print(temp_e_hits)
                     exit()
                     temp_e_hits=temp_e_hits.drop(["r_z",'join_key','_l_HitID','_r_HitID'], axis=1)
                     temp_e_hits.drop(temp_e_hits.index[temp_e_hits['left_hit'] ==False], inplace = True)

@@ -282,7 +282,7 @@ class HitCluster:
             _Tot_Hits.l_MC_ID= _Tot_Hits.l_MC_ID.fillna(_Tot_Hits._l_HitID)
             _Tot_Hits.r_MC_ID= _Tot_Hits.r_MC_ID.fillna(_Tot_Hits._r_HitID)
 
-            _Tot_Hits=_Tot_Hits[(_Tot_Hits['_r_HitID']== '7061813') & (_Tot_Hits['_l_HitID']== '7061894')]
+            #_Tot_Hits=_Tot_Hits[(_Tot_Hits['_r_HitID']== '7061813') & (_Tot_Hits['_l_HitID']== '7061894')]
             StatFakeValues.append(len(_Tot_Hits.axes[0])-len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
             StatTruthValues.append(len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
             _Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['_l_HitID'] == _Tot_Hits['_r_HitID']], inplace = True)
@@ -327,13 +327,11 @@ class HitCluster:
             #93735-3975
             #exit()
             _Tot_Hits=_Tot_Hits[['_l_HitID','_r_HitID','r_z','link_strength']]
-            print(_Tot_Hits)
             Trigger=False
             while(len(_Tot_Hits)>0):
                     _Tot_Hits_Pool=_Tot_Hits
 
                     z_ind=_Tot_Hits_Pool.sort_values(by=['r_z'], ascending=True)[['r_z']].drop_duplicates(subset=['r_z'],keep='first').values.tolist()
-                    print(z_ind)
                     temp_s_hits=_Tot_Hits_Pool.drop(_Tot_Hits_Pool.index[_Tot_Hits_Pool['r_z'] != z_ind[0][0]])
                     #_Tot_Hits_Pool=_Tot_Hits_Pool.drop(_Tot_Hits_Pool.index[_Tot_Hits_Pool['r_z'] == z_ind[z][0]])
                     temp_s_hits['Segment_0']=temp_s_hits['_r_HitID']
@@ -342,13 +340,10 @@ class HitCluster:
                     temp_s_hits=temp_s_hits.rename(columns={"link_strength": "Fit"})
                     temp_s_hits=temp_s_hits.drop(["_r_HitID",'r_z'], axis=1)
                     temp_s_hits=temp_s_hits.rename(columns={"_l_HitID": "_r_HitID" })
-                    print(temp_s_hits)
                     if len(z_ind)>1:
                         for zz in range(1,len(z_ind)):
                             temp_m_hits=_Tot_Hits_Pool.drop(_Tot_Hits_Pool.index[_Tot_Hits_Pool['r_z'] != z_ind[zz][0]])
-                            print(temp_m_hits)
                             temp_s_hits=pd.merge(temp_s_hits, temp_m_hits, how="left", on=['_r_HitID'])
-                            print(temp_s_hits)
                             #temp_s_hits=temp_s_hits.rename(columns={"link_strength": "lls" })
                             temp_s_hits['Segment_'+str(zz)]=temp_s_hits['_r_HitID']
                             temp_s_hits._l_HitID= temp_s_hits._l_HitID.fillna(temp_s_hits._r_HitID)
@@ -358,8 +353,6 @@ class HitCluster:
                             _Tot_Hits_Pool=_Tot_Hits_Pool.drop(['Segment_'+str(zz)], axis=1)
                             temp_s_hits['Track_ID']+=('-'+temp_s_hits['_r_HitID'])
                             temp_s_hits['Fit']+=temp_s_hits['link_strength']
-                            print(temp_s_hits)
-                            print(zz)
                             if zz==len(z_ind)-1:
                                 temp_s_hits['Track_ID']+=('-'+temp_s_hits['_l_HitID'])
                                 temp_s_hits['Segment_'+str(zz+1)]=temp_s_hits['_l_HitID']
@@ -368,7 +361,6 @@ class HitCluster:
                             if zz==len(z_ind)-1:
                                 temp_s_hits=temp_s_hits.drop(["_r_HitID"], axis=1)
                     else:
-                            print(temp_s_hits)
                             temp_s_hits['Track_ID']+=('-'+temp_s_hits['_r_HitID'])
                             temp_s_hits['Segment_1']=temp_s_hits['_r_HitID']
                             temp_s_hits=temp_s_hits.drop(["_r_HitID"], axis=1)
@@ -410,7 +402,6 @@ class HitCluster:
                     else:
                          temp_e_hits=temp_s_hits.sort_values(by=['Fit'], ascending=False)
                          temp_e_hits=temp_e_hits.iloc[:1]
-                         print(temp_e_hits)
                          temp_e_hits=temp_e_hits.drop(["Fit"], axis=1)
                          temp_e_hits=pd.melt(temp_e_hits, id_vars=['Track_ID'])
                          temp_e_hits=temp_e_hits.drop(['variable'], axis=1)

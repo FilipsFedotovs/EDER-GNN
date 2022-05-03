@@ -54,6 +54,18 @@ AFS_DIR=args.AFS
 #import sys
 #sys.path.insert(1, AFS_DIR+'/Code/Utilities/')
 import Utility_Functions as UF #This is where we keep routine utility functions
+input_file_location=EOS_DIR+'/EDER-GNN/Data/REC_SET/R1_HITS.csv'
+
+print(UF.TimeStamp(), "Modules Have been imported successfully...")
+print(UF.TimeStamp(),'Loading pre-selected data from ',input_file_location)
+
+data=pd.read_csv(input_file_location,header=0,
+            usecols=["Hit_ID","x","y","z","tx","ty"])
+data["y"] = pd.to_numeric(data["y"],downcast='float')
+data['y']=data['y']-y_offset
+y_max=data['y'].max()
+Ysteps=math.ceil(y_max/stepY)
+
 
 #Specifying the full path to input/output files
 input_file_location=EOS_DIR+'/EDER-GNN/Data/REC_SET/R2_R2_SelectedClusters_'+str(Set)+'_'+str(ClusterSet)+'.pkl'
@@ -63,7 +75,7 @@ print(UF.TimeStamp(),'Loading pre-selected data from ',input_file_location)
 data_file=open(input_file_location,'rb')
 RawClusters=pickle.load(data_file)
 data_file.close()
-Ysteps=math.ceil(y_max/stepY)  #Calculating number of cuts
+
 print(UF.TimeStamp(),'Loading the model... ')
 
 class Net(torch.nn.Module):

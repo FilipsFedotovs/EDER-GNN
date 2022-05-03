@@ -46,7 +46,7 @@ y_offset=float(args.yOffset)
 x_offset=float(args.xOffset)
 cut_dt=float(args.cut_dt)
 cut_dr=float(args.cut_dr)
-MaxHits=int(args.MaxHits)
+
 #Loading Directory locations
 EOS_DIR=args.EOS
 AFS_DIR=args.AFS

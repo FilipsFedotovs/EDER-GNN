@@ -165,67 +165,6 @@ class HitCluster:
            _Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['d_y'] >= cut_dr], inplace = True)
            StatFakeValues.append(len(_Tot_Hits.axes[0])-len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
            StatTruthValues.append(len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
-
-
-           self.Stats=[StatLabels,StatFakeValues,StatTruthValues]
-      def GiveLinkStats(self,MCHits,cut_dt, cut_dr): #Decorate hit information
-           import pandas as pd
-           _MCClusterHits=[]
-           StatFakeValues=[]
-           StatTruthValues=[]
-           StatLabels=['Initial # of combinations','Delete self-permutations','Enforce positive directionality','Cut on delta t', 'Cut on delta x','Track Reconstruction']
-           for s in MCHits:
-               if s[1]>=self.ClusterID[0]*self.Step[0] and s[1]<((self.ClusterID[0]+1)*self.Step[0]):
-                   if s[2]>=self.ClusterID[1]*self.Step[1] and s[2]<((self.ClusterID[1]+1)*self.Step[1]):
-                       if s[3]>=self.ClusterID[2]*self.Step[2] and s[3]<((self.ClusterID[2]+1)*self.Step[2]):
-                          _MCClusterHits.append([s[0],s[6]])
-           #Preparing Raw and MC combined data 1
-           _l_MCHits=pd.DataFrame(_MCClusterHits, columns = ['l_HitID','l_MC_ID'])
-           _l_Hits=pd.DataFrame(self.ClusterHits, columns = ['l_HitID','l_x','l_y','l_z','l_tx','l_ty'])
-           #Join hits + MC truth
-           _l_Tot_Hits=pd.merge(_l_MCHits, _l_Hits, how="right", on=['l_HitID'])
-           _l_Tot_Hits['join_key'] = 'join_key'
-           #Preparing Raw and MC combined data 2
-           _r_MCHits=pd.DataFrame(_MCClusterHits, columns = ['r_HitID','r_MC_ID'])
-           _r_Hits=pd.DataFrame(self.ClusterHits, columns = ['r_HitID','r_x','r_y','r_z','r_tx','r_ty'])
-           #Join hits + MC truth
-           _r_Tot_Hits=pd.merge(_r_MCHits, _r_Hits, how="right", on=['r_HitID'])
-           _r_Tot_Hits['join_key'] = 'join_key'
-           #Combining data 1 and 2
-           _Tot_Hits=pd.merge(_l_Tot_Hits, _r_Tot_Hits, how="inner", on=['join_key'])
-
-           _Tot_Hits.l_MC_ID= _Tot_Hits.l_MC_ID.fillna(_Tot_Hits.l_HitID)
-           _Tot_Hits.r_MC_ID= _Tot_Hits.r_MC_ID.fillna(_Tot_Hits.r_HitID)
-
-           StatFakeValues.append(len(_Tot_Hits.axes[0])-len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
-           StatTruthValues.append(len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
-           _Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_HitID'] == _Tot_Hits['r_HitID']], inplace = True)
-           StatFakeValues.append(len(_Tot_Hits.axes[0])-len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
-           StatTruthValues.append(len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
-
-           _Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_z'] <= _Tot_Hits['r_z']], inplace = True)
-           StatFakeValues.append(len(_Tot_Hits.axes[0])-len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
-           StatTruthValues.append(len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
-
-           _Tot_Hits['d_tx'] = _Tot_Hits['l_tx']-_Tot_Hits['r_tx']
-           _Tot_Hits['d_tx'] = _Tot_Hits['d_tx'].abs()
-           _Tot_Hits['d_ty'] = _Tot_Hits['l_ty']-_Tot_Hits['r_ty']
-           _Tot_Hits['d_ty'] = _Tot_Hits['d_ty'].abs()
-           _Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['d_tx'] >= cut_dt], inplace = True)
-           _Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['d_ty'] >= cut_dt], inplace = True)
-           StatFakeValues.append(len(_Tot_Hits.axes[0])-len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
-           StatTruthValues.append(len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
-
-           _Tot_Hits['d_x'] = (_Tot_Hits['r_x']-(_Tot_Hits['l_x']+(_Tot_Hits['l_tx']*(_Tot_Hits['r_z']-_Tot_Hits['l_z']))))
-           _Tot_Hits['d_x'] = _Tot_Hits['d_x'].abs()
-
-           _Tot_Hits['d_y'] = (_Tot_Hits['r_y']-(_Tot_Hits['l_y']+(_Tot_Hits['l_ty']*(_Tot_Hits['r_z']-_Tot_Hits['l_z']))))
-           _Tot_Hits['d_y'] = _Tot_Hits['d_y'].abs()
-
-           _Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['d_x'] >= cut_dr], inplace = True)
-           _Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['d_y'] >= cut_dr], inplace = True)
-           StatFakeValues.append(len(_Tot_Hits.axes[0])-len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
-           StatTruthValues.append(len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
            _Tot_Hits=_Tot_Hits[['l_HitID','r_HitID','r_z']]
            _Tot_Hits['link_strength']=1.0
            Trigger=False
@@ -234,33 +173,33 @@ class HitCluster:
 
                     z_ind=_Tot_Hits_Pool.sort_values(by=['r_z'], ascending=True)[['r_z']].drop_duplicates(subset=['r_z'],keep='first').values.tolist()
                     temp_s_hits=_Tot_Hits_Pool.drop(_Tot_Hits_Pool.index[_Tot_Hits_Pool['r_z'] != z_ind[0][0]])
-                    temp_s_hits['Segment_0']=temp_s_hits['_r_HitID']
-                    temp_s_hits['Track_ID']=temp_s_hits['_r_HitID']
+                    temp_s_hits['Segment_0']=temp_s_hits['r_HitID']
+                    temp_s_hits['Track_ID']=temp_s_hits['r_HitID']
                     temp_s_hits=temp_s_hits.rename(columns={"link_strength": "Fit"})
-                    temp_s_hits=temp_s_hits.drop(["r_HitID",'r_z'], axis=1)
-                    temp_s_hits=temp_s_hits.rename(columns={"l_HitID": "r_HitID" })
+                    temp_s_hits=temp_s_hits.drop(["_r_HitID",'r_z'], axis=1)
+                    temp_s_hits=temp_s_hits.rename(columns={"_l_HitID": "_r_HitID" })
                     if len(z_ind)>1:
                         for zz in range(1,len(z_ind)):
                             temp_m_hits=_Tot_Hits_Pool.drop(_Tot_Hits_Pool.index[_Tot_Hits_Pool['r_z'] != z_ind[zz][0]])
-                            temp_s_hits=pd.merge(temp_s_hits, temp_m_hits, how="left", on=['_r_HitID'])
-                            temp_s_hits['Segment_'+str(zz)]=temp_s_hits['_r_HitID']
+                            temp_s_hits=pd.merge(temp_s_hits, temp_m_hits, how="left", on=['r_HitID'])
+                            temp_s_hits['Segment_'+str(zz)]=temp_s_hits['r_HitID']
                             temp_s_hits._l_HitID= temp_s_hits._l_HitID.fillna(temp_s_hits._r_HitID)
                             temp_s_hits.link_strength= temp_s_hits.link_strength.fillna(0.0)
-                            _Tot_Hits_Pool=pd.merge(_Tot_Hits_Pool, temp_s_hits[['_r_HitID','_l_HitID','Segment_'+str(zz)]], how="left", on=['_r_HitID','_l_HitID'])
+                            _Tot_Hits_Pool=pd.merge(_Tot_Hits_Pool, temp_s_hits[['r_HitID','l_HitID','Segment_'+str(zz)]], how="left", on=['r_HitID','l_HitID'])
                             _Tot_Hits_Pool=_Tot_Hits_Pool[_Tot_Hits_Pool['Segment_'+str(zz)].isnull()]
                             _Tot_Hits_Pool=_Tot_Hits_Pool.drop(['Segment_'+str(zz)], axis=1)
-                            temp_s_hits['Track_ID']+=('-'+temp_s_hits['_r_HitID'])
+                            temp_s_hits['Track_ID']+=('-'+temp_s_hits['r_HitID'])
                             temp_s_hits['Fit']+=temp_s_hits['link_strength']
                             if zz==len(z_ind)-1:
-                                temp_s_hits['Track_ID']+=('-'+temp_s_hits['_l_HitID'])
-                                temp_s_hits['Segment_'+str(zz+1)]=temp_s_hits['_l_HitID']
+                                temp_s_hits['Track_ID']+=('-'+temp_s_hits['l_HitID'])
+                                temp_s_hits['Segment_'+str(zz+1)]=temp_s_hits['l_HitID']
                             temp_s_hits=temp_s_hits.drop(["_r_HitID",'r_z','link_strength'], axis=1)
                             temp_s_hits=temp_s_hits.rename(columns={"_l_HitID": "_r_HitID" })
                             if zz==len(z_ind)-1:
                                 temp_s_hits=temp_s_hits.drop(["_r_HitID"], axis=1)
                     else:
-                            temp_s_hits['Track_ID']+=('-'+temp_s_hits['_r_HitID'])
-                            temp_s_hits['Segment_1']=temp_s_hits['_r_HitID']
+                            temp_s_hits['Track_ID']+=('-'+temp_s_hits['r_HitID'])
+                            temp_s_hits['Segment_1']=temp_s_hits['r_HitID']
                             temp_s_hits=temp_s_hits.drop(["_r_HitID"], axis=1)
                     columns=[col for col in temp_s_hits.columns if 'Segment' in col]
                     t_count=0
@@ -310,13 +249,13 @@ class HitCluster:
                     else:
                             f_result=temp_e_hits
                             Trigger=True
-                    _Tot_Hits=pd.merge(_Tot_Hits, temp_e_hits, how="left", left_on=['_l_HitID'], right_on=['HitID'])
+                    _Tot_Hits=pd.merge(_Tot_Hits, temp_e_hits, how="left", left_on=['l_HitID'], right_on=['HitID'])
                     _Tot_Hits=_Tot_Hits[_Tot_Hits['Segment_ID'].isnull()]
-                    _Tot_Hits=_Tot_Hits[['_l_HitID','_r_HitID','r_z','link_strength']]
+                    _Tot_Hits=_Tot_Hits[['l_HitID','r_HitID','r_z','link_strength']]
 
-                    _Tot_Hits=pd.merge(_Tot_Hits, temp_e_hits, how="left", left_on=['_r_HitID'], right_on=['HitID'])
+                    _Tot_Hits=pd.merge(_Tot_Hits, temp_e_hits, how="left", left_on=['r_HitID'], right_on=['HitID'])
                     _Tot_Hits=_Tot_Hits[_Tot_Hits['Segment_ID'].isnull()]
-                    _Tot_Hits=_Tot_Hits[['_l_HitID','_r_HitID','r_z','link_strength']]
+                    _Tot_Hits=_Tot_Hits[['l_HitID','r_HitID','r_z','link_strength']]
                     _Tot_Hits=_Tot_Hits.drop_duplicates(keep='first')
                     if len(_Tot_Hits)==0:
                         break
@@ -327,25 +266,24 @@ class HitCluster:
            f_result=f_result.drop_duplicates(subset='HitID',keep='first')
            f_result=f_result[['HitID','Segment_ID']]
            _l_fHits= f_result.rename(columns={"HitID": "_l_HitID"})
-           _l_Tot_fHits=pd.merge(_l_MCHits, _l_fHits, how="left", on=['_l_HitID'])
+           _l_Tot_fHits=pd.merge(_l_MCHits, _l_fHits, how="left", on=['l_HitID'])
            _r_fHits= f_result.rename(columns={"HitID": "_r_HitID"})
 
             #Join hits + MC truth
-           _r_Tot_fHits=pd.merge(_r_MCHits, _r_fHits, how="right", on=['_r_HitID'])
-           _r_Tot_fHits.drop_duplicates(subset=['_r_HitID'],keep='first', inplace=True)
-           _l_Tot_fHits.drop_duplicates(subset=['_l_HitID'],keep='first', inplace=True)
+           _r_Tot_fHits=pd.merge(_r_MCHits, _r_fHits, how="right", on=['r_HitID'])
+           _r_Tot_fHits.drop_duplicates(subset=['r_HitID'],keep='first', inplace=True)
+           _l_Tot_fHits.drop_duplicates(subset=['l_HitID'],keep='first', inplace=True)
            _Tot_fHits=pd.merge(_l_Tot_fHits, _r_Tot_fHits, how="inner",on=["Segment_ID"])
            _Tot_fHits.l_MC_ID= _Tot_fHits.l_MC_ID.fillna(_Tot_fHits._l_HitID)
            _Tot_fHits.r_MC_ID= _Tot_fHits.r_MC_ID.fillna(_Tot_fHits._r_HitID)
-           _Tot_fHits.drop(_Tot_fHits.index[_Tot_fHits['_l_HitID'] == _Tot_fHits['_r_HitID']], inplace = True)
-           _Tot_fHits["Pair_ID"]= ['-'.join(sorted(tup)) for tup in zip(_Tot_fHits['_l_HitID'], _Tot_fHits['_r_HitID'])]
+           _Tot_fHits.drop(_Tot_fHits.index[_Tot_fHits['l_HitID'] == _Tot_fHits['r_HitID']], inplace = True)
+           _Tot_fHits["Pair_ID"]= ['-'.join(sorted(tup)) for tup in zip(_Tot_fHits['l_HitID'], _Tot_fHits['r_HitID'])]
            _Tot_fHits.drop_duplicates(subset="Pair_ID",keep='first',inplace=True)
            StatFakeValues.append(len(_Tot_fHits.axes[0])-len(_Tot_fHits.drop(_Tot_fHits.index[_Tot_fHits['l_MC_ID'] != _Tot_fHits['r_MC_ID']]).axes[0]))
            StatTruthValues.append(len(_Tot_fHits.drop(_Tot_fHits.index[_Tot_fHits['l_MC_ID'] != _Tot_fHits['r_MC_ID']]).axes[0]))
-           print(StatFakeValues,StatTruthValues)
-           exit()
            self.Stats=[StatLabels,StatFakeValues,StatTruthValues]
-
+           print(self.Stats)
+           exit()
 
 
 

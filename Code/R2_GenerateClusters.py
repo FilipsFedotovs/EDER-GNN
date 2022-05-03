@@ -170,6 +170,7 @@ if Mode=='C':
                             fake_results_3.append(int(result_temp[1][2]))
                             fake_results_4.append(int(result_temp[1][3]))
                             fake_results_5.append(int(result_temp[1][4]))
+                            fake_results_5.append(int(result_temp[1][5]))
                             truth_results_1.append(int(result_temp[2][0]))
                             truth_results_2.append(int(result_temp[2][1]))
                             truth_results_3.append(int(result_temp[2][2]))

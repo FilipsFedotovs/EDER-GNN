@@ -193,10 +193,10 @@ class HitCluster:
                             if zz==len(z_ind)-1:
                                 temp_s_hits['Track_ID']+=('-'+temp_s_hits['l_HitID'])
                                 temp_s_hits['Segment_'+str(zz+1)]=temp_s_hits['l_HitID']
-                            temp_s_hits=temp_s_hits.drop(["_r_HitID",'r_z','link_strength'], axis=1)
+                            temp_s_hits=temp_s_hits.drop(["r_HitID",'r_z','link_strength'], axis=1)
                             temp_s_hits=temp_s_hits.rename(columns={"l_HitID": "r_HitID" })
                             if zz==len(z_ind)-1:
-                                temp_s_hits=temp_s_hits.drop(["_r_HitID"], axis=1)
+                                temp_s_hits=temp_s_hits.drop(["r_HitID"], axis=1)
                     else:
                             temp_s_hits['Track_ID']+=('-'+temp_s_hits['r_HitID'])
                             temp_s_hits['Segment_1']=temp_s_hits['r_HitID']

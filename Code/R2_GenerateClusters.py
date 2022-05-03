@@ -183,12 +183,13 @@ if Mode=='C':
                                 precision_results_3.append(int(result_temp[2][2])/(int(result_temp[2][2])+int(result_temp[1][2])))
                                 precision_results_4.append(int(result_temp[2][3])/(int(result_temp[2][3])+int(result_temp[1][3])))
                                 precision_results_5.append(int(result_temp[2][4])/(int(result_temp[2][4])+int(result_temp[1][4])))
-                                precision_results_5.append(int(result_temp[2][4])/(int(result_temp[2][5])+int(result_temp[1][5])))
+                                precision_results_6.append(int(result_temp[2][5])/(int(result_temp[2][5])+int(result_temp[1][5])))
                                 recall_results_1.append(int(result_temp[2][0])/(int(result_temp[2][2])))
                                 recall_results_2.append(int(result_temp[2][1])/(int(result_temp[2][2])))
                                 recall_results_3.append(int(result_temp[2][2])/(int(result_temp[2][2])))
                                 recall_results_4.append(int(result_temp[2][3])/(int(result_temp[2][2])))
                                 recall_results_5.append(int(result_temp[2][4])/(int(result_temp[2][2])))
+                                recall_results_6.append(int(result_temp[2][5])/(int(result_temp[2][2])))
                             except:
                                 continue
                             label=result_temp[0]

@@ -1,5 +1,5 @@
 #This simple script prepares 2-Track seeds for the initial CNN vertexing
-# Part of EDER-VIANN package
+# Part of EDER-GNN package
 #Made by Filips Fedotovs
 
 
@@ -136,22 +136,25 @@ if Mode=='C':
             fake_results_3=[]
             fake_results_4=[]
             fake_results_5=[]
+            fake_results_6=[]
             truth_results_1=[]
             truth_results_2=[]
             truth_results_3=[]
             truth_results_4=[]
             truth_results_5=[]
-
+            truth_results_6=[]
             precision_results_1=[]
             precision_results_2=[]
             precision_results_3=[]
             precision_results_4=[]
             precision_results_5=[]
+            precision_results_6=[]
             recall_results_1=[]
             recall_results_2=[]
             recall_results_3=[]
             recall_results_4=[]
             recall_results_5=[]
+            recall_results_6=[]
             for k in range(0,Zsteps):
                progress=round((float(k)/float(Zsteps))*100,2)
                print(UF.TimeStamp(),"progress is ",progress,' %') #Progress display

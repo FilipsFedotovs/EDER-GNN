@@ -381,7 +381,8 @@ class HitCluster:
                     temp_s_hits=temp_s_hits.drop(["lls"], axis=1)
                     print(temp_s_hits)
                     print(_Tot_Hits_Pool)
-                    columns=[col for col in temp_e_hits.columns if 'Segment' in col]
+                    columns=[col for col in temp_s_hits.columns if 'Segment' in col]
+                    print(columns)
                     t_count=0
                     for c1 in columns:
                         for c2 in columns:

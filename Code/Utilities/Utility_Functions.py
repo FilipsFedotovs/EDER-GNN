@@ -402,6 +402,7 @@ class HitCluster:
                     temp_dof_hits=pd.melt(temp_dof_hits, id_vars=['Track_ID'])
                     temp_dof_hits=temp_dof_hits.drop(["variable"], axis=1)
                     temp_dof_hits=temp_dof_hits.drop_duplicates(keep='first')
+                    temp_dof_hits=temp_dof_hits.groupby(['Track_ID'])['value'].count().reset_index()
                     print(temp_dof_hits)
                     exit()
                     temp_e_hits=temp_e_hits.drop(["r_z",'join_key','_l_HitID','_r_HitID'], axis=1)

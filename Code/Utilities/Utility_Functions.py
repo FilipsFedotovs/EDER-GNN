@@ -412,11 +412,11 @@ class HitCluster:
                     _Tot_Hits=_Tot_Hits[_Tot_Hits['Segment_ID'].isnull()]
                     _Tot_Hits=_Tot_Hits[['_l_HitID','_r_HitID','r_z','link_strength']]
                     _Tot_Hits=_Tot_Hits.drop_duplicates(keep='first')
-                    print(_Tot_Hits)
-                    print(f_result)
+
                     if len(_Tot_Hits)==0:
                         break
-                    input("Press Enter to continue...")
+            print(_Tot_Hits)
+            print(f_result)
             exit()
                 #
                 #

@@ -409,7 +409,7 @@ class HitCluster:
                     temp_e_hits['Fit/DOF']=(temp_e_hits['link_strength']+temp_e_hits['Fit'])/(temp_e_hits['DoF']-1)
                     temp_e_hits=temp_e_hits.sort_values(by=['Fit/DOF'], ascending=False)
                     print(temp_e_hits)
-                    temp_e_hits=temp_e_hits[['Track_ID']].iloc[:1]
+                    temp_e_hits=temp_e_hits.iloc[:1]
                     print(temp_e_hits)
                     temp_e_hits=temp_e_hits.drop(["Fit",'DoF','link_strength'], axis=1)
                     temp_e_hits=pd.melt(temp_e_hits, id_vars=['Track_ID'])

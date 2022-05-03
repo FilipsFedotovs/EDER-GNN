@@ -398,7 +398,7 @@ class HitCluster:
 
                     temp_e_hits=temp_e_hits.drop_duplicates(subset=["_r_HitID","_l_HitID",'link_strength'],keep='first')[['Track_ID','link_strength']]
                     print(temp_e_hits)
-                    temp_e_hits=temp_e_hits.groupby(['Track_ID','DoF','Fit'])['link_strength'].sum().reset_index()
+                    temp_e_hits=temp_e_hits.groupby(['Track_ID'])['link_strength'].sum().reset_index()
                     print(temp_e_hits)
                     exit()
                     temp_e_hits=temp_e_hits.drop(["r_z",'join_key','_l_HitID','_r_HitID'], axis=1)

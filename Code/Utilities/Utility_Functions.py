@@ -236,7 +236,7 @@ class HitCluster:
 
 
 
-      def LinkHits(self,hits,GiveStats,MCHits,MaxHits,cut_dt,cut_dr):
+      def LinkHits(self,hits,GiveStats,MCHits,cut_dt,cut_dr):
           self.HitLinks=hits
           _Map=[]
           for h in range(len(self.HitLinks[0])):
@@ -270,7 +270,6 @@ class HitCluster:
             _l_Hits=_Tot_Hits_df.rename(columns={"x": "l_x", "y": "l_y", "z": "l_z", "tx": "l_tx","ty": "l_ty","_r_HitID": "_link_HitID" })
             #Join hits + MC truth
             _l_Tot_Hits=pd.merge(_l_MCHits, _l_Hits, how="left", on=['_l_HitID'])
-            #_l_Tot_Hits=_l_Tot_Hits.loc[_l_Tot_Hits['_l_HitID'] == '5532157']
             #Preparing Raw and MC combined data 2
             _r_MCHits=pd.DataFrame(_MCClusterHits, columns = ['_r_HitID','r_MC_ID'])
             _r_Hits=_Tot_Hits_df[['_l_HitID', 'x', 'y', 'z', 'tx', 'ty']].rename(columns={"x": "r_x", "y": "r_y", "z": "r_z", "tx": "r_tx","ty": "r_ty","_l_HitID": "_r_HitID" })
@@ -282,7 +281,7 @@ class HitCluster:
             _Tot_Hits.l_MC_ID= _Tot_Hits.l_MC_ID.fillna(_Tot_Hits._l_HitID)
             _Tot_Hits.r_MC_ID= _Tot_Hits.r_MC_ID.fillna(_Tot_Hits._r_HitID)
 
-            _Tot_Hits=_Tot_Hits[(_Tot_Hits['_l_MC_ID']== '55281-0') | (_Tot_Hits['_r_HitID']== '55281-0')]
+            _Tot_Hits=_Tot_Hits[(_Tot_Hits['l_MC_ID']== '55281-0') | (_Tot_Hits['r_MC_ID']== '55281-1')]
             StatFakeValues.append(len(_Tot_Hits.axes[0])-len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
             StatTruthValues.append(len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
             _Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['_l_HitID'] == _Tot_Hits['_r_HitID']], inplace = True)

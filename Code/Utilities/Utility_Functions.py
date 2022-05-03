@@ -411,8 +411,9 @@ class HitCluster:
                     print(temp_e_hits)
                     temp_e_hits=temp_e_hits.iloc[:1]
                     print(temp_e_hits)
-                    temp_e_hits=temp_e_hits.drop(["Fit",'DoF','link_strength'], axis=1)
+                    temp_e_hits=temp_e_hits.drop(["Fit",'DoF','link_strength','Fit/DOF'], axis=1)
                     temp_e_hits=pd.melt(temp_e_hits, id_vars=['Track_ID'])
+                    temp_e_hits=temp_e_hits.drop(['variable'], axis=1)
                     temp_e_hits= temp_e_hits.rename(columns={'value': "HitID",'Track_ID': 'Segment_ID'})
                     print(temp_e_hits)
                     exit()

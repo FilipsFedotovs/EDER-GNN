@@ -340,11 +340,9 @@ class HitCluster:
                     temp_s_hits['Track_ID']=temp_s_hits['_r_HitID']
                     #(temp_s_hits)
                     temp_s_hits=temp_s_hits.rename(columns={"link_strength": "Fit"})
-                    temp_s_hits['DoF']=2
                     temp_s_hits=temp_s_hits.drop(["_r_HitID",'r_z'], axis=1)
                     temp_s_hits=temp_s_hits.rename(columns={"_l_HitID": "_r_HitID" })
                     print(temp_s_hits)
-                    temp_s_hits['lls']=temp_s_hits['Fit']
                     input("Press Enter to continue...")
                     #temp_s_hits=temp_s_hits.loc[temp_s_hits['Track_ID'] == '9796888']
 
@@ -355,7 +353,7 @@ class HitCluster:
                         #temp_s_hits=temp_s_hits.rename(columns={"link_strength": "lls" })
                         temp_s_hits['Segment_'+str(zz)]=temp_s_hits['_r_HitID']
                         temp_s_hits._l_HitID= temp_s_hits._l_HitID.fillna(temp_s_hits._r_HitID)
-                        temp_s_hits.link_strength= temp_s_hits.link_strength.fillna(temp_s_hits.lls)
+                        temp_s_hits.link_strength= temp_s_hits.link_strength.fillna(0.0)
                         print(temp_s_hits)
                         print(_Tot_Hits_Pool)
 
@@ -364,7 +362,6 @@ class HitCluster:
                         _Tot_Hits_Pool=_Tot_Hits_Pool.drop(['Segment_'+str(zz)], axis=1)
 
                         temp_s_hits['Track_ID']+=('-'+temp_s_hits['_r_HitID'])
-                        temp_s_hits['DoF']+=1
                         temp_s_hits['Fit']+=temp_s_hits['link_strength']
                         if zz==len(z_ind)-1:
                             print(temp_s_hits)
@@ -377,8 +374,6 @@ class HitCluster:
                             print(temp_s_hits)
                             temp_s_hits=temp_s_hits.drop(["_r_HitID"], axis=1)
                         print(temp_s_hits)
-
-                    temp_s_hits=temp_s_hits.drop(["lls"], axis=1)
                     print(temp_s_hits)
                     print(_Tot_Hits_Pool)
                     columns=[col for col in temp_s_hits.columns if 'Segment' in col]

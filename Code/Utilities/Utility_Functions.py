@@ -176,7 +176,7 @@ class HitCluster:
                     temp_s_hits['Segment_0']=temp_s_hits['r_HitID']
                     temp_s_hits['Track_ID']=temp_s_hits['r_HitID']
                     temp_s_hits=temp_s_hits.rename(columns={"link_strength": "Fit"})
-                    temp_s_hits=temp_s_hits.drop(["_r_HitID",'r_z'], axis=1)
+                    temp_s_hits=temp_s_hits.drop(["r_HitID",'r_z'], axis=1)
                     temp_s_hits=temp_s_hits.rename(columns={"l_HitID": "r_HitID" })
                     if len(z_ind)>1:
                         for zz in range(1,len(z_ind)):

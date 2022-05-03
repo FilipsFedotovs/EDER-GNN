@@ -377,32 +377,26 @@ class HitCluster:
                             print(temp_s_hits)
                             temp_s_hits=temp_s_hits.drop(["_r_HitID"], axis=1)
                         print(temp_s_hits)
+
                     temp_s_hits=temp_s_hits.drop(["lls"], axis=1)
                     print(temp_s_hits)
                     print(_Tot_Hits_Pool)
-                    temp_s_hits['join_key']='join_key'
-                    _Tot_Hits_Pool['join_key']='join_key'
-                    temp_s_hits['left_hit']=False
-                    temp_s_hits['right_hit']=False
-                    temp_e_hits=pd.merge(temp_s_hits, _Tot_Hits_Pool, how="inner", on=['join_key'])
-                    print(temp_e_hits)
                     columns=[col for col in temp_e_hits.columns if 'Segment' in col]
-                    print(columns)
-                    temp_e_hits=temp_e_hits[temp_e_hits['Track_ID'].str.contains(temp_e_hits["_r_HitID"])]
+                    t_count=0
+                    for c1 in columns:
+                        for c2 in columns:
+                            if c1!=c2:
+                                t_count+=1
+                                t_temp_e_hits=pd.merge(temp_s_hits, _Tot_Hits_Pool[["_r_HitID","_l_HitID",'link_strength']], how="inner", left_on=[c1,c2], right_on=["_r_HitID","_l_HitID"])
+                                if t_count==1:
+                                    temp_e_hits=t_temp_e_hits
+                                else:
+                                    m_frames=[temp_e_hits,t_temp_e_hits]
+                                    temp_e_hits=pd.concat(m_frames)
+
+
                     print(temp_e_hits)
                     exit()
-                    def Check_lOverlap(row):
-                        for c in columns:
-                          if row[c]==row["_r_HitID"]:
-                             return True
-                        return False
-                    def Check_rOverlap(row):
-                        for c in columns:
-                          if row[c]==row["_l_HitID"]:
-                             return True
-                        return False
-                    temp_e_hits['left_hit'] = temp_e_hits.apply(Check_lOverlap,axis=1)
-                    temp_e_hits['right_hit'] = temp_e_hits.apply(Check_rOverlap,axis=1)
                     temp_e_hits=temp_e_hits.drop(["r_z",'join_key','_l_HitID','_r_HitID'], axis=1)
                     temp_e_hits.drop(temp_e_hits.index[temp_e_hits['left_hit'] ==False], inplace = True)
                     temp_e_hits.drop(temp_e_hits.index[temp_e_hits['right_hit'] ==False], inplace = True)

@@ -33,7 +33,6 @@ parser.add_argument('--cut_dr',help="Cut on angle difference", default='4000')
 parser.add_argument('--zOffset',help="Data offset on z", default='0.0')
 parser.add_argument('--yOffset',help="Data offset on y", default='0.0')
 parser.add_argument('--xOffset',help="Data offset on x", default='0.0')
-parser.add_argument('--MaxHits',help="Max hits per join", default='100000')
 ######################################## Set variables  #############################################################
 args = parser.parse_args()
 
@@ -119,10 +118,7 @@ if args.Log=='Y':
     MCdata.drop(MCdata.index[MCdata['z'] < (Set*stepZ)], inplace = True)  #Keeping the relevant z slice
     MCdata_list=MCdata.values.tolist()
     RawClusters[0].LinkHits(model.decode_all(lat_z),True,MCdata_list,cut_dt,cut_dr)
-
-
-
-print(RawClusters[0].HitLinks)
+print(RawClusters[0].RecStats)
 exit()
 
 # for i in range(0,Xsteps):

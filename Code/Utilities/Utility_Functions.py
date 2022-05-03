@@ -256,7 +256,7 @@ class HitCluster:
             StatFakeValues=[]
             StatTruthValues=[]
 
-            StatLabels=['Initial # of combinations','Delete self-permutations','Enforce positive directionality','Cut on delta t', 'Cut on delta x']
+            StatLabels=['Initial # of combinations','Delete self-permutations','Enforce positive directionality','Cut on delta t', 'Cut on delta x','Track Reconstruction']
             for s in MCHits:
                if s[1]>=self.ClusterID[0]*self.Step[0] and s[1]<((self.ClusterID[0]+1)*self.Step[0]):
                    if s[2]>=self.ClusterID[1]*self.Step[1] and s[2]<((self.ClusterID[1]+1)*self.Step[1]):
@@ -309,20 +309,6 @@ class HitCluster:
 
             StatFakeValues.append(len(_Tot_Hits.axes[0])-len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
             StatTruthValues.append(len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
-            # print(_Tot_Hits[['_r_HitID', 'r_z','_l_HitID','l_z','link_strength']])
-            # _Tot_Hits=_Tot_Hits.sort_values(by=['_l_HitID','r_z','link_strength'], ascending=False)
-            # print(_Tot_Hits[['_r_HitID', 'r_z','_l_HitID','l_z','link_strength']])
-            # _Tot_Hits.drop_duplicates(subset=['_l_HitID','r_z'],keep='first', inplace=True)
-            # print(_Tot_Hits[['_r_HitID', 'r_z','_l_HitID','l_z','link_strength']])
-            # StatFakeValues.append(len(_Tot_Hits.axes[0])-len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
-            # StatTruthValues.append(len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
-
-            print(StatFakeValues)
-            print(StatTruthValues)
-            #_Tot_Hits=_Tot_Hits[(_Tot_Hits['l_MC_ID']== '54703-0')]
-            #print(_Tot_Hits.sort_values(by=['l_MC_ID','r_MC_ID'], ascending=False))
-            #93735-3975
-            #exit()
             _Tot_Hits=_Tot_Hits[['_l_HitID','_r_HitID','r_z','link_strength']]
             Trigger=False
             while(len(_Tot_Hits)>0):
@@ -330,10 +316,8 @@ class HitCluster:
 
                     z_ind=_Tot_Hits_Pool.sort_values(by=['r_z'], ascending=True)[['r_z']].drop_duplicates(subset=['r_z'],keep='first').values.tolist()
                     temp_s_hits=_Tot_Hits_Pool.drop(_Tot_Hits_Pool.index[_Tot_Hits_Pool['r_z'] != z_ind[0][0]])
-                    #_Tot_Hits_Pool=_Tot_Hits_Pool.drop(_Tot_Hits_Pool.index[_Tot_Hits_Pool['r_z'] == z_ind[z][0]])
                     temp_s_hits['Segment_0']=temp_s_hits['_r_HitID']
                     temp_s_hits['Track_ID']=temp_s_hits['_r_HitID']
-                    #(temp_s_hits)
                     temp_s_hits=temp_s_hits.rename(columns={"link_strength": "Fit"})
                     temp_s_hits=temp_s_hits.drop(["_r_HitID",'r_z'], axis=1)
                     temp_s_hits=temp_s_hits.rename(columns={"_l_HitID": "_r_HitID" })
@@ -341,7 +325,6 @@ class HitCluster:
                         for zz in range(1,len(z_ind)):
                             temp_m_hits=_Tot_Hits_Pool.drop(_Tot_Hits_Pool.index[_Tot_Hits_Pool['r_z'] != z_ind[zz][0]])
                             temp_s_hits=pd.merge(temp_s_hits, temp_m_hits, how="left", on=['_r_HitID'])
-                            #temp_s_hits=temp_s_hits.rename(columns={"link_strength": "lls" })
                             temp_s_hits['Segment_'+str(zz)]=temp_s_hits['_r_HitID']
                             temp_s_hits._l_HitID= temp_s_hits._l_HitID.fillna(temp_s_hits._r_HitID)
                             temp_s_hits.link_strength= temp_s_hits.link_strength.fillna(0.0)
@@ -386,7 +369,6 @@ class HitCluster:
                         temp_dof_hits=temp_dof_hits.groupby(['Track_ID'])['value'].count().reset_index()
                         temp_dof_hits= temp_dof_hits.rename(columns={'value': "DoF"})
                         temp_e_hits=pd.merge(temp_e_hits, temp_dof_hits, how="inner", on=['Track_ID'])
-
                         temp_e_hits['Fit/DOF']=(temp_e_hits['link_strength']+temp_e_hits['Fit'])/(temp_e_hits['DoF']-1)
                         temp_e_hits=temp_e_hits.sort_values(by=['Fit/DOF'], ascending=False)
                         temp_e_hits=temp_e_hits.iloc[:1]
@@ -420,17 +402,11 @@ class HitCluster:
                     _Tot_Hits=_Tot_Hits.drop_duplicates(keep='first')
                     if len(_Tot_Hits)==0:
                         break
-            print(_Tot_Hits)
-            print(f_result)
-
-
-
             f_result_sl=f_result.groupby(by=['Segment_ID'])['HitID'].count().reset_index()
             f_result_sl=f_result_sl.rename(columns={"HitID": "Segment_Fit"})
             f_result=pd.merge(f_result, f_result_sl, how="inner", on=['Segment_ID'])
             f_result=f_result.sort_values(by=['HitID','Segment_Fit'], ascending=False)
             f_result=f_result.drop_duplicates(subset='HitID',keep='first')
-            print(f_result)
             f_result=f_result[['HitID','Segment_ID']]
             _l_fHits= f_result.rename(columns={"HitID": "_l_HitID"})
             _l_Tot_fHits=pd.merge(_l_MCHits, _l_fHits, how="left", on=['_l_HitID'])
@@ -446,12 +422,9 @@ class HitCluster:
             _Tot_fHits.drop(_Tot_fHits.index[_Tot_fHits['_l_HitID'] == _Tot_fHits['_r_HitID']], inplace = True)
             _Tot_fHits["Pair_ID"]= ['-'.join(sorted(tup)) for tup in zip(_Tot_fHits['_l_HitID'], _Tot_fHits['_r_HitID'])]
             _Tot_fHits.drop_duplicates(subset="Pair_ID",keep='first',inplace=True)
-            print(_Tot_fHits[(_Tot_fHits['l_MC_ID']!= _Tot_fHits['r_MC_ID'])])
             StatFakeValues.append(len(_Tot_fHits.axes[0])-len(_Tot_fHits.drop(_Tot_fHits.index[_Tot_fHits['l_MC_ID'] != _Tot_fHits['r_MC_ID']]).axes[0]))
             StatTruthValues.append(len(_Tot_fHits.drop(_Tot_fHits.index[_Tot_fHits['l_MC_ID'] != _Tot_fHits['r_MC_ID']]).axes[0]))
-            print(StatFakeValues)
-            print(StatTruthValues)
-            exit()
+            self.RecStats=[StatLabels,StatFakeValues,StatTruthValues]
 
 
       @staticmethod

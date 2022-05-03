@@ -164,7 +164,7 @@ if Mode=='C':
                         cluster_data_file=open(required_output_file_location,'rb')
                         cluster_data=pickle.load(cluster_data_file)
                         for cd in cluster_data:
-                            result_temp=cd.Stats
+                            result_temp=cd.RecStats
                             fake_results_1.append(int(result_temp[1][0]))
                             fake_results_2.append(int(result_temp[1][1]))
                             fake_results_3.append(int(result_temp[1][2]))
@@ -196,14 +196,6 @@ if Mode=='C':
                             [label[3], np.average(fake_results_4), np.average(truth_results_4), np.average(precision_results_4), np.std(precision_results_4), np.average(recall_results_4), np.std(recall_results_4)],\
                             [label[4], np.average(fake_results_5), np.average(truth_results_5), np.average(precision_results_5), np.std(precision_results_5), np.average(recall_results_5), np.std(recall_results_5)]], \
                             headers=['Step', 'Avg # Fake edges', 'Avg # of Genuine edges', 'Avg precision', 'Precision std','Avg recall', 'Recall std' ], tablefmt='orgtbl'))
-            # print(UF.TimeStamp(),bcolors.OKGREEN+'Performance metrics are presented bellow'+bcolors.ENDC)
-            # Precision_Nom=np.average(truth_results_5)
-            # Precision_Nom_Err=np.std(truth_results_5)
-            # Precision_Den=np.average(fake_results_5)+np.average(truth_results_5)
-            # Precision_Den_Err=UF.ErrorOperations(np.average(fake_results_5),np.average(truth_results_5),np.std(fake_results_5),np.std(truth_results_5),'+')
-            # Precision=round((Precision_Nom/Precision_Den)*100,2)
-            # Precision_Err=round(UF.ErrorOperations(Precision_Nom,Precision_Den,Precision_Nom_Err,Precision_Den_Err,'/')*100,2)
-            # print(tabulate([['Precision', Precision, Precision_Err]], headers=['Average [%]', 'Error [%]'], tablefmt='orgtbl'))
        print(bcolors.HEADER+"############################################# End of the program ################################################"+bcolors.ENDC)
 #End of the script
 

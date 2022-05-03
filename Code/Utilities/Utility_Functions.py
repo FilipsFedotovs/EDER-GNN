@@ -414,6 +414,7 @@ class HitCluster:
                     else:
                          temp_e_hits=temp_s_hits.sort_values(by=['Fit'], ascending=False)
                          print(temp_e_hits)
+                         print(f_result)
                          exit()
                          #temp_e_hits=temp_e_hits.iloc[:1]
 

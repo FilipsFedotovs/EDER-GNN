@@ -118,7 +118,7 @@ if args.Log=='Y':
     MCdata.drop(MCdata.index[MCdata['z'] >= ((Set+1)*stepZ)], inplace = True)  #Keeping the relevant z slice
     MCdata.drop(MCdata.index[MCdata['z'] < (Set*stepZ)], inplace = True)  #Keeping the relevant z slice
     MCdata_list=MCdata.values.tolist()
-    RawClusters[0].LinkHits(model.decode_all(lat_z),True,MCdata_list,MaxHits,cut_dt,cut_dr)
+    RawClusters[0].LinkHits(model.decode_all(lat_z),True,MCdata_list,cut_dt,cut_dr)
 
 
 

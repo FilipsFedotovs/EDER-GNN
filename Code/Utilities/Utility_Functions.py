@@ -422,8 +422,15 @@ class HitCluster:
                         _Tot_Hits=_Tot_Hits.drop_duplicates(keep='first')
                     else:
                          temp_e_hits=temp_s_hits.sort_values(by=['Fit'], ascending=False)
-
-                         #temp_e_hits=temp_e_hits.iloc[:1]
+                         temp_e_hits=temp_e_hits.iloc[:1]
+                         print(temp_e_hits)
+                         exit()
+                         # temp_e_hits=temp_e_hits.iloc[:1]
+                         # temp_e_hits=temp_e_hits.drop(["Fit",'DoF','link_strength','Fit/DOF'], axis=1)
+                         # temp_e_hits=pd.melt(temp_e_hits, id_vars=['Track_ID'])
+                         # temp_e_hits=temp_e_hits.drop(['variable'], axis=1)
+                         # temp_e_hits= temp_e_hits.rename(columns={'value': "HitID",'Track_ID': 'Segment_ID'})
+                         # temp_e_hits=temp_e_hits.drop_duplicates(keep='first')
 
                     if len(_Tot_Hits)==0:
                         break

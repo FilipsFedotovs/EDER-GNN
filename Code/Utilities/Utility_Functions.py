@@ -274,8 +274,8 @@ class HitCluster:
            _r_Tot_fHits.drop_duplicates(subset=['r_HitID'],keep='first', inplace=True)
            _l_Tot_fHits.drop_duplicates(subset=['l_HitID'],keep='first', inplace=True)
            _Tot_fHits=pd.merge(_l_Tot_fHits, _r_Tot_fHits, how="inner",on=["Segment_ID"])
-           _Tot_fHits.l_MC_ID= _Tot_fHits.l_MC_ID.fillna(_Tot_fHits._l_HitID)
-           _Tot_fHits.r_MC_ID= _Tot_fHits.r_MC_ID.fillna(_Tot_fHits._r_HitID)
+           _Tot_fHits.l_MC_ID= _Tot_fHits.l_MC_ID.fillna(_Tot_fHits.l_HitID)
+           _Tot_fHits.r_MC_ID= _Tot_fHits.r_MC_ID.fillna(_Tot_fHits.r_HitID)
            _Tot_fHits.drop(_Tot_fHits.index[_Tot_fHits['l_HitID'] == _Tot_fHits['r_HitID']], inplace = True)
            _Tot_fHits["Pair_ID"]= ['-'.join(sorted(tup)) for tup in zip(_Tot_fHits['l_HitID'], _Tot_fHits['r_HitID'])]
            _Tot_fHits.drop_duplicates(subset="Pair_ID",keep='first',inplace=True)

@@ -109,10 +109,10 @@ if Mode=='C':
            for j in range(0,Ysteps):
             OptionHeader = [' --Z_ID ', ' --stepX ',' --stepY ',' --stepZ ', ' --EOS ', " --AFS ", " --zOffset ", " --xOffset ", " --yOffset ", ' --Log ', ' --cut_dt ', ' --cut_dr ', ' --X_ID ', ' --Y_ID ']
             OptionLine = [k, stepX,stepY,stepZ, EOS_DIR, AFS_DIR, z_offset, x_offset, y_offset, args.Log, cut_dt,cut_dr, i, j]
-            required_output_file_location=EOS_DIR+'/EDER-GNN/Data/REC_SET/R2_R2_SelectedClusters_'+str(k)+'_'+str(i)+'.pkl'
-            SHName = AFS_DIR + '/HTCondor/SH/SH_R2_' + str(k) + '_'+ str(i)+ '.sh'
-            SUBName = AFS_DIR + '/HTCondor/SUB/SUB_R2_' + str(k) + '_'+ str(i)+ '.sub'
-            MSGName = AFS_DIR + '/HTCondor/MSG/MSG_R2_' + str(k) + '_'+ str(i)
+            required_output_file_location=EOS_DIR+'/EDER-GNN/Data/REC_SET/R2_R2_SelectedClusters_'+str(k)+'_'+str(i)+'_'+str(j)+'.pkl'
+            SHName = AFS_DIR + '/HTCondor/SH/SH_R2_' + str(k) + '_'+ str(i)+ '_'+ str(j)+ '.sh'
+            SUBName = AFS_DIR + '/HTCondor/SUB/SUB_R2_'+ str(k) + '_'+ str(i)+ '_'+ str(j)+'.sub'
+            MSGName = AFS_DIR + '/HTCondor/MSG/MSG_R2_'+ str(k) + '_'+ str(i)+ '_'+ str(j)
             ScriptName = AFS_DIR + '/Code/Utilities/R2_GenerateClusters_Sub.py '
             if os.path.isfile(required_output_file_location)!=True:
                bad_pop.append([OptionHeader, OptionLine, SHName, SUBName, MSGName, ScriptName, 1, 'EDER-GNN-R2', False,False])

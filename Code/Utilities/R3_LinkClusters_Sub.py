@@ -20,8 +20,9 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 device = "cpu"
 #Setting the parser - this script is usually not run directly, but is used by a Master version Counterpart that passes the required arguments
 parser = argparse.ArgumentParser(description='select cut parameters')
-parser.add_argument('--set',help="Enter Z id", default='0')
-parser.add_argument('--subset',help="Please enter the cluster set", default='1')
+parser.add_argument('--Z_ID',help="Enter Z id", default='0')
+parser.add_argument('--X_ID',help="Please enter the cluster set", default='1')
+parser.add_argument('--Y_ID',help="Please enter the cluster set", default='1')
 parser.add_argument('--EOS',help="EOS directory location", default='.')
 parser.add_argument('--AFS',help="AFS directory location", default='.')
 parser.add_argument('--Log',help="Logging yes?", default='N')
@@ -36,8 +37,9 @@ parser.add_argument('--xOffset',help="Data offset on x", default='0.0')
 ######################################## Set variables  #############################################################
 args = parser.parse_args()
 
-Set=int(args.set)
-ClusterSet=int(args.subset)
+Z_ID=int(args.Z_ID)
+X_ID=int(args.X_ID)
+Y_ID=int(args.Y_ID)
 stepX=float(args.stepX) #The coordinate of the st plate in the current scope
 stepZ=float(args.stepZ)
 stepY=float(args.stepY)
@@ -54,21 +56,9 @@ AFS_DIR=args.AFS
 #import sys
 #sys.path.insert(1, AFS_DIR+'/Code/Utilities/')
 import Utility_Functions as UF #This is where we keep routine utility functions
-input_file_location=EOS_DIR+'/EDER-GNN/Data/REC_SET/R1_HITS.csv'
-
-print(UF.TimeStamp(), "Modules Have been imported successfully...")
-print(UF.TimeStamp(),'Loading pre-selected data from ',input_file_location)
-
-data=pd.read_csv(input_file_location,header=0,
-            usecols=["Hit_ID","x","y","z","tx","ty"])
-data["y"] = pd.to_numeric(data["y"],downcast='float')
-data['y']=data['y']-y_offset
-y_max=data['y'].max()
-Ysteps=math.ceil(y_max/stepY)
-
 
 #Specifying the full path to input/output files
-input_file_location=EOS_DIR+'/EDER-GNN/Data/REC_SET/R2_R2_SelectedClusters_'+str(Set)+'_'+str(ClusterSet)+'.pkl'
+input_file_location=EOS_DIR+'/EDER-GNN/Data/REC_SET/R2_R2_SelectedClusters_'+str(Z_ID)+'_'+str(X_ID)+'_'+str(Y_ID)+'.pkl'
 
 print(UF.TimeStamp(), "Modules Have been imported successfully...")
 print(UF.TimeStamp(),'Loading pre-selected data from ',input_file_location)
@@ -117,26 +107,27 @@ if args.Log=='Y':
     MCdata['z']=MCdata['z']-z_offset
     MCdata['x']=MCdata['x']-x_offset
     MCdata['y']=MCdata['y']-y_offset
-    MCdata.drop(MCdata.index[MCdata['z'] >= ((Set+1)*stepZ)], inplace = True)  #Keeping the relevant z slice
-    MCdata.drop(MCdata.index[MCdata['z'] < (Set*stepZ)], inplace = True)  #Keeping the relevant z slice
+    MCdata.drop(MCdata.index[MCdata['z'] >= ((Z_ID+1)*stepZ)], inplace = True)  #Keeping the relevant z slice
+    MCdata.drop(MCdata.index[MCdata['z'] < (Z_ID*stepZ)], inplace = True)  #Keeping the relevant z slice
+    MCdata.drop(MCdata.index[MCdata['x'] >= ((X_ID+1)*stepX)], inplace = True)  #Keeping the relevant z slice
+    MCdata.drop(MCdata.index[MCdata['x'] < (X_ID*stepX)], inplace = True)  #Keeping the relevant z slice
+    MCdata.drop(MCdata.index[MCdata['y'] >= ((Y_ID+1)*stepY)], inplace = True)  #Keeping the relevant z slice
+    MCdata.drop(MCdata.index[MCdata['y'] < (Y_ID*stepY)], inplace = True)  #Keeping the relevant z slice
     MCdata_list=MCdata.values.tolist()
 
 LoadedClusters=[]
-for j in range(0,Ysteps):
-        progress=round((float(j)/float(Ysteps))*100,2)
-        print(UF.TimeStamp(),"progress is ",progress,' %') #Progress display
-        data=RawClusters[j].ClusterGraph
-        top=[]
-        bottom=[]
-        for i in range(RawClusters[j].ClusterSize):
+data=RawClusters[j].ClusterGraph
+top=[]
+bottom=[]
+for i in range(RawClusters[j].ClusterSize):
             top.append(i)
             bottom.append(i)
-        data.train_pos_edge_index=torch.tensor(np.array([top,bottom]))
-        lat_z = model.encode(data)
-        if args.Log=='Y':
+data.train_pos_edge_index=torch.tensor(np.array([top,bottom]))
+lat_z = model.encode(data)
+if args.Log=='Y':
             RawClusters[j].LinkHits(model.decode_all(lat_z),True,MCdata_list,cut_dt,cut_dr)
-        LoadedClusters.append(RawClusters[j])
-output_file_location=EOS_DIR+'/EDER-GNN/Data/REC_SET/R3_R3_LinkedClusters_'+str(Set)+'_'+str(ClusterSet)+'.pkl'
+LoadedClusters.append(RawClusters[j])
+output_file_location=EOS_DIR+'/EDER-GNN/Data/REC_SET/R3_R4_LinkedClusters_'+str(Z_ID)+'_'+str(X_ID)+'_'+str(Y_ID)+'.pkl'
 open_file = open(output_file_location, "wb")
 pickle.dump(LoadedClusters, open_file)
 print(UF.TimeStamp(), "Cluster linking is finished...")

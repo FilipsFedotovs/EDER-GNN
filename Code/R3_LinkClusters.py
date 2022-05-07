@@ -74,7 +74,9 @@ y_offset=data['y'].min()
 x_offset=data['x'].min()
 data['x']=data['x']-x_offset
 x_max=data['x'].max()
+y_max=data['y'].max()
 Xsteps=math.ceil(x_max/stepX) #Even if use only a max of 20000 track on the right join we cannot perform the full outer join due to the memory limitations, we do it in a small 'cuts'
+Ysteps=math.ceil(y_max/stepY)
 if Mode=='R':
    print(UF.TimeStamp(),bcolors.WARNING+'Warning! You are running the script with the "Mode R" option which means that you want to vertex the seeds from the scratch'+bcolors.ENDC)
    print(UF.TimeStamp(),bcolors.WARNING+'This option will erase all the previous Seed vertexing jobs/results'+bcolors.ENDC)
@@ -88,7 +90,7 @@ if Mode=='R':
       UF.RecCleanUp(AFS_DIR, EOS_DIR, 'R3', ['R3_R4','R3_R3'], "SoftUsed == \"EDER-GNN-R3\"")
       print(UF.TimeStamp(),'Submitting jobs... ',bcolors.ENDC)
       for k in range(0,Zsteps):
-            OptionHeader = [' --set ', ' --stepX ',' --stepY ',' --stepZ ', ' --EOS ', " --AFS ", " --zOffset ", " --xOffset ", " --yOffset ", ' --Log ', ' --cut_dt ', ' --cut_dr ', ' --subset ']
+            OptionHeader = [' --X_ID ', ' --stepX ',' --stepY ',' --stepZ ', ' --EOS ', " --AFS ", " --zOffset ", " --xOffset ", " --yOffset ", ' --Log ', ' --cut_dt ', ' --cut_dr ', ' --subset ']
             OptionLine = [k, stepX,stepY,stepZ, EOS_DIR, AFS_DIR, z_offset, x_offset, y_offset, args.Log, cut_dt,cut_dr, '$1']
             SHName = AFS_DIR + '/HTCondor/SH/SH_R3_' + str(k) + '.sh'
             SUBName = AFS_DIR + '/HTCondor/SUB/SUB_R3_' + str(k) + '.sub'
@@ -194,7 +196,8 @@ if Mode=='C':
                             [label[1], np.average(fake_results_2), np.average(truth_results_2), np.average(precision_results_2), np.std(precision_results_2), np.average(recall_results_2), np.std(recall_results_2)], \
                             [label[2], np.average(fake_results_3), np.average(truth_results_3), np.average(precision_results_3), np.std(precision_results_3), np.average(recall_results_3), np.std(recall_results_3)], \
                             [label[3], np.average(fake_results_4), np.average(truth_results_4), np.average(precision_results_4), np.std(precision_results_4), np.average(recall_results_4), np.std(recall_results_4)],\
-                            [label[4], np.average(fake_results_5), np.average(truth_results_5), np.average(precision_results_5), np.std(precision_results_5), np.average(recall_results_5), np.std(recall_results_5)]], \
+                            [label[3], np.average(fake_results_5), np.average(truth_results_5), np.average(precision_results_5), np.std(precision_results_5), np.average(recall_results_5), np.std(recall_results_5)],\
+                            [label[4], np.average(fake_results_6), np.average(truth_results_6), np.average(precision_results_6), np.std(precision_results_6), np.average(recall_results_6), np.std(recall_results_6)]], \
                             headers=['Step', 'Avg # Fake edges', 'Avg # of Genuine edges', 'Avg precision', 'Precision std','Avg recall', 'Recall std' ], tablefmt='orgtbl'))
        print(bcolors.HEADER+"############################################# End of the program ################################################"+bcolors.ENDC)
 #End of the script

@@ -74,6 +74,7 @@ y_offset=data['y'].min()
 x_offset=data['x'].min()
 data['x']=data['x']-x_offset
 x_max=data['x'].max()
+y_max=data['y'].max()
 Xsteps=math.ceil(x_max/stepX) #Even if use only a max of 20000 track on the right join we cannot perform the full outer join due to the memory limitations, we do it in a small 'cuts'
 Ysteps=math.ceil(y_max/stepY)
 if Mode=='R':

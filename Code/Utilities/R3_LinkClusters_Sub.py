@@ -116,7 +116,7 @@ if args.Log=='Y':
     MCdata_list=MCdata.values.tolist()
 
 LoadedClusters=[]
-data=RawClusters[j].ClusterGraph
+data=RawClusters[0].ClusterGraph
 top=[]
 bottom=[]
 for i in range(RawClusters[0].ClusterSize):

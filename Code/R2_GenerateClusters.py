@@ -75,6 +75,7 @@ x_offset=data['x'].min()
 data['x']=data['x']-x_offset
 x_max=data['x'].max()
 Xsteps=math.ceil(x_max/stepX) #Even if use only a max of 20000 track on the right join we cannot perform the full outer join due to the memory limitations, we do it in a small 'cuts'
+Ysteps=math.ceil(y_max/stepY)
 if Mode=='R':
    print(UF.TimeStamp(),bcolors.WARNING+'Warning! You are running the script with the "Mode R" option which means that you want to vertex the seeds from the scratch'+bcolors.ENDC)
    print(UF.TimeStamp(),bcolors.WARNING+'This option will erase all the previous tracking jobs/results'+bcolors.ENDC)
@@ -88,13 +89,14 @@ if Mode=='R':
       UF.RecCleanUp(AFS_DIR, EOS_DIR, 'R3', ['R2_R3','R2_R2'], "SoftUsed == \"EDER-GNN-R2\"")
       print(UF.TimeStamp(),'Submitting jobs... ',bcolors.ENDC)
       for k in range(0,Zsteps):
-            OptionHeader = [' --set ', ' --stepX ',' --stepY ',' --stepZ ', ' --EOS ', " --AFS ", " --zOffset ", " --xOffset ", " --yOffset ", ' --Log ', ' --cut_dt ', ' --cut_dr ', ' --subset ']
-            OptionLine = [k, stepX,stepY,stepZ, EOS_DIR, AFS_DIR, z_offset, x_offset, y_offset, args.Log, cut_dt,cut_dr, '$1']
-            SHName = AFS_DIR + '/HTCondor/SH/SH_R2_' + str(k) + '.sh'
-            SUBName = AFS_DIR + '/HTCondor/SUB/SUB_R2_' + str(k) + '.sub'
-            MSGName = AFS_DIR + '/HTCondor/MSG/MSG_R2_' + str(k)
+        for i in range(0,Xsteps):
+            OptionHeader = [' --Z_ID ', ' --stepX ',' --stepY ',' --stepZ ', ' --EOS ', " --AFS ", " --zOffset ", " --xOffset ", " --yOffset ", ' --Log ', ' --cut_dt ', ' --cut_dr ', ' --X_ID ', ' --Y_ID ']
+            OptionLine = [k, stepX,stepY,stepZ, EOS_DIR, AFS_DIR, z_offset, x_offset, y_offset, args.Log, cut_dt,cut_dr,i, '$1']
+            SHName = AFS_DIR + '/HTCondor/SH/SH_R2_' + str(k) + '_'+ str(i)+ '.sh'
+            SUBName = AFS_DIR + '/HTCondor/SUB/SUB_R2_' + str(k) + '_'+ str(i)+ '.sub'
+            MSGName = AFS_DIR + '/HTCondor/MSG/MSG_R2_' + str(k) + '_'+ str(i)
             ScriptName = AFS_DIR + '/Code/Utilities/R2_GenerateClusters_Sub.py '
-            UF.SubmitJobs2Condor([OptionHeader, OptionLine, SHName, SUBName, MSGName, ScriptName, Xsteps, 'EDER-GNN-R2', True,False])
+            UF.SubmitJobs2Condor([OptionHeader, OptionLine, SHName, SUBName, MSGName, ScriptName, Ysteps, 'EDER-GNN-R2', False,False])
       print(UF.TimeStamp(), bcolors.OKGREEN+'All jobs have been submitted, please rerun this script with "--Mode C" in few hours'+bcolors.ENDC)
 if Mode=='C':
    bad_pop=[]
@@ -103,15 +105,16 @@ if Mode=='C':
        progress=round((float(k)/float(Zsteps))*100,2)
        print(UF.TimeStamp(),"progress is ",progress,' %') #Progress display
        for i in range(0,Xsteps):
-            OptionHeader = [' --set ', ' --stepX ',' --stepY ',' --stepZ ', ' --EOS ', " --AFS ", " --zOffset ", " --xOffset ", " --yOffset ", ' --Log ', ' --cut_dt ', ' --cut_dr ',' --subset ']
-            OptionLine = [k, stepX,stepY,stepZ, EOS_DIR, AFS_DIR, z_offset, x_offset, y_offset, args.Log, cut_dt,cut_dr, i]
+           for j in range(0,Ysteps):
+            OptionHeader = [' --Z_ID ', ' --stepX ',' --stepY ',' --stepZ ', ' --EOS ', " --AFS ", " --zOffset ", " --xOffset ", " --yOffset ", ' --Log ', ' --cut_dt ', ' --cut_dr ', ' --X_ID ', ' --Y_ID ']
+            OptionLine = [k, stepX,stepY,stepZ, EOS_DIR, AFS_DIR, z_offset, x_offset, y_offset, args.Log, cut_dt,cut_dr, i, j]
             required_output_file_location=EOS_DIR+'/EDER-GNN/Data/REC_SET/R2_R2_SelectedClusters_'+str(k)+'_'+str(i)+'.pkl'
-            SHName = AFS_DIR + '/HTCondor/SH/SH_R2_' + str(k) + '.sh'
-            SUBName = AFS_DIR + '/HTCondor/SUB/SUB_R2_' + str(k) + '.sub'
-            MSGName = AFS_DIR + '/HTCondor/MSG/MSG_R2_' + str(k)
+            SHName = AFS_DIR + '/HTCondor/SH/SH_R2_' + str(k) + '_'+ str(i)+ '.sh'
+            SUBName = AFS_DIR + '/HTCondor/SUB/SUB_R2_' + str(k) + '_'+ str(i)+ '.sub'
+            MSGName = AFS_DIR + '/HTCondor/MSG/MSG_R2_' + str(k) + '_'+ str(i)
             ScriptName = AFS_DIR + '/Code/Utilities/R2_GenerateClusters_Sub.py '
             if os.path.isfile(required_output_file_location)!=True:
-               bad_pop.append([OptionHeader, OptionLine, SHName, SUBName, MSGName, ScriptName, 1, 'EDER-GNN-R2', True,False])
+               bad_pop.append([OptionHeader, OptionLine, SHName, SUBName, MSGName, ScriptName, 1, 'EDER-GNN-R2', False,False])
    if len(bad_pop)>0:
      print(UF.TimeStamp(),bcolors.WARNING+'Warning, there are still', len(bad_pop), 'HTCondor jobs remaining'+bcolors.ENDC)
      print(bcolors.BOLD+'If you would like to wait and try again later please enter W'+bcolors.ENDC)
@@ -160,7 +163,8 @@ if Mode=='C':
                print(UF.TimeStamp(),"progress is ",progress,' %') #Progress display
 
                for i in range(0,Xsteps):
-                    required_output_file_location=EOS_DIR+'/EDER-GNN/Data/REC_SET/R2_R2_SelectedClusters_'+str(k)+'_'+str(i)+'.pkl'
+                 for j in range(0,Ysteps):
+                    required_output_file_location=EOS_DIR+'/EDER-GNN/Data/REC_SET/R2_R2_SelectedClusters_'+str(k)+'_'+str(i)+'_'+str(j)+'.pkl'
                     if os.path.isfile(required_output_file_location)!=True:
                        print(UF.TimeStamp(), bcolors.FAIL+"Critical fail: file",required_output_file_location,'is missing, please restart the script with the option "--Mode R"'+bcolors.ENDC)
                     elif os.path.isfile(required_output_file_location):

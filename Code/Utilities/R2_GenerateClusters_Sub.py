@@ -16,8 +16,9 @@ import pickle
 
 #Setting the parser - this script is usually not run directly, but is used by a Master version Counterpart that passes the required arguments
 parser = argparse.ArgumentParser(description='select cut parameters')
-parser.add_argument('--set',help="Enter Z id", default='0')
-parser.add_argument('--subset',help="Enter X id", default='0')
+parser.add_argument('--Z_ID',help="Enter Z id", default='0')
+parser.add_argument('--X_ID',help="Enter X id", default='0')
+parser.add_argument('--Y_ID',help="Enter Y id", default='0')
 parser.add_argument('--stepX',help="Enter X step size", default='0')
 parser.add_argument('--stepY',help="Enter Y step size", default='0')
 parser.add_argument('--stepZ',help="Enter Z step size", default='0')
@@ -33,8 +34,9 @@ parser.add_argument('--cut_dr',help="Cut on angle difference", default='4000')
 ######################################## Set variables  #############################################################
 args = parser.parse_args()
 
-Set=int(args.set)
-Subset=int(args.subset)
+Z_ID=int(args.Z_ID)
+X_ID=int(args.X_ID)
+Y_ID=int(args.Y_ID)
 stepX=float(args.stepX) #The coordinate of the st plate in the current scope
 stepZ=float(args.stepZ)
 stepY=float(args.stepY)
@@ -69,10 +71,12 @@ data['z']=data['z']-z_offset
 x_max=data['x'].max()
 y_max=data['y'].max()
 print(UF.TimeStamp(),'Creating clusters... ')
-data.drop(data.index[data['z'] >= ((Set+1)*stepZ)], inplace = True)  #Keeping the relevant z slice
-data.drop(data.index[data['z'] < (Set*stepZ)], inplace = True)  #Keeping the relevant z slice
-data.drop(data.index[data['x'] >= ((Subset+1)*stepX)], inplace = True)  #Keeping the relevant z slice
-data.drop(data.index[data['x'] < (Subset*stepX)], inplace = True)  #Keeping the relevant z slice
+data.drop(data.index[data['z'] >= ((Z_ID+1)*stepZ)], inplace = True)  #Keeping the relevant z slice
+data.drop(data.index[data['z'] < (Z_ID*stepZ)], inplace = True)  #Keeping the relevant z slice
+data.drop(data.index[data['x'] >= ((X_ID+1)*stepX)], inplace = True)  #Keeping the relevant z slice
+data.drop(data.index[data['x'] < (X_ID*stepX)], inplace = True)  #Keeping the relevant z slice
+data.drop(data.index[data['y'] >= ((Y_ID+1)*stepY)], inplace = True)  #Keeping the relevant z slice
+data.drop(data.index[data['y'] < (Y_ID*stepY)], inplace = True)  #Keeping the relevant z slice
 data_list=data.values.tolist()
 Ysteps=math.ceil(y_max/stepY)  #Calculating number of cuts
 
@@ -89,22 +93,21 @@ if args.Log=='Y':
     MCdata['z']=MCdata['z']-z_offset
     MCdata['x']=MCdata['x']-x_offset
     MCdata['y']=MCdata['y']-y_offset
-    MCdata.drop(MCdata.index[MCdata['z'] >= ((Set+1)*stepZ)], inplace = True)  #Keeping the relevant z slice
-    MCdata.drop(MCdata.index[MCdata['z'] < (Set*stepZ)], inplace = True)  #Keeping the relevant z slice
-    MCdata.drop(MCdata.index[MCdata['x'] >= ((Subset+1)*stepX)], inplace = True)  #Keeping the relevant z slice
-    MCdata.drop(MCdata.index[MCdata['x'] < (Subset*stepX)], inplace = True)  #Keeping the relevant z slice
+    MCdata.drop(MCdata.index[MCdata['z'] >= ((Z_ID+1)*stepZ)], inplace = True)  #Keeping the relevant z slice
+    MCdata.drop(MCdata.index[MCdata['z'] < (Z_ID*stepZ)], inplace = True)  #Keeping the relevant z slice
+    MCdata.drop(MCdata.index[MCdata['x'] >= ((X_ID+1)*stepX)], inplace = True)  #Keeping the relevant z slice
+    MCdata.drop(MCdata.index[MCdata['x'] < (X_ID*stepX)], inplace = True)  #Keeping the relevant z slice
+    MCdata.drop(MCdata.index[MCdata['y'] >= ((Y_ID+1)*stepY)], inplace = True)  #Keeping the relevant z slice
+    MCdata.drop(MCdata.index[MCdata['y'] < (Y_ID*stepY)], inplace = True)  #Keeping the relevant z slice
     MCdata_list=MCdata.values.tolist()
 LoadedClusters=[]
 
-for j in range(0,Ysteps):
-        progress=round((float(j)/float(Ysteps))*100,2)
-        print(UF.TimeStamp(),"progress is ",progress,' %') #Progress display
-        HC=UF.HitCluster([Subset,j,Set],[stepX,stepY,stepZ])
-        HC.LoadClusterHits(data_list)
-        if args.Log=='Y':
+HC=UF.HitCluster([X_ID,Y_ID,Z_ID],[stepX,stepY,stepZ])
+HC.LoadClusterHits(data_list)
+if args.Log=='Y':
             HC.GiveStats(MCdata_list,cut_dt,cut_dr)
-        LoadedClusters.append(HC)
-output_file_location=EOS_DIR+'/EDER-GNN/Data/REC_SET/R2_R2_SelectedClusters_'+str(Set)+'_'+str(Subset)+'.pkl'
+LoadedClusters.append(HC)
+output_file_location=EOS_DIR+'/EDER-GNN/Data/REC_SET/R2_R2_SelectedClusters_'+str(Z_ID)+'_'+str(X_ID)+'_'+str(Y_ID)+'.pkl'
 open_file = open(output_file_location, "wb")
 pickle.dump(LoadedClusters, open_file)
 print(UF.TimeStamp(), "Cluster generation is finished...")

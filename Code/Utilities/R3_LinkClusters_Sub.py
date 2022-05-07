@@ -119,14 +119,14 @@ LoadedClusters=[]
 data=RawClusters[j].ClusterGraph
 top=[]
 bottom=[]
-for i in range(RawClusters[j].ClusterSize):
+for i in range(RawClusters[0].ClusterSize):
             top.append(i)
             bottom.append(i)
 data.train_pos_edge_index=torch.tensor(np.array([top,bottom]))
 lat_z = model.encode(data)
 if args.Log=='Y':
-            RawClusters[j].LinkHits(model.decode_all(lat_z),True,MCdata_list,cut_dt,cut_dr)
-LoadedClusters.append(RawClusters[j])
+            RawClusters[0].LinkHits(model.decode_all(lat_z),True,MCdata_list,cut_dt,cut_dr)
+LoadedClusters.append(RawClusters[0])
 output_file_location=EOS_DIR+'/EDER-GNN/Data/REC_SET/R3_R4_LinkedClusters_'+str(Z_ID)+'_'+str(X_ID)+'_'+str(Y_ID)+'.pkl'
 open_file = open(output_file_location, "wb")
 pickle.dump(LoadedClusters, open_file)

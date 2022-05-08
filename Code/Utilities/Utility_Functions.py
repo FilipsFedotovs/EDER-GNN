@@ -119,6 +119,9 @@ class HitCluster:
                           _MCClusterHits.append([s[0],s[6]])
            #Preparing Raw and MC combined data 1
            _l_MCHits=pd.DataFrame(_MCClusterHits, columns = ['l_HitID','l_MC_ID'])
+           #Temp
+           _l_MCHits.to_csv('MC_Output.csv',index=False)
+
            _l_Hits=pd.DataFrame(self.ClusterHits, columns = ['l_HitID','l_x','l_y','l_z','l_tx','l_ty'])
            #Join hits + MC truth
            _l_Tot_Hits=pd.merge(_l_MCHits, _l_Hits, how="right", on=['l_HitID'])
@@ -286,6 +289,9 @@ class HitCluster:
                StatFakeValues.append(0)
                StatTruthValues.append(0)
            self.Stats=[StatLabels,StatFakeValues,StatTruthValues]
+           #Temp
+           f_result.to_csv('Rnd_Output.csv',index=False)
+
 
 
 
@@ -366,6 +372,8 @@ class HitCluster:
             StatTruthValues.append(len(_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']]).axes[0]))
             _Tot_Hits=_Tot_Hits[['_l_HitID','_r_HitID','r_z','link_strength']]
             Trigger=False
+            print(_Tot_Hits)
+            exit()
             while(len(_Tot_Hits)>0):
                     _Tot_Hits_Pool=_Tot_Hits
 
@@ -484,6 +492,9 @@ class HitCluster:
                StatFakeValues.append(0)
                StatTruthValues.append(0)
             self.RecStats=[StatLabels,StatFakeValues,StatTruthValues]
+
+            #Temp
+            f_result.to_csv('Link_Output.csv',index=False)
 
 
       @staticmethod

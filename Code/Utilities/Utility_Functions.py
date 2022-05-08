@@ -120,7 +120,7 @@ class HitCluster:
            #Preparing Raw and MC combined data 1
            _l_MCHits=pd.DataFrame(_MCClusterHits, columns = ['l_HitID','l_MC_ID'])
            #Temp
-           _l_MCHits.to_csv('MC_Output.csv',index=False)
+           #_l_MCHits.to_csv('MC_Output.csv',index=False)
 
            _l_Hits=pd.DataFrame(self.ClusterHits, columns = ['l_HitID','l_x','l_y','l_z','l_tx','l_ty'])
            #Join hits + MC truth
@@ -291,7 +291,7 @@ class HitCluster:
                StatTruthValues.append(0)
            self.Stats=[StatLabels,StatFakeValues,StatTruthValues]
            #Temp
-           f_result.to_csv('Rnd_Output.csv',index=False)
+           #f_result.to_csv('Rnd_Output.csv',index=False)
 
 
 
@@ -494,7 +494,7 @@ class HitCluster:
             self.RecStats=[StatLabels,StatFakeValues,StatTruthValues]
 
             #Temp
-            f_result.to_csv('Link_Output.csv',index=False)
+            #f_result.to_csv('Link_Output.csv',index=False)
 
 
       @staticmethod

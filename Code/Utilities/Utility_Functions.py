@@ -172,7 +172,7 @@ class HitCluster:
            _Tot_Hits['link_strength']=1.0
            Trigger=False
 
-           while(len(_Tot_Hits)>0):
+           while(len(f_result)>0):
                     _Tot_Hits_Pool=_Tot_Hits
 
                     z_ind=_Tot_Hits_Pool.sort_values(by=['r_z'], ascending=True)[['r_z']].drop_duplicates(subset=['r_z'],keep='first').values.tolist()

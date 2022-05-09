@@ -468,7 +468,7 @@ class HitCluster:
                     _Tot_Hits=_Tot_Hits.drop_duplicates(keep='first')
                     if len(_Tot_Hits)==0:
                         break
-            if len(_Tot_Hits)>0:
+            if len(f_result)>0:
                 f_result_sl=f_result.groupby(by=['Segment_ID'])['HitID'].count().reset_index()
                 f_result_sl=f_result_sl.rename(columns={"HitID": "Segment_Fit"})
                 f_result=pd.merge(f_result, f_result_sl, how="inner", on=['Segment_ID'])

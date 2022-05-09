@@ -171,7 +171,7 @@ class HitCluster:
            _Tot_Hits=_Tot_Hits[['l_HitID','r_HitID','r_z']]
            _Tot_Hits['link_strength']=1.0
            Trigger=False
-
+           print(_Tot_Hits)
            while(len(_Tot_Hits)>0):
                     _Tot_Hits_Pool=_Tot_Hits
 

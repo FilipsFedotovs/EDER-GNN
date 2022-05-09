@@ -172,7 +172,7 @@ class HitCluster:
            _Tot_Hits['link_strength']=1.0
            Trigger=False
 
-           while(len(f_result)>0):
+           while(len(_Tot_Hits)>0):
                     _Tot_Hits_Pool=_Tot_Hits
 
                     z_ind=_Tot_Hits_Pool.sort_values(by=['r_z'], ascending=True)[['r_z']].drop_duplicates(subset=['r_z'],keep='first').values.tolist()
@@ -266,7 +266,7 @@ class HitCluster:
                     # input('Press Enter')
                     if len(_Tot_Hits)==0:
                         break
-           if len(_Tot_Hits)>0:
+           if len(f_result)>0:
                f_result_sl=f_result.groupby(by=['Segment_ID'])['HitID'].count().reset_index()
                f_result_sl=f_result_sl.rename(columns={"HitID": "Segment_Fit"})
                f_result=pd.merge(f_result, f_result_sl, how="inner", on=['Segment_ID'])

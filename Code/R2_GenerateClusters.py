@@ -27,6 +27,7 @@ class bcolors:   #We use it for the interface
 parser = argparse.ArgumentParser(description='This script takes preselected 2-track seed candidates from previous step and refines them by applying additional cuts on the parameters such as DOCA, fiducial cute and distance to the possible vertex origin.')
 parser.add_argument('--Mode',help="Running Mode: Reset(R)/Continue(C)", default='C')
 parser.add_argument('--Log',help="Would you like to enable logging? Y/N", default='N')
+parser.add_argument('--Force',help="Would you like to enable logging? Y/N", default='N')
 ######################################## Set variables  #############################################################
 args = parser.parse_args()
 Mode=args.Mode
@@ -116,7 +117,7 @@ if Mode=='C':
             ScriptName = AFS_DIR + '/Code/Utilities/R2_GenerateClusters_Sub.py '
             if os.path.isfile(required_output_file_location)!=True:
                bad_pop.append([OptionHeader, OptionLine, SHName, SUBName, MSGName, ScriptName, 1, 'EDER-GNN-R2', False,False])
-   if len(bad_pop)>0:
+   if len(bad_pop)>0 and args.Force=='N':
      print(UF.TimeStamp(),bcolors.WARNING+'Warning, there are still', len(bad_pop), 'HTCondor jobs remaining'+bcolors.ENDC)
      print(bcolors.BOLD+'If you would like to wait and try again later please enter W'+bcolors.ENDC)
      print(bcolors.BOLD+'If you would like to resubmit please enter R'+bcolors.ENDC)

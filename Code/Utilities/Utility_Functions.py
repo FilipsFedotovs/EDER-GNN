@@ -171,7 +171,7 @@ class HitCluster:
            _Tot_Hits=_Tot_Hits[['l_HitID','r_HitID','r_z']]
            _Tot_Hits['link_strength']=1.0
            Trigger=False
-           print(_Tot_Hits)
+           f_result=[]
            while(len(_Tot_Hits)>0):
                     _Tot_Hits_Pool=_Tot_Hits
 
@@ -261,9 +261,7 @@ class HitCluster:
                     _Tot_Hits=_Tot_Hits[_Tot_Hits['Segment_ID'].isnull()]
                     _Tot_Hits=_Tot_Hits[['l_HitID','r_HitID','r_z','link_strength']]
                     _Tot_Hits=_Tot_Hits.drop_duplicates(keep='first')
-                    print(_Tot_Hits)
-                    print(f_result)
-                    input('Press Enter')
+
                     if len(_Tot_Hits)==0:
                         break
            if len(f_result)>0:

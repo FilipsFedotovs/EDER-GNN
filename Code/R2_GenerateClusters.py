@@ -190,21 +190,21 @@ if Mode=='C':
                             truth_results_4.append(int(result_temp[2][3]))
                             truth_results_5.append(int(result_temp[2][4]))
                             truth_results_6.append(int(result_temp[2][5]))
-                            #try:
-                            precision_results_1.append(int(result_temp[2][0])/(int(result_temp[2][0])+int(result_temp[1][0])))
-                            precision_results_2.append(int(result_temp[2][1])/(int(result_temp[2][1])+int(result_temp[1][1])))
-                            precision_results_3.append(int(result_temp[2][2])/(int(result_temp[2][2])+int(result_temp[1][2])))
-                            precision_results_4.append(int(result_temp[2][3])/(int(result_temp[2][3])+int(result_temp[1][3])))
-                            precision_results_5.append(int(result_temp[2][4])/(int(result_temp[2][4])+int(result_temp[1][4])))
-                            precision_results_6.append(int(result_temp[2][5])/(int(result_temp[2][5])+int(result_temp[1][5])))
-                            recall_results_1.append(int(result_temp[2][0])/(int(result_temp[2][2])))
-                            recall_results_2.append(int(result_temp[2][1])/(int(result_temp[2][2])))
-                            recall_results_3.append(int(result_temp[2][2])/(int(result_temp[2][2])))
-                            recall_results_4.append(int(result_temp[2][3])/(int(result_temp[2][2])))
-                            recall_results_5.append(int(result_temp[2][4])/(int(result_temp[2][2])))
-                            recall_results_6.append(int(result_temp[2][5])/(int(result_temp[2][2])))
-                            #except:
-                            #    continue
+                            try:
+                                precision_results_1.append(int(result_temp[2][0])/(int(result_temp[2][0])+int(result_temp[1][0])))
+                                precision_results_2.append(int(result_temp[2][1])/(int(result_temp[2][1])+int(result_temp[1][1])))
+                                precision_results_3.append(int(result_temp[2][2])/(int(result_temp[2][2])+int(result_temp[1][2])))
+                                precision_results_4.append(int(result_temp[2][3])/(int(result_temp[2][3])+int(result_temp[1][3])))
+                                precision_results_5.append(int(result_temp[2][4])/(int(result_temp[2][4])+int(result_temp[1][4])))
+                                precision_results_6.append(int(result_temp[2][5])/(int(result_temp[2][5])+int(result_temp[1][5])))
+                                recall_results_1.append(int(result_temp[2][0])/(int(result_temp[2][2])))
+                                recall_results_2.append(int(result_temp[2][1])/(int(result_temp[2][2])))
+                                recall_results_3.append(int(result_temp[2][2])/(int(result_temp[2][2])))
+                                recall_results_4.append(int(result_temp[2][3])/(int(result_temp[2][2])))
+                                recall_results_5.append(int(result_temp[2][4])/(int(result_temp[2][2])))
+                                recall_results_6.append(int(result_temp[2][5])/(int(result_temp[2][2])))
+                            except:
+                               continue
                             label=result_temp[0]
             print(UF.TimeStamp(),bcolors.OKGREEN+'Raw results have been compiled and presented bellow:'+bcolors.ENDC)
             print(tabulate([[label[0], np.average(fake_results_1), np.average(truth_results_1), np.average(precision_results_1), np.std(precision_results_1), np.average(recall_results_1), np.std(recall_results_1)], \

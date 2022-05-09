@@ -167,8 +167,11 @@ if Mode=='C':
                for i in range(0,Xsteps):
                  for j in range(0,Ysteps):
                     required_output_file_location=EOS_DIR+'/EDER-GNN/Data/REC_SET/R2_R2_SelectedClusters_'+str(k)+'_'+str(i)+'_'+str(j)+'.pkl'
-                    if os.path.isfile(required_output_file_location)!=True:
+                    if os.path.isfile(required_output_file_location)!=True and args.Force=='N':
                        print(UF.TimeStamp(), bcolors.FAIL+"Critical fail: file",required_output_file_location,'is missing, please restart the script with the option "--Mode R"'+bcolors.ENDC)
+                       exit()
+                    elif os.path.isfile(required_output_file_location)!=True and args.Force=='Y':
+                        continue
                     elif os.path.isfile(required_output_file_location):
                         cluster_data_file=open(required_output_file_location,'rb')
                         cluster_data=pickle.load(cluster_data_file)
@@ -202,6 +205,7 @@ if Mode=='C':
                             except:
                                 continue
                             label=result_temp[0]
+                            print(label)
             print(UF.TimeStamp(),bcolors.OKGREEN+'Raw results have been compiled and presented bellow:'+bcolors.ENDC)
             print(tabulate([[label[0], np.average(fake_results_1), np.average(truth_results_1), np.average(precision_results_1), np.std(precision_results_1), np.average(recall_results_1), np.std(recall_results_1)], \
                             [label[1], np.average(fake_results_2), np.average(truth_results_2), np.average(precision_results_2), np.std(precision_results_2), np.average(recall_results_2), np.std(recall_results_2)], \

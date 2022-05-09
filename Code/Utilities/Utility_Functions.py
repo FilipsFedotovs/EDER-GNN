@@ -495,6 +495,7 @@ class HitCluster:
                StatFakeValues.append(0)
                StatTruthValues.append(0)
             self.RecStats=[StatLabels,StatFakeValues,StatTruthValues]
+            print([StatLabels,StatFakeValues,StatTruthValues])
 
             #Temp
             #f_result.to_csv('Link_Output.csv',index=False)

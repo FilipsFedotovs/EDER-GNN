@@ -44,7 +44,7 @@ MinHitsTrack=2
 # MaxX=2000.0
 # MaxY=500.0
 # MaxZ=20000.0
-# Pre_CNN_Model_Name='1T_50_SHIP_PREFIT_1_model'
+Model_Name='Model_Identity'
 # Post_CNN_Model_Name='1T_50_SHIP_POSTFIT_1_model'
 # ModelArchitecture=[[6, 4, 1, 2, 2, 2, 2], [], [],[], [], [1, 4, 2], [], [], [], [], [7, 1, 1, 4]]
 

@@ -34,6 +34,7 @@ parser.add_argument('--cut_dr',help="Cut on angle difference", default='4000')
 parser.add_argument('--zOffset',help="Data offset on z", default='0.0')
 parser.add_argument('--yOffset',help="Data offset on y", default='0.0')
 parser.add_argument('--xOffset',help="Data offset on x", default='0.0')
+parser.add_argument('--ModelName',help="Name of the model", default='')
 ######################################## Set variables  #############################################################
 args = parser.parse_args()
 
@@ -94,7 +95,7 @@ class Net(torch.nn.Module):
                          output_matrix.append(strength_matrix)
                          return output_matrix # get predicted edge_list
 model = Net(5).to(device)
-model.load_state_dict(torch.load(EOS_DIR+'/EDER-GNN/Models/DefaultModel'))
+model.load_state_dict(torch.load(EOS_DIR+'/EDER-GNN/Models/'+args.ModelName))
 model.eval()
 if args.Log=='Y':
     input_file_location=EOS_DIR+'/EDER-GNN/Data/TEST_SET/E1_HITS.csv'

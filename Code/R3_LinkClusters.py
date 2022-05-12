@@ -143,6 +143,7 @@ if Mode=='C':
             fake_results_4=[]
             fake_results_5=[]
             fake_results_6=[]
+            fake_results_7=[]
             truth_results_1=[]
             truth_results_2=[]
             truth_results_3=[]

@@ -88,7 +88,7 @@ if Mode=='R':
 
    if UserAnswer=='Y':
       print(UF.TimeStamp(),'Performing the cleanup... ',bcolors.ENDC)
-      UF.RecCleanUp(AFS_DIR, EOS_DIR, 'E6', ['E6'], "SoftUsed == \"EDER-GNN-E6\"")
+      UF.EvalCleanUp(AFS_DIR, EOS_DIR, 'E6', ['E6'], "SoftUsed == \"EDER-GNN-E6\"")
       print(UF.TimeStamp(),'Submitting jobs... ',bcolors.ENDC)
       for k in range(0,Zsteps):
         for i in range(0,Xsteps):

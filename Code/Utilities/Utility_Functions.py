@@ -503,27 +503,39 @@ class HitCluster:
 
       def TestKalmanHits(self,FEDRAdata_list,MCdata_list):
           import pandas as pd
-          _Hits_df=pd.DataFrame(self.ClusterHits, columns = ['_l_HitID','x','y','z','tx','ty'])[['_l_HitID','z']]
-          _Hits_df["z"] = pd.to_numeric(_Hits_df["z"],downcast='float')
-          print(_Hits_df)
-          exit()
-          #_Tot_Hits_df.drop(_Tot_Hits_df.index[_Tot_Hits_df['_l_HitID'] == _Tot_Hits_df['_r_HitID']], inplace = True)
+          _Tot_Hits_df=pd.DataFrame(self.ClusterHits, columns = ['HitID','x','y','z','tx','ty'])[['HitID','z']]
+          _Tot_Hits_df["z"] = pd.to_numeric(_Tot_Hits_df["z"],downcast='float')
+
           _MCClusterHits=[]
+          _FEDRAClusterHits=[]
           StatFakeValues=[]
-           #  StatTruthValues=[]
-           #
-           #  StatLabels=['Initial # of combinations','Delete self-permutations','Enforce positive directionality','Cut on delta t', 'Cut on delta x','Track Reconstruction']
-           #  for s in MCHits:
-           #     if s[1]>=self.ClusterID[0]*self.Step[0] and s[1]<((self.ClusterID[0]+1)*self.Step[0]):
-           #         if s[2]>=self.ClusterID[1]*self.Step[1] and s[2]<((self.ClusterID[1]+1)*self.Step[1]):
-           #             if s[3]>=self.ClusterID[2]*self.Step[2] and s[3]<((self.ClusterID[2]+1)*self.Step[2]):
-           #                _MCClusterHits.append([s[0],s[6]])
-           # #Preparing Raw and MC combined data 1
-           #  _l_MCHits=pd.DataFrame(_MCClusterHits, columns = ['_l_HitID','l_MC_ID'])
-           #  _r_MCHits=pd.DataFrame(_MCClusterHits, columns = ['_r_HitID','l_MC_ID'])
-           #  _l_Hits=_Tot_Hits_df.rename(columns={"x": "l_x", "y": "l_y", "z": "l_z", "tx": "l_tx","ty": "l_ty","_r_HitID": "_link_HitID" })
-           #  #Join hits + MC truth
-           #  _l_Tot_Hits=pd.merge(_l_MCHits, _l_Hits, how="left", on=['_l_HitID'])
+          StatTruthValues=[]
+          StatLabels=['Initial # of combinations','Fedra Reconstruction']
+          for s in MCdata_list:
+             if s[1]>=self.ClusterID[0]*self.Step[0] and s[1]<((self.ClusterID[0]+1)*self.Step[0]):
+                    if s[2]>=self.ClusterID[1]*self.Step[1] and s[2]<((self.ClusterID[1]+1)*self.Step[1]):
+                        if s[3]>=self.ClusterID[2]*self.Step[2] and s[3]<((self.ClusterID[2]+1)*self.Step[2]):
+                           _MCClusterHits.append([s[0],s[6]])
+          for s in FEDRAdata_list:
+             if s[1]>=self.ClusterID[0]*self.Step[0] and s[1]<((self.ClusterID[0]+1)*self.Step[0]):
+                    if s[2]>=self.ClusterID[1]*self.Step[1] and s[2]<((self.ClusterID[1]+1)*self.Step[1]):
+                        if s[3]>=self.ClusterID[2]*self.Step[2] and s[3]<((self.ClusterID[2]+1)*self.Step[2]):
+                           _FEDRAClusterHits.append([s[0],s[6]])
+          #Preparing Raw and MC combined data 1
+          _l_MCHits=pd.DataFrame(_MCClusterHits, columns = ['l_HitID','l_MC_ID'])
+          _r_MCHits=pd.DataFrame(_MCClusterHits, columns = ['r_HitID','r_MC_ID'])
+          _l_FHits=pd.DataFrame(_FEDRAClusterHits, columns = ['l_HitID','l_FEDRA_ID'])
+          _r_FHits=pd.DataFrame(_FEDRAClusterHits, columns = ['r_HitID','r_FEDRA_ID'])
+          _l_Hits=_Tot_Hits_df.rename(columns={"z": "l_z","HitID": "l_HitID" })
+          _r_Hits=_Tot_Hits_df.rename(columns={"z": "r_z","HitID": "r_HitID" })
+          #Join hits + MC truth
+          _l_Tot_Hits=pd.merge(_l_MCHits, _l_Hits, how="left", on=['l_HitID'])
+          _r_Tot_Hits=pd.merge(_r_MCHits, _r_Hits, how="left", on=['r_HitID'])
+          _l_Tot_Hits=pd.merge(_l_FHits, _l_Hits, how="left", on=['l_HitID'])
+          _r_Tot_Hits=pd.merge(_r_FHits, _r_Hits, how="left", on=['r_HitID'])
+          print(_l_Tot_Hits)
+          print(_r_Tot_Hits)
+          exit()
            #  #Preparing Raw and MC combined data 2
            #  _r_MCHits=pd.DataFrame(_MCClusterHits, columns = ['_r_HitID','r_MC_ID'])
            #  _r_Hits=_Tot_Hits_df[['_l_HitID', 'x', 'y', 'z', 'tx', 'ty']].rename(columns={"x": "r_x", "y": "r_y", "z": "r_z", "tx": "r_tx","ty": "r_ty","_l_HitID": "_r_HitID" })

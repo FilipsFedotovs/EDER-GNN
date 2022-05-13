@@ -124,13 +124,13 @@ elif mode=='R':
      [OptionHeader, OptionLine, SHName, SUBName, MSGName, ScriptName, 1, 'EDER-GNN-M2', True,
       True])
  job[4]=job[5]
- UF.LogOperations(EOSsubModelDIR+'/M5_M5_JobTask.csv','StartLog',[job])
+ UF.LogOperations(EOSsubModelDIR+'/M2_M2_JobTask.csv','StartLog',[job])
  print(bcolors.BOLD+"Please the job completion in few hours by running this script with the option C"+bcolors.ENDC)
 if mode=='C':
    CurrentSet=0
    print(UF.TimeStamp(),'Continuing the training that has been started before')
    print(UF.TimeStamp(),'Checking the previous job completion...')
-   csv_reader=open(EOSsubModelDIR+'/M5_M5_JobTask.csv',"r")
+   csv_reader=open(EOSsubModelDIR+'/M2_M2_JobTask.csv',"r")
    PreviousJob = list(csv.reader(csv_reader))
    if args.LR!='Default':
        PreviousJob[0][3]=args.LR

@@ -24,9 +24,11 @@ parser.add_argument('--Mode',help="Please enter the running mode: 'R' for reset,
 parser.add_argument('--ModelName',help="Which model would you like to use as a base for training (please enter N if you want to train a new model from scratch)", default='Default')
 parser.add_argument('--ModelNewName',help="Would you like to save your pretrained model as a separate one", default='Default')
 parser.add_argument('--LR',help="Would you like enter the models starting Learning Rate, If yes please enter it here eg: 0.01 ", default='0.01')
+parser.add_argument('--Epoch',help="How many epochs per cluster? ", default='10')
 args = parser.parse_args()
 #setting main learning parameters
 mode=args.Mode
+Epoch=int(args.Epoch)
 _=0
 #Loading Directory locations
 csv_reader=open('../config',"r")
@@ -78,11 +80,11 @@ if mode=='R' and args.ModelName=='N':
        LR=float(args.LR)
        job.append(args.ModelNewName)
        DNA = '"' + str(PM.ModelArchitecture) + '"'
-       OptionLine = ['Create', 1, EOS_DIR, AFS_DIR, DNA, args.LR, 1, ModelName, args.ModelNewName]
+       OptionLine = ['Create', 1, EOS_DIR, AFS_DIR, DNA, args.LR, Epoch, ModelName, args.ModelNewName]
  print(UF.TimeStamp(),bcolors.OKGREEN+'Job description has been created'+bcolors.ENDC)
  PerformanceHeader=[['Epochs','Set','Training Samples','Train Loss','Validation Accuracy','Test Accuracy']]
  UF.LogOperations(EOSsubModelDIR+'/M5_PERFORMANCE_'+job[5]+'.csv','StartLog',PerformanceHeader)
- OptionHeader = [' --Mode ', ' --ImageSet ', ' --EOS ', " --AFS ", " --DNA ",
+ OptionHeader = [' --Mode ', ' --ClusterSet ', ' --EOS ', " --AFS ", " --DNA ",
                  " --LR ", " --Epoch ", " --ModelName ", " --ModelNewName "]
  SHName = AFS_DIR + '/HTCondor/SH/SH_M2.sh'
  SUBName = AFS_DIR + '/HTCondor/SUB/SUB_M2.sub'
@@ -149,7 +151,7 @@ if mode=='C':
           OptionLine = ['Create', PreviousJob[0][0], EOS_DIR, AFS_DIR, '"'+str(PreviousJob[0][2])+'"', PreviousJob[0][3], PreviousJob[0][1], PreviousJob[0][4], PreviousJob[0][5]]
         if CurrentSet>1:
           OptionLine = ['Train', PreviousJob[0][0], EOS_DIR, AFS_DIR, '"'+str(PreviousJob[0][2])+'"', PreviousJob[0][3], PreviousJob[0][1], PreviousJob[0][4], PreviousJob[0][5]]
-        OptionHeader = [' --Mode ', ' --ImageSet ', ' --EOS ', " --AFS ", " --DNA ",
+        OptionHeader = [' --Mode ', ' --ClusterSet ', ' --EOS ', " --AFS ", " --DNA ",
                         " --LR ", " --Epoch ", " --ModelName ", " --ModelNewName "]
         SHName = AFS_DIR + '/HTCondor/SH/SH_M2.sh'
         SUBName = AFS_DIR + '/HTCondor/SUB/SUB_M2.sub'
@@ -176,7 +178,7 @@ if mode=='C':
           PreviousJob[0][0]=str(CurrentSet)
           PreviousJob[0][1]=str(CurrentEpoch)
           OptionLine = ['Train', PreviousJob[0][0], EOS_DIR, AFS_DIR, '"'+str(PreviousJob[0][2])+'"', PreviousJob[0][3], PreviousJob[0][1], PreviousJob[0][4], PreviousJob[0][5]]
-          OptionHeader = [' --Mode ', ' --ImageSet ', ' --EOS ', " --AFS ", " --DNA ",
+          OptionHeader = [' --Mode ', ' --ClusterSet ', ' --EOS ', " --AFS ", " --DNA ",
                           " --LR ", " --Epoch ", " --ModelName ", " --ModelNewName "]
           SHName = AFS_DIR + '/HTCondor/SH/SH_M2.sh'
           SUBName = AFS_DIR + '/HTCondor/SUB/SUB_M2.sub'
@@ -194,7 +196,7 @@ if mode=='C':
           PreviousJob[0][0]=str(CurrentSet)
           UF.LogOperations(EOSsubModelDIR+'/M2_M2_JobTask.csv','StartLog',PreviousJob)
           OptionLine = ['Train', PreviousJob[0][0], EOS_DIR, AFS_DIR, '"'+str(PreviousJob[0][2])+'"', PreviousJob[0][3], PreviousJob[0][1], PreviousJob[0][4], PreviousJob[0][5]]
-          OptionHeader = [' --Mode ', ' --ImageSet ', ' --EOS ', " --AFS ", " --DNA ",
+          OptionHeader = [' --Mode ', ' --ClusterSet ', ' --EOS ', " --AFS ", " --DNA ",
                           " --LR ", " --Epoch ", " --ModelName ", " --ModelNewName "]
           SHName = AFS_DIR + '/HTCondor/SH/SH_M2.sh'
           SUBName = AFS_DIR + '/HTCondor/SUB/SUB_M2.sub'

@@ -531,8 +531,8 @@ class HitCluster:
           #Join hits + MC truth
           _l_Tot_Hits=pd.merge(_l_MCHits, _l_Hits, how="left", on=['l_HitID'])
           _r_Tot_Hits=pd.merge(_r_MCHits, _r_Hits, how="left", on=['r_HitID'])
-          _l_Tot_Hits=pd.merge(_l_FHits, _l_Hits, how="left", on=['l_HitID'])
-          _r_Tot_Hits=pd.merge(_r_FHits, _r_Hits, how="left", on=['r_HitID'])
+          _l_Tot_Hits=pd.merge(_l_FHits, _l_Tot_Hits, how="right", on=['l_HitID'])
+          _r_Tot_Hits=pd.merge(_r_FHits, _r_Tot_Hits, how="right", on=['r_HitID'])
           print(_l_Tot_Hits)
           print(_r_Tot_Hits)
           exit()

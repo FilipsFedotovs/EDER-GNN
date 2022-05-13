@@ -92,15 +92,8 @@ FEDRAdata.drop(FEDRAdata.index[FEDRAdata['x'] < (X_ID*stepX)], inplace = True)  
 FEDRAdata.drop(FEDRAdata.index[FEDRAdata['y'] >= ((Y_ID+1)*stepY)], inplace = True)  #Keeping the relevant z slice
 FEDRAdata.drop(FEDRAdata.index[FEDRAdata['y'] < (Y_ID*stepY)], inplace = True)  #Keeping the relevant z slice
 FEDRAdata_list=FEDRAdata.values.tolist()
-print(MCdata_list)
-print(FEDRAdata_list)
-exit()
 LoadedClusters=[]
-data=RawClusters[0].ClusterGraph
-
-lat_z = model.encode(data)
-if args.Log=='Y':
-            RawClusters[0].TestKalmanHits(FEDRAdata_list,MCdata_list)
+RawClusters[0].TestKalmanHits(FEDRAdata_list,MCdata_list)
 LoadedClusters.append(RawClusters[0])
 output_file_location=EOS_DIR+'/EDER-GNN/Data/TEST_SET/E6_LinkedClusters_'+str(Z_ID)+'_'+str(X_ID)+'_'+str(Y_ID)+'.pkl'
 open_file = open(output_file_location, "wb")

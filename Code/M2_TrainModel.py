@@ -112,7 +112,7 @@ elif mode=='R':
      job.append(args.ModelNewName)
      OptionLine = ['Train', 1, EOS_DIR, AFS_DIR, DNA, args.LR, Epoch, ModelName, args.ModelNewName]
  print(UF.TimeStamp(),bcolors.OKGREEN+'Job description has been created'+bcolors.ENDC)
- PerformanceHeader=[['Epochs','Set','Training Samples','Train Loss','Validation Accuracy','Test Accuracy']]
+ PerformanceHeader=[['ClusterSet','Cluster', 'Cluster Size','Epochs', 'Train Loss', 'Best validation accuracy', 'Best Test Accuracy']]
  UF.LogOperations(EOSsubModelDIR+'/M2_PERFORMANCE_'+job[5]+'.csv','StartLog',PerformanceHeader)
  OptionHeader = [' --Mode ', ' --ImageSet ', ' --EOS ', " --AFS ", " --DNA ",
                  " --LR ", " --Epoch ", " --ModelName ", " --ModelNewName "]

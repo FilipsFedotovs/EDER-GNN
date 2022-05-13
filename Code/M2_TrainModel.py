@@ -83,7 +83,7 @@ if mode=='R' and args.ModelName=='N':
        OptionLine = ['Create', 1, EOS_DIR, AFS_DIR, DNA, args.LR, Epoch, ModelName, args.ModelNewName]
  print(UF.TimeStamp(),bcolors.OKGREEN+'Job description has been created'+bcolors.ENDC)
  PerformanceHeader=[['Epochs','Set','Training Samples','Train Loss','Validation Accuracy','Test Accuracy']]
- UF.LogOperations(EOSsubModelDIR+'/M5_PERFORMANCE_'+job[5]+'.csv','StartLog',PerformanceHeader)
+ UF.LogOperations(EOSsubModelDIR+'/M2_PERFORMANCE_'+job[5]+'.csv','StartLog',PerformanceHeader)
  OptionHeader = [' --Mode ', ' --ClusterSet ', ' --EOS ', " --AFS ", " --DNA ",
                  " --LR ", " --Epoch ", " --ModelName ", " --ModelNewName "]
  SHName = AFS_DIR + '/HTCondor/SH/SH_M2.sh'

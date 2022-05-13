@@ -1,0 +1,200 @@
+#This simple script prepares 2-Track seeds for the initial CNN vertexing
+# Part of EDER-GNN package
+#Made by Filips Fedotovs
+
+
+########################################    Import libraries    #############################################
+import csv
+import argparse
+import pandas as pd #We use Panda for a routine data processing
+import math #We use it for data manipulation
+import numpy as np
+import os
+import pickle
+from tabulate import tabulate
+
+class bcolors:   #We use it for the interface
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
+#Setting the parser - this script is usually not run directly, but is used by a Master version Counterpart that passes the required arguments
+parser = argparse.ArgumentParser(description='This script takes preselected 2-track seed candidates from previous step and refines them by applying additional cuts on the parameters such as DOCA, fiducial cute and distance to the possible vertex origin.')
+parser.add_argument('--Mode',help="Running Mode: Reset(R)/Continue(C)", default='C')
+parser.add_argument('--Force',help="Would you like to enable logging? Y/N", default='N')
+######################################## Set variables  #############################################################
+args = parser.parse_args()
+Mode=args.Mode
+
+
+
+
+#Loading Directory locations
+csv_reader=open('../config',"r")
+config = list(csv.reader(csv_reader))
+for c in config:
+    if c[0]=='AFS_DIR':
+        AFS_DIR=c[1]
+    if c[0]=='EOS_DIR':
+        EOS_DIR=c[1]
+csv_reader.close()
+import sys
+
+
+sys.path.insert(1, AFS_DIR+'/Code/Utilities/')
+import Utility_Functions as UF #This is where we keep routine utility functions
+import Parameters as PM #This is where we keep framework global parameters
+########################################     Preset framework parameters    #########################################
+stepX=PM.stepX
+stepY=PM.stepY
+stepZ=PM.stepZ
+cut_dt=PM.cut_dt
+cut_dr=PM.cut_dr
+ModelName=PM.ModelName
+#Specifying the full path to input/output files
+input_file_location=EOS_DIR+'/EDER-GNN/Data/REC_SET/R1_HITS.csv'
+print(bcolors.HEADER+"########################################################################################################"+bcolors.ENDC)
+print(bcolors.HEADER+"######################     Initialising EDER-GNN Kalman test module             ########################"+bcolors.ENDC)
+print(bcolors.HEADER+"#########################              Written by Filips Fedotovs              #########################"+bcolors.ENDC)
+print(bcolors.HEADER+"#########################                 PhD Student at UCL                   #########################"+bcolors.ENDC)
+print(bcolors.HEADER+"########################################################################################################"+bcolors.ENDC)
+print(UF.TimeStamp(), bcolors.OKGREEN+"Modules Have been imported successfully..."+bcolors.ENDC)
+print(UF.TimeStamp(),'Loading preselected data from ',bcolors.OKBLUE+input_file_location+bcolors.ENDC)
+data=pd.read_csv(input_file_location,header=0,usecols=['z','x','y'])
+print(UF.TimeStamp(),'Analysing data... ',bcolors.ENDC)
+z_offset=data['z'].min()
+data['z']=data['z']-z_offset
+z_max=data['z'].max()
+Zsteps=math.ceil(z_max/stepZ)
+y_offset=data['y'].min()
+x_offset=data['x'].min()
+data['x']=data['x']-x_offset
+x_max=data['x'].max()
+y_max=data['y'].max()
+Xsteps=math.ceil(x_max/stepX) #Even if use only a max of 20000 track on the right join we cannot perform the full outer join due to the memory limitations, we do it in a small 'cuts'
+Ysteps=math.ceil(y_max/stepY)
+if Mode=='R':
+   print(UF.TimeStamp(),bcolors.WARNING+'Warning! You are running the script with the "Mode R" option which means that you want to vertex the seeds from the scratch'+bcolors.ENDC)
+   print(UF.TimeStamp(),bcolors.WARNING+'This option will erase all the previous tracking jobs/results'+bcolors.ENDC)
+   UserAnswer=input(bcolors.BOLD+"Would you like to continue (Y/N)? \n"+bcolors.ENDC)
+   if UserAnswer=='N':
+         Mode='C'
+         print(UF.TimeStamp(),'OK, continuing then...')
+
+   if UserAnswer=='Y':
+      print(UF.TimeStamp(),'Performing the cleanup... ',bcolors.ENDC)
+      UF.RecCleanUp(AFS_DIR, EOS_DIR, 'E6', ['E6'], "SoftUsed == \"EDER-GNN-E6\"")
+      print(UF.TimeStamp(),'Submitting jobs... ',bcolors.ENDC)
+      for k in range(0,Zsteps):
+        for i in range(0,Xsteps):
+            OptionHeader = [' --Z_ID ', ' --stepX ',' --stepY ',' --stepZ ', ' --EOS ', " --AFS ", " --zOffset ", " --xOffset ", " --yOffset ", ' --X_ID ', ' --Y_ID ']
+            OptionLine = [k, stepX,stepY,stepZ, EOS_DIR, AFS_DIR, z_offset, x_offset, y_offset, i, '$1']
+            SHName = AFS_DIR + '/HTCondor/SH/SH_E6_' + str(k) + '_'+ str(i)+ '.sh'
+            SUBName = AFS_DIR + '/HTCondor/SUB/SUB_E6_' + str(k) + '_'+ str(i)+ '.sub'
+            MSGName = AFS_DIR + '/HTCondor/MSG/MSG_E6_' + str(k) + '_'+ str(i)
+            ScriptName = AFS_DIR + '/Code/Utilities/E6_TestKalman_Sub.py '
+            UF.SubmitJobs2Condor([OptionHeader, OptionLine, SHName, SUBName, MSGName, ScriptName, Ysteps, 'EDER-GNN-E6', False,False])
+      print(UF.TimeStamp(), bcolors.OKGREEN+'All jobs have been submitted, please rerun this script with "--Mode C" in few hours'+bcolors.ENDC)
+if Mode=='C':
+   bad_pop=[]
+   print(UF.TimeStamp(),'Checking jobs... ',bcolors.ENDC)
+   for k in range(0,Zsteps):
+       progress=round((float(k)/float(Zsteps))*100,2)
+       print(UF.TimeStamp(),"progress is ",progress,' %') #Progress display
+       for i in range(0,Xsteps):
+           for j in range(0,Ysteps):
+            OptionHeader = [' --Z_ID ', ' --stepX ',' --stepY ',' --stepZ ', ' --EOS ', " --AFS ", " --zOffset ", " --xOffset ", " --yOffset ", ' --X_ID ', ' --Y_ID ']
+            OptionLine = [k, stepX,stepY,stepZ, EOS_DIR, AFS_DIR, z_offset, x_offset, y_offset, i, j]
+            required_output_file_location=EOS_DIR+'/EDER-GNN/Data/TEST_SET/E6_LinkedClusters_'+str(k)+'_'+str(i)+'_'+str(j)+'.pkl'
+            SHName = AFS_DIR + '/HTCondor/SH/SH_E6_' + str(k) + '_'+ str(i)+ '_'+ str(j)+ '.sh'
+            SUBName = AFS_DIR + '/HTCondor/SUB/SUB_E6_'+ str(k) + '_'+ str(i)+ '_'+ str(j)+'.sub'
+            MSGName = AFS_DIR + '/HTCondor/MSG/MSG_E6_'+ str(k) + '_'+ str(i)+ '_'+ str(j)
+            ScriptName = AFS_DIR + '/Code/Utilities/E6_TestKalman_Sub.py '
+            if os.path.isfile(required_output_file_location)!=True:
+               bad_pop.append([OptionHeader, OptionLine, SHName, SUBName, MSGName, ScriptName, 1, 'EDER-GNN-E6', False,False])
+   if len(bad_pop)>0 and args.Force=='N':
+     print(UF.TimeStamp(),bcolors.WARNING+'Warning, there are still', len(bad_pop), 'HTCondor jobs remaining'+bcolors.ENDC)
+     print(bcolors.BOLD+'If you would like to wait and try again later please enter W'+bcolors.ENDC)
+     print(bcolors.BOLD+'If you would like to resubmit please enter R'+bcolors.ENDC)
+     UserAnswer=input(bcolors.BOLD+"Please, enter your option\n"+bcolors.ENDC)
+     if UserAnswer=='W':
+         print(UF.TimeStamp(),'OK, exiting now then')
+         exit()
+     if UserAnswer=='R':
+        for bp in bad_pop:
+             UF.SubmitJobs2Condor(bp)
+        print(UF.TimeStamp(), bcolors.OKGREEN+"All jobs have been resubmitted"+bcolors.ENDC)
+        print(bcolors.BOLD+"Please check them in few hours"+bcolors.ENDC)
+        exit()
+   else:
+            print(UF.TimeStamp(),bcolors.OKGREEN+'All HTCondor Seed Creation jobs have finished'+bcolors.ENDC)
+            fake_results_1=[]
+            fake_results_2=[]
+            fake_results_3=[]
+            fake_results_4=[]
+            truth_results_1=[]
+            truth_results_2=[]
+            truth_results_3=[]
+            truth_results_4=[]
+            precision_results_1=[]
+            precision_results_2=[]
+            precision_results_3=[]
+            precision_results_4=[]
+            recall_results_1=[]
+            recall_results_2=[]
+            recall_results_3=[]
+            recall_results_4=[]
+            for k in range(0,Zsteps):
+               progress=round((float(k)/float(Zsteps))*100,2)
+               print(UF.TimeStamp(),"progress is ",progress,' %') #Progress display
+
+               for i in range(0,Xsteps):
+                 for j in range(0,Ysteps):
+                    required_output_file_location=EOS_DIR+'/EDER-GNN/Data/TEST_SET/E6_LinkedClusters_'+str(k)+'_'+str(i)+'_'+str(j)+'.pkl'
+                    if os.path.isfile(required_output_file_location)!=True and args.Force=='N':
+                       print(UF.TimeStamp(), bcolors.FAIL+"Critical fail: file",required_output_file_location,'is missing, please restart the script with the option "--Mode R"'+bcolors.ENDC)
+                       exit()
+                    elif os.path.isfile(required_output_file_location)!=True and args.Force=='Y':
+                        continue
+                    elif os.path.isfile(required_output_file_location):
+                        cluster_data_file=open(required_output_file_location,'rb')
+                        cluster_data=pickle.load(cluster_data_file)
+                        for cd in cluster_data:
+                            result_temp=cd.KalmanRecStats
+                            fake_results_1.append(int(result_temp[1][0]))
+                            fake_results_2.append(int(result_temp[1][1]))
+                            fake_results_3.append(int(result_temp[1][2]))
+                            fake_results_4.append(int(result_temp[1][3]))
+                            truth_results_1.append(int(result_temp[2][0]))
+                            truth_results_2.append(int(result_temp[2][1]))
+                            truth_results_3.append(int(result_temp[2][2]))
+                            truth_results_4.append(int(result_temp[2][3]))
+                            try:
+                                precision_results_1.append(int(result_temp[2][0])/(int(result_temp[2][0])+int(result_temp[1][0])))
+                                precision_results_2.append(int(result_temp[2][1])/(int(result_temp[2][1])+int(result_temp[1][1])))
+                                precision_results_3.append(int(result_temp[2][2])/(int(result_temp[2][2])+int(result_temp[1][2])))
+                                precision_results_4.append(int(result_temp[2][3])/(int(result_temp[2][3])+int(result_temp[1][3])))
+                                recall_results_1.append(int(result_temp[2][0])/(int(result_temp[2][2])))
+                                recall_results_2.append(int(result_temp[2][1])/(int(result_temp[2][2])))
+                                recall_results_3.append(int(result_temp[2][2])/(int(result_temp[2][2])))
+                                recall_results_4.append(int(result_temp[2][3])/(int(result_temp[2][2])))
+                            except:
+                               continue
+                            label=result_temp[0]
+                            label.append('Original # of valid Combinations')
+            print(UF.TimeStamp(),bcolors.OKGREEN+'Raw results have been compiled and presented bellow:'+bcolors.ENDC)
+            print(tabulate([[label[0], np.average(fake_results_1), np.average(truth_results_1), np.average(precision_results_1), np.std(precision_results_1), np.average(recall_results_1), np.std(recall_results_1)], \
+                            [label[1], np.average(fake_results_2), np.average(truth_results_2), np.average(precision_results_2), np.std(precision_results_2), np.average(recall_results_2), np.std(recall_results_2)], \
+                            [label[2], np.average(fake_results_3), np.average(truth_results_3), np.average(precision_results_3), np.std(precision_results_3), np.average(recall_results_3), np.std(recall_results_3)], \
+                            [label[3], np.average(fake_results_4), np.average(truth_results_4), np.average(precision_results_4), np.std(precision_results_4), np.average(recall_results_4), np.std(recall_results_4)]], \
+                            headers=['Step', 'Avg # Fake edges', 'Avg # of Genuine edges', 'Avg precision', 'Precision std','Avg recall', 'Recall std' ], tablefmt='orgtbl'))
+            print(bcolors.HEADER+"############################################# End of the program ################################################"+bcolors.ENDC)
+#End of the script
+
+
+

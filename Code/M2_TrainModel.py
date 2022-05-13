@@ -71,6 +71,7 @@ if mode=='R' and args.ModelName=='N':
  if args.ModelNewName=='Default':
        job.append(ModelName)
        OptionLine = ['Create', 1, EOS_DIR, AFS_DIR, DNA, args.LR, 1, ModelName, ModelName]
+ else:
        HiddenLayerDNA=[]
        FullyConnectedDNA=[]
        OutputDNA=[]

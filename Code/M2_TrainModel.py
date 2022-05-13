@@ -65,7 +65,7 @@ if mode=='R' and args.ModelName=='N':
  UF.TrainCleanUp(AFS_DIR, EOS_DIR, 'M2', ['M2_M2','M2_PERFORMANCE_'], "SoftUsed == \"EDER-GNN-M2\"")
  job=[]
  job.append(1)
- job.append(1)
+ job.append(Epoch)
  job.append(PM.ModelArchitecture)
  job.append(args.LR)
  job.append(ModelName)
@@ -136,7 +136,6 @@ if mode=='C':
        PreviousJob[0][3]=args.LR
    csv_reader.close()
    CurrentSet=int(PreviousJob[0][0])
-   CurrentEpoch=int(PreviousJob[0][1])
    required_file_name=EOSsubModelDIR+'/M2_M2_model_train_log_'+PreviousJob[0][0]+'.csv'
    if os.path.isfile(required_file_name)==False:
      print(UF.TimeStamp(),bcolors.WARNING+'Warning, the HTCondor job is still running'+bcolors.ENDC)

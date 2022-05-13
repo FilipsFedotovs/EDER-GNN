@@ -97,7 +97,7 @@ if mode=='R' and args.ModelName=='N':
  UF.LogOperations(EOSsubModelDIR+'/M2_M2_JobTask.csv','StartLog',[job])
  print(bcolors.BOLD+"Please the job completion in few hours by running this script with the option C"+bcolors.ENDC)
 elif mode=='R':
- UF.TrainCleanUp(AFS_DIR, EOS_DIR, 'M5', ['M5_M5','M5_PERFORMANCE_'], "SoftUsed == \"EDER-GNN-M5\"")
+ UF.TrainCleanUp(AFS_DIR, EOS_DIR, 'M5', ['M2_M2','M2_PERFORMANCE_'], "SoftUsed == \"EDER-GNN-M2\"")
  job=[]
  job.append(1)
  job.append(Epoch)
@@ -165,7 +165,7 @@ if mode=='C':
    else:
       csv_reader=open(required_file_name,"r")
       PreviousHeader = list(csv.reader(csv_reader))
-      UF.LogOperations(EOSsubModelDIR+'/M5_PERFORMANCE_'+PreviousJob[0][5]+'.csv','UpdateLog',PreviousHeader)
+      UF.LogOperations(EOSsubModelDIR+'/M2_PERFORMANCE_'+PreviousJob[0][5]+'.csv','UpdateLog',PreviousHeader)
       os.unlink(required_file_name)
       print(UF.TimeStamp(),bcolors.OKGREEN+'The training of the model by using image set',CurrentSet,'has been completed'+bcolors.ENDC)
       print(UF.TimeStamp(),'Creating next batch',CurrentSet+1)

@@ -25,26 +25,8 @@ cut_dr=60
 valRatio=0.1
 testRatio=0.05
 
-# MaxSLG=4000
-# MaxSTG=50#This parameter restricts the maximum length of of the longitudinal and transverse distance between track segments.
 MinHitsTrack=2
-# MaxTrainSampleSize=50000
-# MaxValSampleSize=100000
-# MaxDoca=50
-# MinAngle=0 #Seed Opening Angle (Magnitude) in radians
-# MaxAngle=1 #Seed Opening Angle (Magnitude) in radians
-#
-#
-#
-# ##Model parameters
-# pre_acceptance=0.5
-# post_acceptance=0.5
-# #pre_vx_acceptance=0.662
-# resolution=50
-# MaxX=2000.0
-# MaxY=500.0
-# MaxZ=20000.0
+
 ModelName='Model_Identity'
-# Post_CNN_Model_Name='1T_50_SHIP_POSTFIT_1_model'
 # ModelArchitecture=[[6, 4, 1, 2, 2, 2, 2], [], [],[], [], [1, 4, 2], [], [], [], [], [7, 1, 1, 4]]
 

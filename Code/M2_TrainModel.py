@@ -173,7 +173,6 @@ if mode=='C':
       if os.path.isfile(EOS_DIR+'/EDER-GNN/Data/TRAIN_SET/'+'M1_M2_SelectedTrainClusters_'+str(CurrentSet+1)+'.pkl')==False:
           print(bcolors.WARNING+'No more training files left, restarting the new epoch...'+bcolors.ENDC)
           CurrentSet=1
-          CurrentEpoch+=1
           PreviousJob[0][0]=str(CurrentSet)
           PreviousJob[0][1]=str(CurrentEpoch)
           OptionLine = ['Train', PreviousJob[0][0], EOS_DIR, AFS_DIR, '"'+str(PreviousJob[0][2])+'"', PreviousJob[0][3], PreviousJob[0][1], PreviousJob[0][4], PreviousJob[0][5]]

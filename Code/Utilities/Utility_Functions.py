@@ -503,7 +503,7 @@ class HitCluster:
 
       def TestKalmanHits(self,FEDRAdata_list,MCdata_list):
           import pandas as pd
-          _Hits_df=pd.DataFrame(self.ClusterHits, columns = ['_l_HitID','x','y','z','tx','ty'])
+          _Hits_df=pd.DataFrame(self.ClusterHits, columns = ['_l_HitID','x','y','z','tx','ty'])[['_l_HitID','z']]
           _Hits_df["z"] = pd.to_numeric(_Hits_df["z"],downcast='float')
           print(_Hits_df)
           exit()

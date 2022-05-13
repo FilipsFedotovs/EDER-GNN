@@ -100,17 +100,17 @@ elif mode=='R':
  UF.TrainCleanUp(AFS_DIR, EOS_DIR, 'M5', ['M5_M5','M5_PERFORMANCE_'], "SoftUsed == \"EDER-GNN-M5\"")
  job=[]
  job.append(1)
- job.append(1)
+ job.append(Epoch)
  job.append(PM.ModelArchitecture)
  job.append(args.LR)
  job.append(ModelName)
  DNA = '"' + str(PM.ModelArchitecture) + '"'
  if args.ModelNewName=='Default':
      job.append(ModelName)
-     OptionLine = ['Train', 1, EOS_DIR, AFS_DIR, DNA, args.LR, 1,  ModelName, ModelName]
+     OptionLine = ['Train', 1, EOS_DIR, AFS_DIR, DNA, args.LR, Epoch,  ModelName, ModelName]
  else:
      job.append(args.ModelNewName)
-     OptionLine = ['Train', 1, EOS_DIR, AFS_DIR, DNA, args.LR, 1, ModelName, args.ModelNewName]
+     OptionLine = ['Train', 1, EOS_DIR, AFS_DIR, DNA, args.LR, Epoch, ModelName, args.ModelNewName]
  print(UF.TimeStamp(),bcolors.OKGREEN+'Job description has been created'+bcolors.ENDC)
  PerformanceHeader=[['Epochs','Set','Training Samples','Train Loss','Validation Accuracy','Test Accuracy']]
  UF.LogOperations(EOSsubModelDIR+'/M2_PERFORMANCE_'+job[5]+'.csv','StartLog',PerformanceHeader)
@@ -137,7 +137,7 @@ if mode=='C':
    csv_reader.close()
    CurrentSet=int(PreviousJob[0][0])
    CurrentEpoch=int(PreviousJob[0][1])
-   required_file_name=EOSsubModelDIR+'/M5_M5_model_train_log_'+PreviousJob[0][0]+'.csv'
+   required_file_name=EOSsubModelDIR+'/M2_M2_model_train_log_'+PreviousJob[0][0]+'.csv'
    if os.path.isfile(required_file_name)==False:
      print(UF.TimeStamp(),bcolors.WARNING+'Warning, the HTCondor job is still running'+bcolors.ENDC)
      print(bcolors.BOLD+'If you would like to wait and try again later please enter W'+bcolors.ENDC)

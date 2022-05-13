@@ -97,7 +97,7 @@ if mode=='R' and args.ModelName=='N':
  UF.LogOperations(EOSsubModelDIR+'/M2_M2_JobTask.csv','StartLog',[job])
  print(bcolors.BOLD+"Please the job completion in few hours by running this script with the option C"+bcolors.ENDC)
 elif mode=='R':
- UF.TrainCleanUp(AFS_DIR, EOS_DIR, 'M5', ['M2_M2','M2_PERFORMANCE_'], "SoftUsed == \"EDER-GNN-M2\"")
+ UF.TrainCleanUp(AFS_DIR, EOS_DIR, 'M2', ['M2_M2','M2_PERFORMANCE_'], "SoftUsed == \"EDER-GNN-M2\"")
  job=[]
  job.append(1)
  job.append(Epoch)

@@ -67,7 +67,7 @@ for gene in DNA:
 
 act_fun_list=['N/A','linear','exponential','elu','relu', 'selu','sigmoid','softmax','softplus','softsign','tanh']
 ValidModel=True
-print(DNA)
+print(HiddenLayerDNA)
 exit()
 
 ##################################   Loading Directory locations   ##################################################

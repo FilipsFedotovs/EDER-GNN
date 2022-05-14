@@ -444,8 +444,8 @@ class HitCluster:
                         temp_dof_hits=temp_dof_hits.groupby(['Track_ID'])['value'].count().reset_index()
                         temp_dof_hits= temp_dof_hits.rename(columns={'value': "DoF"})
                         temp_e_hits=pd.merge(temp_e_hits, temp_dof_hits, how="inner", on=['Track_ID'])
-                        temp_e_hits['Fit/DOF']=(temp_e_hits['link_strength']+temp_e_hits['Fit'])/(temp_e_hits['DoF']-1)
-                        #temp_e_hits['Fit/DOF']=(temp_e_hits['Fit'])/(temp_e_hits['DoF']-1)
+                        #temp_e_hits['Fit/DOF']=(temp_e_hits['link_strength']+temp_e_hits['Fit'])/(temp_e_hits['DoF']-1)
+                        temp_e_hits['Fit/DOF']=(temp_e_hits['Fit'])/(temp_e_hits['DoF']-1)
                         temp_e_hits=temp_e_hits.sort_values(by=['Fit/DOF'], ascending=False)
                         #print(temp_e_hits)
                         temp_e_hits=temp_e_hits.iloc[:1]

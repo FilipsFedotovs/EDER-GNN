@@ -188,7 +188,7 @@ if Mode=='Train':
             model.load_state_dict(torch.load(model_name))
 if Mode!='Train' and Mode!='Test':
                class Net(torch.nn.Module):
-                    def __init__(self,NoF):
+                    def __init__(self):
                         super(Net, self).__init__()
                         for el in range(0,len(HiddenLayerDNA)):
                             if el==0:
@@ -226,7 +226,7 @@ if Mode!='Train' and Mode!='Test':
                          prob_adj = z @ z.t() # get adj NxN
                          return (prob_adj > 0).nonzero(as_tuple=False).t() # get predicted edge_list
 # Compile the model
-               model = Net(OutputDNA[0][0]).to(device)
+               model = Net().to(device)
                optimizer = torch.optim.Adam(params=model.parameters(), lr=LR)
 
 #            #except:

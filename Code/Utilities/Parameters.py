@@ -28,5 +28,5 @@ testRatio=0.05
 MinHitsTrack=2
 
 ModelName='Model_Identity'
-ModelArchitecture=[[6, 4, 1, 2, 2, 2, 2], [], [],[], [], [1, 4, 2], [], [], [], [], [7, 1, 1, 4]]
+ModelArchitecture=[[2], [1], [],[], [], [], [], [], [], [], [5]]
 

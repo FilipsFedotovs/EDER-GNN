@@ -57,6 +57,7 @@ LR=float(args.LR)
 HiddenLayerDNA=[]
 FullyConnectedDNA=[]
 OutputDNA=[]
+print(DNA)
 for gene in DNA:
     if DNA.index(gene)<=4 and len(gene)>0:
         HiddenLayerDNA.append(gene)

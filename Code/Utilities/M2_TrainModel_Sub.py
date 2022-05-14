@@ -152,7 +152,7 @@ if Mode=='Train':
 
                             if el==0:
                                 Nodes=HiddenLayerDNA[el][0]**4
-                                NoF=OutputDNA[0]
+                                NoF=OutputDNA[0][0]
                                 self.conv1 = GCNConv(NoF, Nodes)
                             if el==1:
                                 Nodes=HiddenLayerDNA[el][0]**4
@@ -194,7 +194,7 @@ if Mode!='Train' and Mode!='Test':
                         for el in range(0,len(HiddenLayerDNA)):
                             if el==0:
                                 Nodes=HiddenLayerDNA[el][0]**4
-                                NoF=OutputDNA[0]
+                                NoF=OutputDNA[0][0]
                                 self.conv1 = GCNConv(NoF, Nodes)
                             if el==1:
                                 Nodes=HiddenLayerDNA[el][0]**4

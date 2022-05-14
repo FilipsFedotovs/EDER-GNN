@@ -124,6 +124,7 @@ for i in range(RawClusters[0].ClusterSize):
             top.append(i)
             bottom.append(i)
 data.train_pos_edge_index=torch.tensor(np.array([top,bottom]))
+print(data)
 lat_z = model.encode(data)
 if args.Log=='Y':
             RawClusters[0].LinkHits(model.decode_all(lat_z),True,MCdata_list,cut_dt,cut_dr)

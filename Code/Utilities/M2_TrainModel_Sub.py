@@ -149,26 +149,25 @@ if Mode=='Train':
                     def __init__(self):
                         super(Net, self).__init__()
                         for el in range(0,len(HiddenLayerDNA)):
-
                             if el==0:
-                                Nodes=HiddenLayerDNA[el][0]**4
+                                Nodes=HiddenLayerDNA[el][0]*16
                                 NoF=OutputDNA[0][0]
                                 self.conv1 = GCNConv(NoF, Nodes)
                             if el==1:
-                                Nodes=HiddenLayerDNA[el][0]**4
-                                PNodes=HiddenLayerDNA[el-1][0]**4
+                                Nodes=HiddenLayerDNA[el][0]*16
+                                PNodes=HiddenLayerDNA[el-1][0]*16
                                 self.conv2 = GCNConv(PNodes, Nodes)
                             if el==2:
-                                Nodes=HiddenLayerDNA[el][0]**4
-                                PNodes=HiddenLayerDNA[el-1][0]**4
+                                Nodes=HiddenLayerDNA[el][0]*16
+                                PNodes=HiddenLayerDNA[el-1][0]*16
                                 self.conv3 = GCNConv(PNodes, Nodes)
                             if el==3:
-                                Nodes=HiddenLayerDNA[el][0]**4
+                                Nodes=HiddenLayerDNA[el][0]*16
                                 NoF=OutputDNA[0]
                                 self.conv4 = GCNConv(NoF, Nodes)
                             if el==4:
-                                Nodes=HiddenLayerDNA[el][0]**4
-                                PNodes=HiddenLayerDNA[el-1][0]**4
+                                Nodes=HiddenLayerDNA[el][0]*16
+                                PNodes=HiddenLayerDNA[el-1][0]*16
                                 self.conv5 = GCNConv(PNodes, Nodes)
                     def encode(self,sample):
                          x = self.conv1(sample.x, sample.train_pos_edge_index) # convolution 1
@@ -193,27 +192,25 @@ if Mode!='Train' and Mode!='Test':
                         super(Net, self).__init__()
                         for el in range(0,len(HiddenLayerDNA)):
                             if el==0:
-                                Nodes=HiddenLayerDNA[el][0]**4
+                                Nodes=HiddenLayerDNA[el][0]*16
                                 NoF=OutputDNA[0][0]
                                 self.conv1 = GCNConv(NoF, Nodes)
                             if el==1:
-                                Nodes=HiddenLayerDNA[el][0]**4
-                                PNodes=HiddenLayerDNA[el-1][0]**4
+                                Nodes=HiddenLayerDNA[el][0]*16
+                                PNodes=HiddenLayerDNA[el-1][0]*16
                                 self.conv2 = GCNConv(PNodes, Nodes)
                             if el==2:
-                                Nodes=HiddenLayerDNA[el][0]**4
-                                PNodes=HiddenLayerDNA[el-1][0]**4
+                                Nodes=HiddenLayerDNA[el][0]*16
+                                PNodes=HiddenLayerDNA[el-1][0]*16
                                 self.conv3 = GCNConv(PNodes, Nodes)
                             if el==3:
-                                Nodes=HiddenLayerDNA[el][0]**4
+                                Nodes=HiddenLayerDNA[el][0]*16
                                 NoF=OutputDNA[0]
                                 self.conv4 = GCNConv(NoF, Nodes)
                             if el==4:
-                                Nodes=HiddenLayerDNA[el][0]**4
-                                PNodes=HiddenLayerDNA[el-1][0]**4
+                                Nodes=HiddenLayerDNA[el][0]*16
+                                PNodes=HiddenLayerDNA[el-1][0]*16
                                 self.conv5 = GCNConv(PNodes, Nodes)
-                        print(Net)
-                        exit()
 
                     def encode(self,sample):
                          x = self.conv1(sample.x, sample.train_pos_edge_index) # convolution 1
@@ -229,7 +226,7 @@ if Mode!='Train' and Mode!='Test':
                          prob_adj = z @ z.t() # get adj NxN
                          return (prob_adj > 0).nonzero(as_tuple=False).t() # get predicted edge_list
 # Compile the model
-               model = Net(5).to(device)
+               model = Net(OutputDNA[0][0]).to(device)
                optimizer = torch.optim.Adam(params=model.parameters(), lr=LR)
 
 #            #except:

@@ -67,8 +67,9 @@ for gene in DNA:
 
 act_fun_list=['N/A','linear','exponential','elu','relu', 'selu','sigmoid','softmax','softplus','softsign','tanh']
 ValidModel=True
-# Accuracy=0.0
-# Accuracy0=0.0
+print(OutputDNA)
+exit()
+
 ##################################   Loading Directory locations   ##################################################
 AFS_DIR=args.AFS
 EOS_DIR=args.EOS
@@ -93,9 +94,6 @@ print(UF.TimeStamp(), bcolors.OKGREEN+"Modules Have been imported successfully..
 # TrainBatchSize=(OutputDNA[0][1]*4)
 
 def get_link_labels(pos_edge_index, neg_edge_index):
-     # returns a tensor:
-     # [1,1,1,1,...,0,0,0,0,0,..] with the number of ones is equel to the lenght of pos_edge_index
-     # and the number of zeros is equal to the length of neg_edge_index
      E = pos_edge_index.size(1) + neg_edge_index.size(1)
      link_labels = torch.zeros(E, dtype=torch.float, device=device)
      link_labels[:pos_edge_index.size(1)] = 1.
@@ -144,19 +142,9 @@ if Mode!='Test':
     TrainClusters=pickle.load(train_file)
     train_file.close()
 
-#
+
 print(UF.TimeStamp(), bcolors.OKGREEN+"Train data has been loaded successfully..."+bcolors.ENDC)
-#
-# NValBatches=math.ceil(float(len(ValImages))/float(TrainBatchSize))
-#
-# print(UF.TimeStamp(),'Loading the model...')
-# ##### This but has to be converted to a part that interprets DNA code  ###################################
-# if args.LR=='Default':
-#   LR=10**(-int(OutputDNA[0][3]))
-#   opt = adam(learning_rate=10**(-int(OutputDNA[0][3])))
-# else:
-#     LR=float(args.LR)
-#     opt = adam(learning_rate=float(args.LR))
+
 if Mode=='Train':
             class Net(torch.nn.Module):
                     def __init__(self,NoF):
@@ -182,28 +170,6 @@ if Mode=='Train':
             optimizer = torch.optim.Adam(params=model.parameters(), lr=LR)
             model.load_state_dict(torch.load(model_name))
 if Mode!='Train' and Mode!='Test':
-#            #try:
-#              model = Sequential()
-#              for HL in HiddenLayerDNA:
-#                  Nodes=HL[0]*16
-#                  KS=(HL[2]*2)+1
-#                  PS=HL[3]
-#                  DR=float(HL[6]-1)/10.0
-#                  if HiddenLayerDNA.index(HL)==0:
-#                     model.add(Conv3D(Nodes, activation=act_fun_list[HL[1]],kernel_size=(KS,KS,KS),kernel_initializer='he_uniform', input_shape=(TrainImages[0].H,TrainImages[0].W,TrainImages[0].L,1)))
-#                  else:
-#                     model.add(Conv3D(Nodes, activation=act_fun_list[HL[1]],kernel_size=(KS,KS,KS),kernel_initializer='he_uniform'))
-#                  if PS>1:
-#                     model.add(MaxPooling3D(pool_size=(PS, PS, PS)))
-#                  model.add(BatchNormalization(center=HL[4]>1, scale=HL[5]>1))
-#                  model.add(Dropout(DR))
-#              model.add(Flatten())
-#              for FC in FullyConnectedDNA:
-#                      Nodes=4**FC[0]
-#                      DR=float(FC[2]-1)/10.0
-#                      model.add(Dense(Nodes, activation=act_fun_list[FC[1]], kernel_initializer='he_uniform'))
-#                      model.add(Dropout(DR))
-#              model.add(Dense(2, activation=act_fun_list[OutputDNA[0][0]]))
                class Net(torch.nn.Module):
                     def __init__(self,NoF):
                         super(Net, self).__init__()

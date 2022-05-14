@@ -150,24 +150,24 @@ if Mode=='Train':
                         super(Net, self).__init__()
                         for el in range(0,len(HiddenLayerDNA)):
                             if el==0:
-                                Nodes=HiddenLayerDNA[el][0]*16
+                                Nodes=4**HiddenLayerDNA[el][0]
                                 NoF=OutputDNA[0][0]
                                 self.conv1 = GCNConv(NoF, Nodes)
                             if el==1:
-                                Nodes=HiddenLayerDNA[el][0]*16
-                                PNodes=HiddenLayerDNA[el-1][0]*16
+                                Nodes=4**HiddenLayerDNA[el][0]
+                                PNodes=4**HiddenLayerDNA[el-1][0]
                                 self.conv2 = GCNConv(PNodes, Nodes)
                             if el==2:
-                                Nodes=HiddenLayerDNA[el][0]*16
-                                PNodes=HiddenLayerDNA[el-1][0]*16
+                                Nodes=4**HiddenLayerDNA[el][0]
+                                PNodes=4**HiddenLayerDNA[el-1][0]
                                 self.conv3 = GCNConv(PNodes, Nodes)
                             if el==3:
-                                Nodes=HiddenLayerDNA[el][0]*16
-                                NoF=OutputDNA[0]
-                                self.conv4 = GCNConv(NoF, Nodes)
+                                Nodes=4**HiddenLayerDNA[el][0]
+                                PNodes=4**HiddenLayerDNA[el-1][0]
+                                self.conv4 = GCNConv(PNodes, Nodes)
                             if el==4:
-                                Nodes=HiddenLayerDNA[el][0]*16
-                                PNodes=HiddenLayerDNA[el-1][0]*16
+                                Nodes=4**HiddenLayerDNA[el][0]
+                                PNodes=4**HiddenLayerDNA[el-1][0]
                                 self.conv5 = GCNConv(PNodes, Nodes)
                     def encode(self,sample):
                          x = self.conv1(sample.x, sample.train_pos_edge_index) # convolution 1
@@ -192,24 +192,24 @@ if Mode!='Train' and Mode!='Test':
                         super(Net, self).__init__()
                         for el in range(0,len(HiddenLayerDNA)):
                             if el==0:
-                                Nodes=HiddenLayerDNA[el][0]*16
+                                Nodes=4**HiddenLayerDNA[el][0]
                                 NoF=OutputDNA[0][0]
                                 self.conv1 = GCNConv(NoF, Nodes)
                             if el==1:
-                                Nodes=HiddenLayerDNA[el][0]*16
-                                PNodes=HiddenLayerDNA[el-1][0]*16
+                                Nodes=4**HiddenLayerDNA[el][0]
+                                PNodes=4**HiddenLayerDNA[el-1][0]
                                 self.conv2 = GCNConv(PNodes, Nodes)
                             if el==2:
-                                Nodes=HiddenLayerDNA[el][0]*16
-                                PNodes=HiddenLayerDNA[el-1][0]*16
+                                Nodes=4**HiddenLayerDNA[el][0]
+                                PNodes=4**HiddenLayerDNA[el-1][0]
                                 self.conv3 = GCNConv(PNodes, Nodes)
                             if el==3:
-                                Nodes=HiddenLayerDNA[el][0]*16
-                                NoF=OutputDNA[0]
-                                self.conv4 = GCNConv(NoF, Nodes)
+                                Nodes=4**HiddenLayerDNA[el][0]
+                                PNodes=4**HiddenLayerDNA[el-1][0]
+                                self.conv4 = GCNConv(PNodes, Nodes)
                             if el==4:
-                                Nodes=HiddenLayerDNA[el][0]*16
-                                PNodes=HiddenLayerDNA[el-1][0]*16
+                                Nodes=4**HiddenLayerDNA[el][0]
+                                PNodes=4**HiddenLayerDNA[el-1][0]
                                 self.conv5 = GCNConv(PNodes, Nodes)
 
                     def encode(self,sample):

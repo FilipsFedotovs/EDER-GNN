@@ -429,6 +429,7 @@ class HitCluster:
                                     m_frames=[temp_e_hits,t_temp_e_hits]
                                     temp_e_hits=pd.concat(m_frames)
                     if t_count!=0:
+                        print(temp_e_hits)
                         temp_e_hits=temp_e_hits.drop_duplicates(subset=["_r_HitID","_l_HitID",'link_strength'],keep='first')[['Track_ID','link_strength',"_r_HitID","_l_HitID"]]
 
                         temp_e_hits=temp_e_hits.groupby(['Track_ID'])['link_strength'].sum().reset_index()
@@ -443,6 +444,8 @@ class HitCluster:
                         temp_e_hits=pd.merge(temp_e_hits, temp_dof_hits, how="inner", on=['Track_ID'])
                         temp_e_hits['Fit/DOF']=(temp_e_hits['link_strength']+temp_e_hits['Fit'])/(temp_e_hits['DoF']-1)
                         temp_e_hits=temp_e_hits.sort_values(by=['Fit/DOF'], ascending=False)
+                        print(temp_e_hits)
+                        input('Press to continue')
                         temp_e_hits=temp_e_hits.iloc[:1]
                         temp_e_hits=temp_e_hits.drop(["Fit",'DoF','link_strength','Fit/DOF'], axis=1)
                         temp_e_hits=pd.melt(temp_e_hits, id_vars=['Track_ID'])

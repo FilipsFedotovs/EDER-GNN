@@ -147,11 +147,29 @@ print(UF.TimeStamp(), bcolors.OKGREEN+"Train data has been loaded successfully..
 
 if Mode=='Train':
             class Net(torch.nn.Module):
-                    def __init__(self,NoF):
+                    def __init__(self):
                         super(Net, self).__init__()
-                        self.conv1 = GCNConv(NoF, 128)
-                        self.conv2 = GCNConv(128, 64)
-
+                        for el in range(0,len(HiddenLayerDNA)):
+                            if el==0:
+                                Nodes=HiddenLayerDNA[el][0]*4
+                                NoF=OutputDNA[0]
+                                self.conv1 = GCNConv(NoF, Nodes)
+                            if el==1:
+                                Nodes=HiddenLayerDNA[el][0]*4
+                                PNodes=HiddenLayerDNA[el-1][0]*4
+                                self.conv2 = GCNConv(PNodes, Nodes)
+                            if el==2:
+                                Nodes=HiddenLayerDNA[el][0]*4
+                                PNodes=HiddenLayerDNA[el-1][0]*4
+                                self.conv3 = GCNConv(PNodes, Nodes)
+                            if el==3:
+                                Nodes=HiddenLayerDNA[el][0]*4
+                                NoF=OutputDNA[0]
+                                self.conv4 = GCNConv(NoF, Nodes)
+                            if el==4:
+                                Nodes=HiddenLayerDNA[el][0]*4
+                                PNodes=HiddenLayerDNA[el-1][0]*4
+                                self.conv5 = GCNConv(PNodes, Nodes)
                     def encode(self,sample):
                          x = self.conv1(sample.x, sample.train_pos_edge_index) # convolution 1
                          x = x.relu()
@@ -173,8 +191,29 @@ if Mode!='Train' and Mode!='Test':
                class Net(torch.nn.Module):
                     def __init__(self,NoF):
                         super(Net, self).__init__()
-                        self.conv1 = GCNConv(NoF, 128)
-                        self.conv2 = GCNConv(128, 64)
+                        for el in range(0,len(HiddenLayerDNA)):
+                            if el==0:
+                                Nodes=HiddenLayerDNA[el][0]*4
+                                NoF=OutputDNA[0]
+                                self.conv1 = GCNConv(NoF, Nodes)
+                            if el==1:
+                                Nodes=HiddenLayerDNA[el][0]*4
+                                PNodes=HiddenLayerDNA[el-1][0]*4
+                                self.conv2 = GCNConv(PNodes, Nodes)
+                            if el==2:
+                                Nodes=HiddenLayerDNA[el][0]*4
+                                PNodes=HiddenLayerDNA[el-1][0]*4
+                                self.conv3 = GCNConv(PNodes, Nodes)
+                            if el==3:
+                                Nodes=HiddenLayerDNA[el][0]*4
+                                NoF=OutputDNA[0]
+                                self.conv4 = GCNConv(NoF, Nodes)
+                            if el==4:
+                                Nodes=HiddenLayerDNA[el][0]*4
+                                PNodes=HiddenLayerDNA[el-1][0]*4
+                                self.conv5 = GCNConv(PNodes, Nodes)
+                        print(Net)
+                        exit()
 
                     def encode(self,sample):
                          x = self.conv1(sample.x, sample.train_pos_edge_index) # convolution 1

@@ -114,7 +114,7 @@ elif mode=='R':
  print(UF.TimeStamp(),bcolors.OKGREEN+'Job description has been created'+bcolors.ENDC)
  PerformanceHeader=[['ClusterSet','Cluster', 'Cluster Size','Epochs', 'Train Loss', 'Best validation accuracy', 'Best Test Accuracy']]
  UF.LogOperations(EOSsubModelDIR+'/M2_PERFORMANCE_'+job[5]+'.csv','StartLog',PerformanceHeader)
- OptionHeader = [' --Mode ', ' --ImageSet ', ' --EOS ', " --AFS ", " --DNA ",
+ OptionHeader = [' --Mode ', ' --ClusterSet ', ' --EOS ', " --AFS ", " --DNA ",
                  " --LR ", " --Epoch ", " --ModelName ", " --ModelNewName "]
  SHName = AFS_DIR + '/HTCondor/SH/SH_M2.sh'
  SUBName = AFS_DIR + '/HTCondor/SUB/SUB_M2.sub'

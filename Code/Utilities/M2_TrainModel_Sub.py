@@ -180,6 +180,7 @@ if Mode=='Train':
             model.load_state_dict(torch.load(model_name))
 if Mode!='Train' and Mode!='Test':
                print(len(HiddenLayerDNA))
+               print(HiddenLayerDNA)
                exit()
                class Net(torch.nn.Module):
                     def __init__(self):

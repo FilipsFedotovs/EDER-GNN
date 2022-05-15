@@ -193,9 +193,8 @@ if Mode!='Train' and Mode!='Test':
                             if el==1:
                                 Nodes=4**HiddenLayerDNA[el][0]
                                 PNodes=4**HiddenLayerDNA[el-1][0]
-                                print(Nodes,PNodes)
+                                print(PNodes,Nodes)
                                 self.conv2 = GCNConv(PNodes, Nodes)
-                                exit()
                             if el==2:
                                 Nodes=4**HiddenLayerDNA[el][0]
                                 PNodes=4**HiddenLayerDNA[el-1][0]

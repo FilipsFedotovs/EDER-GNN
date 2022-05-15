@@ -179,6 +179,8 @@ if Mode=='Train':
             optimizer = torch.optim.Adam(params=model.parameters(), lr=LR)
             model.load_state_dict(torch.load(model_name))
 if Mode!='Train' and Mode!='Test':
+               print(len(HiddenLayerDNA))
+               exit()
                class Net(torch.nn.Module):
                     def __init__(self):
                         super(Net, self).__init__()

@@ -56,10 +56,11 @@ DNA=ast.literal_eval(args.DNA)
 LR=float(args.LR)
 HiddenLayerDNA=[]
 FullyConnectedDNA=[]
-OutputDNA=[]
-print(DNA)
-for gene in DNA:
-    if DNA.index(gene)<=4 and len(gene)>0:
+OutputDNA=DNA[:4]
+print(OutputDNA)
+exit()
+for gene in range(0,len(DNA)):
+    if gene<=4 and len(gene)>0:
         HiddenLayerDNA.append(gene)
     elif DNA.index(gene)<=9 and len(gene)>0:
         FullyConnectedDNA.append(gene)

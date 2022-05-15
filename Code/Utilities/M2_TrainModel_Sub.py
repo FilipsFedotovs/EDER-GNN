@@ -54,9 +54,8 @@ Mode=args.Mode
 Epoch=int(args.Epoch)
 DNA=ast.literal_eval(args.DNA)
 LR=float(args.LR)
-HiddenLayerDNA=[]
-FullyConnectedDNA=[]
-OutputDNA=DNA[:5]
+HiddenLayerDNA=DNA[:5]
+OutputDNA=DNA[9:]
 print(OutputDNA)
 exit()
 for gene in range(0,len(DNA)):

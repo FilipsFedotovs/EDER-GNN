@@ -56,7 +56,7 @@ DNA=ast.literal_eval(args.DNA)
 LR=float(args.LR)
 HiddenLayerDNA=[]
 FullyConnectedDNA=[]
-OutputDNA=DNA[:4]
+OutputDNA=DNA[:5]
 print(OutputDNA)
 exit()
 for gene in range(0,len(DNA)):

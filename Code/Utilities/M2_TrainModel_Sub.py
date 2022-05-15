@@ -55,21 +55,10 @@ Epoch=int(args.Epoch)
 DNA=ast.literal_eval(args.DNA)
 LR=float(args.LR)
 HiddenLayerDNA=DNA[:5]
-OutputDNA=DNA[9:]
-print(OutputDNA)
-exit()
-for gene in range(0,len(DNA)):
-    if gene<=4 and len(gene)>0:
-        HiddenLayerDNA.append(gene)
-    elif DNA.index(gene)<=9 and len(gene)>0:
-        FullyConnectedDNA.append(gene)
-    elif DNA.index(gene)>9 and len(gene)>0:
-        OutputDNA.append(gene)
-
+OutputDNA=DNA[10:]
 act_fun_list=['N/A','linear','exponential','elu','relu', 'selu','sigmoid','softmax','softplus','softsign','tanh']
 ValidModel=True
-print(OutputDNA)
-exit()
+
 
 ##################################   Loading Directory locations   ##################################################
 AFS_DIR=args.AFS

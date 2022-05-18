@@ -189,6 +189,7 @@ if Mode!='Train' and Mode!='Test':
                                 Nodes=32*HiddenLayerDNA[el][0]
                                 NoF=OutputDNA[0][0]
                                 self.conv1 = GCNConv(NoF, Nodes)
+                                print(NoF)
                                 print(Nodes)
                             if el==1:
                                 Nodes=32*HiddenLayerDNA[el][0]

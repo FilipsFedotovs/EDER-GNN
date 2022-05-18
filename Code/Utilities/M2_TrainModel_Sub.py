@@ -179,8 +179,6 @@ if Mode=='Train':
             optimizer = torch.optim.Adam(params=model.parameters(), lr=LR)
             model.load_state_dict(torch.load(model_name))
 if Mode!='Train' and Mode!='Test':
-               print(len(HiddenLayerDNA))
-               print(HiddenLayerDNA)
                class Net(torch.nn.Module):
                     def __init__(self):
                         super(Net, self).__init__()
@@ -189,12 +187,9 @@ if Mode!='Train' and Mode!='Test':
                                 Nodes=32*HiddenLayerDNA[el][0]
                                 NoF=OutputDNA[0][0]
                                 self.conv1 = GCNConv(NoF, Nodes)
-                                print(NoF)
-                                print(Nodes)
                             if el==1:
                                 Nodes=32*HiddenLayerDNA[el][0]
                                 PNodes=32*HiddenLayerDNA[el-1][0]
-                                print(PNodes,Nodes)
                                 self.conv2 = GCNConv(PNodes, Nodes)
                             if el==2:
                                 Nodes=32*HiddenLayerDNA[el][0]
@@ -239,12 +234,12 @@ for tc in range(0,len(TrainClusters)):
     c_sample = c_sample.to(device)
     best_val_perf = test_perf = 0
     for epoch in range(0, Epoch):
-      #try:
-      train_loss = train(c_sample)
-      val_perf, tmp_test_perf = test(c_sample)
-      #except:
-      #   print('Failed training...')
-      #   break
+      try:
+          train_loss = train(c_sample)
+          val_perf, tmp_test_perf = test(c_sample)
+      except:
+         print('Failed training...')
+         break
       if val_perf > best_val_perf:
              best_val_perf = val_perf
              test_perf = tmp_test_perf

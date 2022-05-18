@@ -56,7 +56,7 @@ DNA=ast.literal_eval(args.DNA)
 LR=float(args.LR)
 HiddenLayerDNA=[x for x in DNA[:5] if x != []]
 
-OutputDNA=[x for x in DNA[:10] if x != []]
+OutputDNA=[x for x in DNA[10:] if x != []]
 act_fun_list=['N/A','linear','exponential','elu','relu', 'selu','sigmoid','softmax','softplus','softsign','tanh']
 ValidModel=True
 

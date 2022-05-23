@@ -57,6 +57,7 @@ stepZ=PM.stepZ
 cut_dt=PM.cut_dt
 cut_dr=PM.cut_dr
 ModelName=PM.ModelName
+DNA=PM.ModelArchitecture
 #Specifying the full path to input/output files
 input_file_location=EOS_DIR+'/EDER-GNN/Data/REC_SET/R1_HITS.csv'
 print(bcolors.HEADER+"########################################################################################################"+bcolors.ENDC)
@@ -93,8 +94,8 @@ if Mode=='R':
       print(UF.TimeStamp(),'Submitting jobs... ',bcolors.ENDC)
       for k in range(0,Zsteps):
         for i in range(0,Xsteps):
-            OptionHeader = [' --Z_ID ', ' --stepX ',' --stepY ',' --stepZ ', ' --EOS ', " --AFS ", " --zOffset ", " --xOffset ", " --yOffset ", ' --Log ', ' --cut_dt ', ' --cut_dr ', ' --X_ID ', ' --Y_ID ', ' --ModelName ']
-            OptionLine = [k, stepX,stepY,stepZ, EOS_DIR, AFS_DIR, z_offset, x_offset, y_offset, args.Log, cut_dt,cut_dr,i, '$1', ModelName]
+            OptionHeader = [' --Z_ID ', ' --stepX ',' --stepY ',' --stepZ ', ' --EOS ', " --AFS ", " --zOffset ", " --xOffset ", " --yOffset ", ' --Log ', ' --cut_dt ', ' --cut_dr ', ' --X_ID ', ' --Y_ID ', ' --ModelName ', ' --DNA ']
+            OptionLine = [k, stepX,stepY,stepZ, EOS_DIR, AFS_DIR, z_offset, x_offset, y_offset, args.Log, cut_dt,cut_dr,i, '$1', ModelName, DNA]
             SHName = AFS_DIR + '/HTCondor/SH/SH_R3_' + str(k) + '_'+ str(i)+ '.sh'
             SUBName = AFS_DIR + '/HTCondor/SUB/SUB_R3_' + str(k) + '_'+ str(i)+ '.sub'
             MSGName = AFS_DIR + '/HTCondor/MSG/MSG_R3_' + str(k) + '_'+ str(i)
@@ -109,8 +110,8 @@ if Mode=='C':
        print(UF.TimeStamp(),"progress is ",progress,' %') #Progress display
        for i in range(0,Xsteps):
            for j in range(0,Ysteps):
-            OptionHeader = [' --Z_ID ', ' --stepX ',' --stepY ',' --stepZ ', ' --EOS ', " --AFS ", " --zOffset ", " --xOffset ", " --yOffset ", ' --Log ', ' --cut_dt ', ' --cut_dr ', ' --X_ID ', ' --Y_ID ', ' --ModelName ']
-            OptionLine = [k, stepX,stepY,stepZ, EOS_DIR, AFS_DIR, z_offset, x_offset, y_offset, args.Log, cut_dt,cut_dr, i, j, ModelName]
+            OptionHeader = [' --Z_ID ', ' --stepX ',' --stepY ',' --stepZ ', ' --EOS ', " --AFS ", " --zOffset ", " --xOffset ", " --yOffset ", ' --Log ', ' --cut_dt ', ' --cut_dr ', ' --X_ID ', ' --Y_ID ', ' --ModelName ', ' --DNA ']
+            OptionLine = [k, stepX,stepY,stepZ, EOS_DIR, AFS_DIR, z_offset, x_offset, y_offset, args.Log, cut_dt,cut_dr, i, j, ModelName, DNA]
             required_output_file_location=EOS_DIR+'/EDER-GNN/Data/REC_SET/R3_R4_LinkedClusters_'+str(k)+'_'+str(i)+'_'+str(j)+'.pkl'
             SHName = AFS_DIR + '/HTCondor/SH/SH_R3_' + str(k) + '_'+ str(i)+ '_'+ str(j)+ '.sh'
             SUBName = AFS_DIR + '/HTCondor/SUB/SUB_R3_'+ str(k) + '_'+ str(i)+ '_'+ str(j)+'.sub'

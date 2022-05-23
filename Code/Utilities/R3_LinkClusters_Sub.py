@@ -14,6 +14,7 @@ import gc  #Helps to clear memory
 import numpy as np
 import pickle
 import torch
+import ast
 import torch_geometric
 from torch_geometric.nn import GCNConv
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -35,9 +36,10 @@ parser.add_argument('--zOffset',help="Data offset on z", default='0.0')
 parser.add_argument('--yOffset',help="Data offset on y", default='0.0')
 parser.add_argument('--xOffset',help="Data offset on x", default='0.0')
 parser.add_argument('--ModelName',help="Name of the model", default='')
+parser.add_argument('--DNA',help="Please enter the model dna", default='[[4, 4, 1, 2, 2, 2, 2], [5, 4, 1, 1, 2, 2, 2], [5, 4, 2, 1, 2, 2, 2], [5, 4, 2, 1, 2, 2, 2], [], [3, 4, 2], [3, 4, 2], [2, 4, 2], [], [], [7, 1, 1, 4]]')
 ######################################## Set variables  #############################################################
 args = parser.parse_args()
-
+DNA=ast.literal_eval(args.DNA)
 Z_ID=int(args.Z_ID)
 X_ID=int(args.X_ID)
 Y_ID=int(args.Y_ID)
@@ -49,7 +51,8 @@ y_offset=float(args.yOffset)
 x_offset=float(args.xOffset)
 cut_dt=float(args.cut_dt)
 cut_dr=float(args.cut_dr)
-
+HiddenLayerDNA=[x for x in DNA[:5] if x != []]
+OutputDNA=[x for x in DNA[10:] if x != []]
 #Loading Directory locations
 EOS_DIR=args.EOS
 AFS_DIR=args.AFS
@@ -81,10 +84,29 @@ else:
     print(UF.TimeStamp(),'Loading the model... ')
 
     class Net(torch.nn.Module):
-                        def __init__(self,NoF):
+                        def __init__(self):
                             super(Net, self).__init__()
-                            self.conv1 = GCNConv(NoF, 128)
-                            self.conv2 = GCNConv(128, 64)
+                            for el in range(0,len(HiddenLayerDNA)):
+                                if el==0:
+                                    Nodes=32*HiddenLayerDNA[el][0]
+                                    NoF=OutputDNA[0][0]
+                                    self.conv1 = GCNConv(NoF, Nodes)
+                                if el==1:
+                                    Nodes=32*HiddenLayerDNA[el][0]
+                                    PNodes=32*HiddenLayerDNA[el-1][0]
+                                    self.conv2 = GCNConv(PNodes, Nodes)
+                                if el==2:
+                                    Nodes=32*HiddenLayerDNA[el][0]
+                                    PNodes=32*HiddenLayerDNA[el-1][0]
+                                    self.conv3 = GCNConv(PNodes, Nodes)
+                                if el==3:
+                                    Nodes=32*HiddenLayerDNA[el][0]
+                                    PNodes=32*HiddenLayerDNA[el-1][0]
+                                    self.conv4 = GCNConv(PNodes, Nodes)
+                                if el==4:
+                                    Nodes=32*HiddenLayerDNA[el][0]
+                                    PNodes=32*HiddenLayerDNA[el-1][0]
+                                    self.conv5 = GCNConv(PNodes, Nodes)
 
                         def encode(self,sample):
                              x = self.conv1(sample.x, sample.train_pos_edge_index) # convolution 1
@@ -105,7 +127,7 @@ else:
                                 strength_matrix.append(element)
                              output_matrix.append(strength_matrix)
                              return output_matrix # get predicted edge_list
-    model = Net(5).to(device)
+    model = Net().to(device)
     model.load_state_dict(torch.load(EOS_DIR+'/EDER-GNN/Models/'+args.ModelName))
     model.eval()
     if args.Log=='Y':

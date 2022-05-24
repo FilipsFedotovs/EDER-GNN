@@ -57,7 +57,7 @@ stepZ=PM.stepZ
 cut_dt=PM.cut_dt
 cut_dr=PM.cut_dr
 ModelName=PM.ModelName
-DNA=PM.ModelArchitecture
+DNA = '"' + str(PM.ModelArchitecture) + '"'
 #Specifying the full path to input/output files
 input_file_location=EOS_DIR+'/EDER-GNN/Data/REC_SET/R1_HITS.csv'
 print(bcolors.HEADER+"########################################################################################################"+bcolors.ENDC)

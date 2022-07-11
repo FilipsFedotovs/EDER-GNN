@@ -162,15 +162,9 @@ class HitCluster:
            random.shuffle(_FinalList)
            import torch
            self.ClusterGraph.edge_index=torch.tensor(np.array(HitCluster.GenerateLinks(_FinalList,self.ClusterHitIDs)))
-           print(self.ClusterGraph.edge_index)
+           self.ClusterGraph.edge_attr=torch.tensor(np.array(HitCluster.GenerateEdgeAttributes(_FinalList)))
+           print(self.ClusterGraph.edge_attr)
            exit()
-
-           self.ClusterGraph.val_pos_edge_index=torch.tensor(np.array(HitCluster.GenerateLinks(_GenuineValList,self.ClusterHitIDs)))
-           self.ClusterGraph.test_pos_edge_index=torch.tensor(np.array(HitCluster.GenerateLinks(_GenuineTestList,self.ClusterHitIDs)))
-           self.ClusterGraph.val_neg_edge_index=torch.tensor(np.array(HitCluster.GenerateLinks(_FakeValList,self.ClusterHitIDs)))
-           self.ClusterGraph.test_neg_edge_index=torch.tensor(np.array(HitCluster.GenerateLinks(_FakeTestList,self.ClusterHitIDs)))
-           self.ClusterGraph.train_neg_edge_index=torch.tensor(np.array(HitCluster.GenerateLinks(_FakeList,self.ClusterHitIDs)))
-           self.ClusterGraph.train_pos_edge_index=torch.tensor(np.array(HitCluster.GenerateLinks(_GenuineList,self.ClusterHitIDs)))
 
       def GiveStats(self,MCHits,cut_dt, cut_dr): #Decorate hit information
            import pandas as pd
@@ -636,13 +630,10 @@ class HitCluster:
               _Top.append(_ClusterID.index(ip[0]))
               _Bottom.append(_ClusterID.index(ip[1]))
           return [_Top,_Bottom]
-      def GenerateEdgeAttributes(_input,_ClusterID):
-          _Top=[]
-          _Bottom=[]
+      def GenerateEdgeAttributes(_input):
           for ip in _input:
-              _Top.append(_ClusterID.index(ip[0]))
-              _Bottom.append(_ClusterID.index(ip[1]))
-          return [_Top,_Bottom]
+              _EdgeAttr.append(ip[2])
+          return [_EdgeAttr]
 
 
 def CleanFolder(folder,key):

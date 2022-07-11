@@ -155,8 +155,10 @@ class HitCluster:
            _Fakes = _Fakes.drop(['d_tx','d_ty','d_x','d_y','join_key','r_x','r_y','r_z','l_x','l_y','l_z','l_tx','l_ty','r_tx','r_ty','l_MC_ID','r_MC_ID'],axis=1)
            _Genuine['Connection']=1
            _Fakes['Connection']=0
-           
-           print(_Genuine)
+           _FakeList=_Fakes.values.tolist()
+           _GenuineList=_Genuine.values.tolist()
+           _FinalList=_FakeList+_GenuineList
+           print(_FinalList)
            exit()
            import torch
            self.ClusterGraph.val_pos_edge_index=torch.tensor(np.array(HitCluster.GenerateLinks(_GenuineValList,self.ClusterHitIDs)))

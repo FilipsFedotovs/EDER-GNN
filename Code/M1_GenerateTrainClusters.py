@@ -96,7 +96,7 @@ if Mode=='R':
             SHName = AFS_DIR + '/HTCondor/SH/SH_M1_' + str(k) + '.sh'
             SUBName = AFS_DIR + '/HTCondor/SUB/SUB_M1_' + str(k) + '.sub'
             MSGName = AFS_DIR + '/HTCondor/MSG/MSG_M1_' + str(k)
-            ScriptName = AFS_DIR + '/Code/Utilities/M1_GenerateTrainClusters_Sub.py '
+            ScriptName = AFS_DIR + '/Code/Utilities/M1b_GenerateTrainClusters_Sub.py '
             UF.SubmitJobs2Condor([OptionHeader, OptionLine, SHName, SUBName, MSGName, ScriptName, Xsteps, 'EDER-GNN-M1', False,False])
       print(UF.TimeStamp(), bcolors.OKGREEN+'All jobs have been submitted, please rerun this script with "--Mode C" in few hours'+bcolors.ENDC)
 if Mode=='C':
@@ -112,7 +112,7 @@ if Mode=='C':
             SHName = AFS_DIR + '/HTCondor/SH/SH_M1_' + str(k) + '.sh'
             SUBName = AFS_DIR + '/HTCondor/SUB/SUB_M1_' + str(k) + '.sub'
             MSGName = AFS_DIR + '/HTCondor/MSG/MSG_M1_' + str(k)
-            ScriptName = AFS_DIR + '/Code/Utilities/M1_GenerateTrainClusters_Sub.py '
+            ScriptName = AFS_DIR + '/Code/Utilities/M1b_GenerateTrainClusters_Sub.py '
             if os.path.isfile(required_output_file_location)!=True:
                bad_pop.append([OptionHeader, OptionLine, SHName, SUBName, MSGName, ScriptName, 1, 'EDER-GNN-M1', False,False])
    if len(bad_pop)>0:

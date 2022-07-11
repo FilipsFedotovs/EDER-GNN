@@ -161,6 +161,7 @@ class HitCluster:
            _FinalList=_FakeList+_GenuineList
            random.shuffle(_FinalList)
            print(_FinalList)
+           print(ClusterGraph.x)
            exit()
            import torch
            self.ClusterGraph.val_pos_edge_index=torch.tensor(np.array(HitCluster.GenerateLinks(_GenuineValList,self.ClusterHitIDs)))
@@ -628,6 +629,13 @@ class HitCluster:
 
       @staticmethod
       def GenerateLinks(_input,_ClusterID):
+          _Top=[]
+          _Bottom=[]
+          for ip in _input:
+              _Top.append(_ClusterID.index(ip[0]))
+              _Bottom.append(_ClusterID.index(ip[1]))
+          return [_Top,_Bottom]
+      def GenerateEdgeAttributes(_input,_ClusterID):
           _Top=[]
           _Bottom=[]
           for ip in _input:

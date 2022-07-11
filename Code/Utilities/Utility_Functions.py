@@ -161,7 +161,7 @@ class HitCluster:
            _FinalList=_FakeList+_GenuineList
            random.shuffle(_FinalList)
            print(_FinalList)
-           print(ClusterGraph.x)
+           print(self.ClusterGraph.x)
            exit()
            import torch
            self.ClusterGraph.val_pos_edge_index=torch.tensor(np.array(HitCluster.GenerateLinks(_GenuineValList,self.ClusterHitIDs)))

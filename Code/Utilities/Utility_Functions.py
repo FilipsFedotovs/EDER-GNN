@@ -107,6 +107,73 @@ class HitCluster:
            self.ClusterGraph.train_neg_edge_index=torch.tensor(np.array(HitCluster.GenerateLinks(_FakeList,self.ClusterHitIDs)))
            self.ClusterGraph.train_pos_edge_index=torch.tensor(np.array(HitCluster.GenerateLinks(_GenuineList,self.ClusterHitIDs)))
 
+      def GenerateTrainDatav2(self, MCHits,cut_dt, cut_dr): #Decorate hit information
+           import pandas as pd
+           _MCClusterHits=[]
+           for s in MCHits:
+               if s[1]>=self.ClusterID[0]*self.Step[0] and s[1]<((self.ClusterID[0]+1)*self.Step[0]):
+                   if s[2]>=self.ClusterID[1]*self.Step[1] and s[2]<((self.ClusterID[1]+1)*self.Step[1]):
+                       if s[3]>=self.ClusterID[2]*self.Step[2] and s[3]<((self.ClusterID[2]+1)*self.Step[2]):
+                          _MCClusterHits.append([s[0],s[6]])
+           #Preparing Raw and MC combined data 1
+           _l_MCHits=pd.DataFrame(_MCClusterHits, columns = ['l_HitID','l_MC_ID'])
+           _l_Hits=pd.DataFrame(self.ClusterHits, columns = ['l_HitID','l_x','l_y','l_z','l_tx','l_ty'])
+           #Join hits + MC truth
+           _l_Tot_Hits=pd.merge(_l_MCHits, _l_Hits, how="right", on=['l_HitID'])
+           _l_Tot_Hits['join_key'] = 'join_key'
+
+           #Preparing Raw and MC combined data 2
+           _r_MCHits=pd.DataFrame(_MCClusterHits, columns = ['r_HitID','r_MC_ID'])
+           _r_Hits=pd.DataFrame(self.ClusterHits, columns = ['r_HitID','r_x','r_y','r_z','r_tx','r_ty'])
+           #Join hits + MC truth
+           _r_Tot_Hits=pd.merge(_r_MCHits, _r_Hits, how="right", on=['r_HitID'])
+           _r_Tot_Hits['join_key'] = 'join_key'
+
+           #Combining data 1 and 2
+           _Tot_Hits=pd.merge(_l_Tot_Hits, _r_Tot_Hits, how="inner", on=['join_key'])
+           _Tot_Hits.l_MC_ID= _Tot_Hits.l_MC_ID.fillna(_Tot_Hits.l_HitID)
+           _Tot_Hits.r_MC_ID= _Tot_Hits.r_MC_ID.fillna(_Tot_Hits.r_HitID)
+           #_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_HitID'] == _Tot_Hits['r_HitID']], inplace = True)
+           #_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_z'] <= _Tot_Hits['r_z']], inplace = True)
+           _Tot_Hits['d_tx'] = _Tot_Hits['l_tx']-_Tot_Hits['r_tx']
+           _Tot_Hits['d_tx'] = _Tot_Hits['d_tx'].abs()
+           _Tot_Hits['d_ty'] = _Tot_Hits['l_ty']-_Tot_Hits['r_ty']
+           _Tot_Hits['d_ty'] = _Tot_Hits['d_ty'].abs()
+           _Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['d_tx'] >= cut_dt], inplace = True)
+           _Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['d_ty'] >= cut_dt], inplace = True)
+           _Tot_Hits['d_x'] = (_Tot_Hits['r_x']-(_Tot_Hits['l_x']+(_Tot_Hits['l_tx']*(_Tot_Hits['r_z']-_Tot_Hits['l_z']))))
+           _Tot_Hits['d_x'] = _Tot_Hits['d_x'].abs()
+           _Tot_Hits['d_y'] = (_Tot_Hits['r_y']-(_Tot_Hits['l_y']+(_Tot_Hits['l_ty']*(_Tot_Hits['r_z']-_Tot_Hits['l_z']))))
+           _Tot_Hits['d_y'] = _Tot_Hits['d_y'].abs()
+           _Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['d_x'] >= cut_dr], inplace = True)
+           _Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['d_y'] >= cut_dr], inplace = True)
+           _Genuine=_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']])
+           _Fakes=_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] == _Tot_Hits['r_MC_ID']])
+
+           _Genuine = _Genuine.drop(['d_tx','d_ty','d_x','d_y','join_key','r_x','r_y','r_z','l_x','l_y','l_z','l_tx','l_ty','r_tx','r_ty','l_MC_ID','r_MC_ID'],axis=1)
+           _Fakes = _Fakes.drop(['d_tx','d_ty','d_x','d_y','join_key','r_x','r_y','r_z','l_x','l_y','l_z','l_tx','l_ty','r_tx','r_ty','l_MC_ID','r_MC_ID'],axis=1)
+           print(_Genuine)
+           exit()
+           _min_n=min(len(_Genuine),len(_Fakes))
+           _Genuine=_Genuine.sample(n=_min_n)
+           _Fakes=_Fakes.sample(n=_min_n)
+           _TestSize=int(round(len(_Fakes)*test_ratio))
+           _ValSize=int(round(len(_Fakes)*val_ratio))
+           _FakeList=_Fakes.values.tolist()
+           _GenuineList=_Genuine.values.tolist()
+           _FakeTestList=_FakeList[0:_TestSize]
+           _GenuineTestList=_GenuineList[0:_TestSize]
+           _FakeValList=_FakeList[_TestSize:(_ValSize+_TestSize)]
+           _GenuineValList=_GenuineList[_TestSize:(_ValSize+_TestSize)]
+           _FakeList=_FakeList[(_ValSize+_TestSize):]
+           _GenuineList=_GenuineList[(_ValSize+_TestSize):]
+           import torch
+           self.ClusterGraph.val_pos_edge_index=torch.tensor(np.array(HitCluster.GenerateLinks(_GenuineValList,self.ClusterHitIDs)))
+           self.ClusterGraph.test_pos_edge_index=torch.tensor(np.array(HitCluster.GenerateLinks(_GenuineTestList,self.ClusterHitIDs)))
+           self.ClusterGraph.val_neg_edge_index=torch.tensor(np.array(HitCluster.GenerateLinks(_FakeValList,self.ClusterHitIDs)))
+           self.ClusterGraph.test_neg_edge_index=torch.tensor(np.array(HitCluster.GenerateLinks(_FakeTestList,self.ClusterHitIDs)))
+           self.ClusterGraph.train_neg_edge_index=torch.tensor(np.array(HitCluster.GenerateLinks(_FakeList,self.ClusterHitIDs)))
+           self.ClusterGraph.train_pos_edge_index=torch.tensor(np.array(HitCluster.GenerateLinks(_GenuineList,self.ClusterHitIDs)))
 
       def GiveStats(self,MCHits,cut_dt, cut_dr): #Decorate hit information
            import pandas as pd

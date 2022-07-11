@@ -150,23 +150,14 @@ class HitCluster:
            _Genuine=_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']])
            _Fakes=_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] == _Tot_Hits['r_MC_ID']])
 
+
            _Genuine = _Genuine.drop(['d_tx','d_ty','d_x','d_y','join_key','r_x','r_y','r_z','l_x','l_y','l_z','l_tx','l_ty','r_tx','r_ty','l_MC_ID','r_MC_ID'],axis=1)
            _Fakes = _Fakes.drop(['d_tx','d_ty','d_x','d_y','join_key','r_x','r_y','r_z','l_x','l_y','l_z','l_tx','l_ty','r_tx','r_ty','l_MC_ID','r_MC_ID'],axis=1)
+           _Genuine['Connection']=1
+           _Fakes['Connection']=0
+           
            print(_Genuine)
            exit()
-           _min_n=min(len(_Genuine),len(_Fakes))
-           _Genuine=_Genuine.sample(n=_min_n)
-           _Fakes=_Fakes.sample(n=_min_n)
-           _TestSize=int(round(len(_Fakes)*test_ratio))
-           _ValSize=int(round(len(_Fakes)*val_ratio))
-           _FakeList=_Fakes.values.tolist()
-           _GenuineList=_Genuine.values.tolist()
-           _FakeTestList=_FakeList[0:_TestSize]
-           _GenuineTestList=_GenuineList[0:_TestSize]
-           _FakeValList=_FakeList[_TestSize:(_ValSize+_TestSize)]
-           _GenuineValList=_GenuineList[_TestSize:(_ValSize+_TestSize)]
-           _FakeList=_FakeList[(_ValSize+_TestSize):]
-           _GenuineList=_GenuineList[(_ValSize+_TestSize):]
            import torch
            self.ClusterGraph.val_pos_edge_index=torch.tensor(np.array(HitCluster.GenerateLinks(_GenuineValList,self.ClusterHitIDs)))
            self.ClusterGraph.test_pos_edge_index=torch.tensor(np.array(HitCluster.GenerateLinks(_GenuineTestList,self.ClusterHitIDs)))

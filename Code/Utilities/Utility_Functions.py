@@ -163,8 +163,6 @@ class HitCluster:
            import torch
            self.ClusterGraph.edge_index=torch.tensor(np.array(HitCluster.GenerateLinks(_FinalList,self.ClusterHitIDs)))
            self.ClusterGraph.edge_attr=torch.tensor(np.array(HitCluster.GenerateEdgeAttributes(_FinalList)))
-           print(self.ClusterGraph.edge_attr)
-           exit()
 
       def GiveStats(self,MCHits,cut_dt, cut_dr): #Decorate hit information
            import pandas as pd

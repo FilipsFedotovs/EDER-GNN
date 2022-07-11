@@ -10,6 +10,7 @@ import ast
 import numpy as np
 #import scipy
 import copy
+import random
 #from scipy.stats import chisquare
 
 #This utility provides Timestamps for print messages
@@ -158,6 +159,7 @@ class HitCluster:
            _FakeList=_Fakes.values.tolist()
            _GenuineList=_Genuine.values.tolist()
            _FinalList=_FakeList+_GenuineList
+           random.shuffle(_FinalList)
            print(_FinalList)
            exit()
            import torch

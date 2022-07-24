@@ -18,8 +18,10 @@ import Utility_Functions
 from Utility_Functions import HitCluster
 import torch
 import torch_geometric
-
+from time import time
+from torch.optim.lr_scheduler import StepLR
 import torch.nn.functional as F
+from edge_classifier_1 import EdgeClassifier
 from sklearn.metrics import roc_auc_score
 from torch_geometric.utils import negative_sampling
 from torch_geometric.nn import GCNConv
@@ -81,46 +83,69 @@ print(bcolors.HEADER+"#########################                 PhD Student at U
 print(bcolors.HEADER+"########################################################################################################"+bcolors.ENDC)
 print(UF.TimeStamp(), bcolors.OKGREEN+"Modules Have been imported successfully..."+bcolors.ENDC)
 
-# #Calculate number of batches used for this job
-# TrainBatchSize=(OutputDNA[0][1]*4)
-
-def get_link_labels(pos_edge_index, neg_edge_index):
-     E = pos_edge_index.size(1) + neg_edge_index.size(1)
-     link_labels = torch.zeros(E, dtype=torch.float, device=device)
-     link_labels[:pos_edge_index.size(1)] = 1.
-     return link_labels
+def train(args, model, device, sample, optimizer, epoch):
+    model.train()
+    losses, t0, N = [], time(), len(sample)
+    for batch_idx, (data, fname) in enumerate(sample):
+        data = data.to(device)
+        if (len(data.x)==0): continue
+        optimizer.zero_grad()
+        output = model(data.x, data.edge_index, data.edge_attr)
+        y, output = data.y, output.squeeze(1)
+        loss = F.binary_cross_entropy(output, y, reduction='mean')
+        loss.backward()
+        optimizer.step()
+        if batch_idx % args.log_interval == 0:
+            percent_complete = 100. * batch_idx / N
+            logging.info(f'Train Epoch: {epoch} [{batch_idx}/{N}' +
+                         f'({percent_complete:.0f}%)]\tLoss: {loss.item():.6f}')
+            if args.dry_run: break
+        losses.append(loss.item())
+    logging.info(f'Epoch completed in {time()-t0}s')
+    logging.info(f'Train Loss: {np.nanmean(losses)}')
+    return np.nanmean(losses)
 #
 #
-def train(sample):
-     model.train()
-     optimizer.zero_grad()
-#
-     z = model.encode(sample) #encode
-     link_logits = model.decode(z, sample.train_pos_edge_index, neg_edge_index) # decode
 
-     link_labels = get_link_labels(sample.train_pos_edge_index, neg_edge_index)
-     loss = F.binary_cross_entropy_with_logits(link_logits, link_labels)
-     loss.backward()
-     optimizer.step()
+def validate(model, device, val_loader):
+    model.eval()
+    opt_thlds, accs = [], []
+    for batch_idx, (data, fname) in enumerate(val_loader):
+        data = data.to(device)
+        if (len(data.x)==0): continue
+        output = model(data.x, data.edge_index, data.edge_attr)
+        y, output = data.y, output.squeeze()
+        loss = F.binary_cross_entropy(output, y, reduction='mean').item()
+        diff, opt_thld, opt_acc = 100, 0, 0
+        best_tpr, best_tnr = 0, 0
+        for thld in np.arange(0.01, 0.6, 0.01):
+            acc, TPR, TNR = binary_classification_stats(output, y, thld)
+            delta = abs(TPR-TNR)
+            if (delta.item() < diff):
+                diff, opt_thld, opt_acc = delta.item(), thld, acc.item()
+        opt_thlds.append(opt_thld)
+        accs.append(opt_acc)
+    logging.info(f'Validation set accuracy (where TPR=TNR): {np.nanmean(accs)}')
+    logging.info(f'Validation set optimal edge weight thld: {np.nanmean(opt_thld)}')
+    return np.nanmean(opt_thlds)
 
-     return loss
-#
-#
-@torch.no_grad()
-def test(sample):
-     model.eval()
-     perfs = []
-     for prefix in ["val", "test"]:
-         pos_edge_index = sample[f'{prefix}_pos_edge_index']
-         neg_edge_index = sample[f'{prefix}_neg_edge_index']
-         z = model.encode(sample) # encode train
-         link_logits = model.decode(z, pos_edge_index, neg_edge_index) # decode test or val
-         link_probs = link_logits.sigmoid() # apply sigmoid
-
-         link_labels = get_link_labels(pos_edge_index, neg_edge_index) # get link
-
-         perfs.append(roc_auc_score(link_labels.cpu(), link_probs.cpu())) #compute roc_auc score
-     return perfs
+def test(model, device, test_loader, thld=0.5):
+    model.eval()
+    losses, accs = [], []
+    with torch.no_grad():
+        for batch_idx, (data, fname) in enumerate(test_loader):
+            data = data.to(device)
+            if (len(data.x)==0): continue
+            output = model(data.x, data.edge_index, data.edge_attr)
+            y, output = data.y, output.squeeze()
+            acc, TPR, TNR = binary_classification_stats(output, y, thld)
+            loss = F.binary_cross_entropy(output, data.y,
+                                          reduction='mean')
+            accs.append(acc.item())
+            losses.append(loss.item())
+    logging.info(f'Test loss: {np.nanmean(losses):.4f}')
+    logging.info(f'Test accuracy: {np.nanmean(accs):.4f}')
+    return np.nanmean(losses), np.nanmean(accs)
 if Mode!='Test':
     print(UF.TimeStamp(),'Loading data from ',bcolors.OKBLUE+flocation+bcolors.ENDC)
     train_file=open(flocation,'rb')
@@ -130,111 +155,132 @@ if Mode!='Test':
 
 print(UF.TimeStamp(), bcolors.OKGREEN+"Train data has been loaded successfully..."+bcolors.ENDC)
 
-if Mode=='Train':
-            class Net(torch.nn.Module):
-                    def __init__(self):
-                        super(Net, self).__init__()
-                        for el in range(0,len(HiddenLayerDNA)):
-                            if el==0:
-                                Nodes=32*HiddenLayerDNA[el][0]
-                                NoF=OutputDNA[0][0]
-                                self.conv1 = GCNConv(NoF, Nodes)
-                            if el==1:
-                                Nodes=32*HiddenLayerDNA[el][0]
-                                PNodes=32*HiddenLayerDNA[el-1][0]
-                                self.conv2 = GCNConv(PNodes, Nodes)
-                            if el==2:
-                                Nodes=32*HiddenLayerDNA[el][0]
-                                PNodes=32*HiddenLayerDNA[el-1][0]
-                                self.conv3 = GCNConv(PNodes, Nodes)
-                            if el==3:
-                                Nodes=32*HiddenLayerDNA[el][0]
-                                PNodes=32*HiddenLayerDNA[el-1][0]
-                                self.conv4 = GCNConv(PNodes, Nodes)
-                            if el==4:
-                                Nodes=32*HiddenLayerDNA[el][0]
-                                PNodes=32*HiddenLayerDNA[el-1][0]
-                                self.conv5 = GCNConv(PNodes, Nodes)
-                    def encode(self,sample):
-                         x = self.conv1(sample.x, sample.train_pos_edge_index) # convolution 1
-                         x = x.relu()
-                         return self.conv2(x, sample.train_pos_edge_index) # convolution 2
-
-                    def decode(self, z, pos_edge_index, neg_edge_index): # only pos and neg edges
-                         edge_index = torch.cat([pos_edge_index, neg_edge_index], dim=-1) # concatenate pos and neg edges
-                         logits = (z[edge_index[0]] * z[edge_index[1]]).sum(dim=-1)  # dot product
-                         return logits
-
-                    def decode_all(self, z):
-                         prob_adj = z @ z.t() # get adj NxN
-                         return (prob_adj > 0).nonzero(as_tuple=False).t() # get predicted edge_list
-            model_name=EOSsubModelDIR+'/'+args.ModelName
-            model = Net().to(device)
-            optimizer = torch.optim.Adam(params=model.parameters(), lr=LR)
-            model.load_state_dict(torch.load(model_name))
-if Mode!='Train' and Mode!='Test':
-               class MLP(nn.Module):
-                    def __init__(self, input_size, output_size, hidden_size):
-                        super(MLP, self).__init__()
-
-                        self.layers = nn.Sequential(
-                            nn.Linear(input_size, hidden_size),
-                            nn.ReLU(),
-                            nn.Linear(hidden_size, hidden_size),
-                            nn.ReLU(),
-                            nn.Linear(hidden_size, hidden_size),
-                            nn.ReLU(),
-                            nn.Linear(hidden_size, output_size),
-                        )
-
-                    def forward(self, C):
-                        return self.layers(C)
-
-               class EdgeClassifier(nn.Module):
-                    def __init__(self, node_indim, edge_indim):
-                        super(EdgeClassifier, self).__init__()
-                        self.IN = InteractionNetwork(node_indim, edge_indim,
-                                     node_outdim=3, edge_outdim=4,
-                                     hidden_size=120)
-                        self.W = MLP(4, 1, 40)
-
-                    def forward(self, x: Tensor, edge_index: Tensor,
-                        edge_attr: Tensor) -> Tensor:
-
-                        x1, edge_attr_1 = self.IN(x, edge_index, edge_attr)
-                        return torch.sigmoid(self.W(edge_attr))
-
-# Compile the model
-               model = Net().to(device)
-               optimizer = torch.optim.Adam(params=model.parameters(), lr=LR)
+# if Mode=='Train':
+#             class Net(torch.nn.Module):
+#                     def __init__(self):
+#                         super(Net, self).__init__()
+#                         for el in range(0,len(HiddenLayerDNA)):
+#                             if el==0:
+#                                 Nodes=32*HiddenLayerDNA[el][0]
+#                                 NoF=OutputDNA[0][0]
+#                                 self.conv1 = GCNConv(NoF, Nodes)
+#                             if el==1:
+#                                 Nodes=32*HiddenLayerDNA[el][0]
+#                                 PNodes=32*HiddenLayerDNA[el-1][0]
+#                                 self.conv2 = GCNConv(PNodes, Nodes)
+#                             if el==2:
+#                                 Nodes=32*HiddenLayerDNA[el][0]
+#                                 PNodes=32*HiddenLayerDNA[el-1][0]
+#                                 self.conv3 = GCNConv(PNodes, Nodes)
+#                             if el==3:
+#                                 Nodes=32*HiddenLayerDNA[el][0]
+#                                 PNodes=32*HiddenLayerDNA[el-1][0]
+#                                 self.conv4 = GCNConv(PNodes, Nodes)
+#                             if el==4:
+#                                 Nodes=32*HiddenLayerDNA[el][0]
+#                                 PNodes=32*HiddenLayerDNA[el-1][0]
+#                                 self.conv5 = GCNConv(PNodes, Nodes)
+#                     def encode(self,sample):
+#                          x = self.conv1(sample.x, sample.train_pos_edge_index) # convolution 1
+#                          x = x.relu()
+#                          return self.conv2(x, sample.train_pos_edge_index) # convolution 2
+#
+#                     def decode(self, z, pos_edge_index, neg_edge_index): # only pos and neg edges
+#                          edge_index = torch.cat([pos_edge_index, neg_edge_index], dim=-1) # concatenate pos and neg edges
+#                          logits = (z[edge_index[0]] * z[edge_index[1]]).sum(dim=-1)  # dot product
+#                          return logits
+#
+#                     def decode_all(self, z):
+#                          prob_adj = z @ z.t() # get adj NxN
+#                          return (prob_adj > 0).nonzero(as_tuple=False).t() # get predicted edge_list
+#             model_name=EOSsubModelDIR+'/'+args.ModelName
+#             model = Net().to(device)
+#             optimizer = torch.optim.Adam(params=model.parameters(), lr=LR)
+#             model.load_state_dict(torch.load(model_name))
+# if Mode!='Train' and Mode!='Test':
+#                class MLP(nn.Module):
+#                     def __init__(self, input_size, output_size, hidden_size):
+#                         super(MLP, self).__init__()
+#
+#                         self.layers = nn.Sequential(
+#                             nn.Linear(input_size, hidden_size),
+#                             nn.ReLU(),
+#                             nn.Linear(hidden_size, hidden_size),
+#                             nn.ReLU(),
+#                             nn.Linear(hidden_size, hidden_size),
+#                             nn.ReLU(),
+#                             nn.Linear(hidden_size, output_size),
+#                         )
+#
+#                     def forward(self, C):
+#                         return self.layers(C)
+#
+#                class EdgeClassifier(nn.Module):
+#                     def __init__(self, node_indim, edge_indim):
+#                         super(EdgeClassifier, self).__init__()
+#                         self.IN = InteractionNetwork(node_indim, edge_indim,
+#                                      node_outdim=3, edge_outdim=4,
+#                                      hidden_size=120)
+#                         self.W = MLP(4, 1, 40)
+#
+#                     def forward(self, x: Tensor, edge_index: Tensor,
+#                         edge_attr: Tensor) -> Tensor:
+#
+#                         x1, edge_attr_1 = self.IN(x, edge_index, edge_attr)
+#                         return torch.sigmoid(self.W(edge_attr))
+#
+# # Compile the model
+#                model = Net().to(device)
+#                optimizer = torch.optim.Adam(params=model.parameters(), lr=LR)
 
 #            #except:
 #            #   print(UF.TimeStamp(), bcolors.FAIL+"Invalid model, aborting the training..."+bcolors.ENDC)
 #            #   ValidModel=False
 #             #  exit()
 
-print(UF.TimeStamp(),'Starting the training process... ')
-records=[]
-for tc in range(0,len(TrainClusters)):
-    c_sample=TrainClusters[tc].ClusterGraph
-    c_sample.train_mask = c_sample.val_mask = c_sample.test_mask = c_sample.y = None
-    c_sample = c_sample.to(device)
-    best_val_perf = test_perf = 0
-    for epoch in range(0, Epoch):
-      try:
-          train_loss = train(c_sample)
-          val_perf, tmp_test_perf = test(c_sample)
-      except:
-         print('Failed training...')
-         break
-      if val_perf > best_val_perf:
-             best_val_perf = val_perf
-             test_perf = tmp_test_perf
-      if epoch % 10 == 0:
-                records.append([ClusterSet,tc, TrainClusters[tc].ClusterSize,epoch, train_loss.item(), best_val_perf, test_perf])
-                print(ClusterSet,tc, TrainClusters[tc].ClusterSize,epoch, train_loss.item(), best_val_perf, test_perf)
 
-# if ValidModel:
+def main(args):
+    print(UF.TimeStamp(),'Starting the training process... ')
+
+    use_cuda = not args.no_cuda and torch.cuda.is_available()
+    logging.info(f'Parameter use_cuda={use_cuda}')
+    torch.manual_seed(args.seed)
+    device = torch.device("cuda" if use_cuda else "cpu")
+
+    params = {'batch_size': 1, 'shuffle': True, 'num_workers': 4}
+    
+    loaders = get_dataloaders(args.indir, args.n_train, args.n_test,
+                              n_val=args.n_val, shuffle=False,
+                              params=params)
+
+    model = EdgeClassifier(3, 4).to(device)
+    total_trainable_params = sum(p.numel() for p in model.parameters())
+    logging.info(f'Trainable params in network: {total_trainable_params}')
+
+    optimizer = optim.Adam(model.parameters(), lr=args.lr)
+    scheduler = StepLR(optimizer, step_size=args.step_size,
+                       gamma=args.gamma)
+
+    output = {'train_loss': [], 'test_loss': [], 'test_acc': []}
+    for epoch in range(1, args.epochs + 1):
+        logging.info(f'Entering epoch {epoch}')
+        train_loss = train(args, model, device, loaders['train'], optimizer, epoch)
+        thld = validate(model, device, loaders['val'])
+        logging.info(f'Sending thld={thld} to test routine.')
+        test_loss, test_acc = test(model, device, loaders['test'], thld=thld)
+        scheduler.step()
+        if args.save_model:
+            model_name = join(args.model_outdir,
+                              job_name + f'_epoch{epoch}')
+            torch.save(model.state_dict(), model_name)
+        output['train_loss'].append(train_loss)
+        output['test_loss'].append(test_loss)
+        output['test_acc'].append(test_acc)
+        np.save(join(args.stats_outdir, job_name), output)
+
+
+if __name__ == '__main__':
+    main(sys.argv[1:])
 model_name=EOSsubModelDIR+'/'+args.ModelNewName
 torch.save(model.state_dict(), model_name)
 UF.LogOperations(EOSsubModelDIR+'/'+'M2_M2_model_train_log_'+ClusterSet+'.csv','StartLog', records)

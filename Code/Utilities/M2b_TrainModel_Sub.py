@@ -248,7 +248,7 @@ def main(args):
     device = torch.device("cuda" if use_cuda else "cpu")
 
     params = {'batch_size': 1, 'shuffle': True, 'num_workers': 4}
-    
+
     loaders = get_dataloaders(args.indir, args.n_train, args.n_test,
                               n_val=args.n_val, shuffle=False,
                               params=params)

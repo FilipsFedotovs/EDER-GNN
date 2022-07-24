@@ -258,7 +258,7 @@ def main(args):
 
     optimizer = optim.Adam(model.parameters(), lr=LR)
     scheduler = StepLR(optimizer, step_size=5,
-                       gamma=args.gamma)
+                       gamma=0.99)
 
     output = {'train_loss': [], 'test_loss': [], 'test_acc': []}
     for epoch in range(1, args.epochs + 1):

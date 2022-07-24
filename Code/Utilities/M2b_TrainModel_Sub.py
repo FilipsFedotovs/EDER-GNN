@@ -93,6 +93,9 @@ def train(args, model, device, sample, optimizer, epoch):
         data = HC.ClusterGraph.to(device)
         if (len(data.x)==0): continue
         optimizer.zero_grad()
+        print(data.x)
+        print(data.edge_index)
+        print(data.edge_attr)
         output = model(data.x, data.edge_index, data.edge_attr)
         y, output = data.y, output.squeeze(1)
         loss = F.binary_cross_entropy(output, y, reduction='mean')

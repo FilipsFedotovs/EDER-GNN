@@ -263,8 +263,10 @@ def main(args):
     output = {'train_loss': [], 'test_loss': [], 'test_acc': []}
     for epoch in range(1, 75 + 1):
         logging.info(f'Entering epoch {epoch}')
-        train_loss = train(args, model, device, TrainClusters, optimizer, epoch)
         print(TrainClusters)
+
+        train_loss = train(args, model, device, TrainClusters, optimizer, epoch)
+
         print(train_loss)
         exit()
         thld = validate(model, device, loaders['val'])

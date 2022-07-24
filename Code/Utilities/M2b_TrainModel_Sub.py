@@ -96,7 +96,7 @@ def train(args, model, device, sample, optimizer, epoch):
         print(data.x)
         print(data.edge_index)
         print(data.edge_attr)
-        output = model(data.x, data.edge_index)
+        output = model(data.x, data.edge_index, data.edge_attr)
         y, output = data.y, output.squeeze(1)
         loss = F.binary_cross_entropy(output, y, reduction='mean')
         loss.backward()

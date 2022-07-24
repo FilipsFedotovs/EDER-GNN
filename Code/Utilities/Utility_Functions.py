@@ -631,7 +631,7 @@ class HitCluster:
       def GenerateEdgeAttributes(_input):
           _EdgeAttr=[]
           for ip in _input:
-              _EdgeAttr.append(ip[2])
+              _EdgeAttr.append(0.99)
           return [_EdgeAttr]
 
 

@@ -49,6 +49,8 @@ parser.add_argument('--LR',help="Please enter the value of learning rate", defau
 parser.add_argument('--Epoch',help="Please enter the number of epochs per cluster", default='10')
 parser.add_argument('--ModelName',help="Name of the model", default='1T_MC_1_model')
 parser.add_argument('--ModelNewName',help="Name of the model", default='1T_MC_1_model')
+parser.add_argument('--no-cuda', action='store_true', default=False,
+                        help='disables CUDA training')
 ########################################     Initialising Variables    #########################################
 args = parser.parse_args()
 ClusterSet=args.ClusterSet

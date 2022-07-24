@@ -90,7 +90,7 @@ def train(args, model, device, sample, optimizer, epoch):
     model.train()
     losses, t0, N = [], time(), len(sample)
     for HC in enumerate(sample):
-        data = data.to(device)
+        data = HC.to(device)
         if (len(data.x)==0): continue
         optimizer.zero_grad()
         output = model(data.x, data.edge_index, data.edge_attr)

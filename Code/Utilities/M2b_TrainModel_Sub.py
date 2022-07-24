@@ -244,16 +244,12 @@ print(UF.TimeStamp(), bcolors.OKGREEN+"Train data has been loaded successfully..
 def main(args):
     print(UF.TimeStamp(),'Starting the training process... ')
 
-    use_cuda = not args.no_cuda and torch.cuda.is_available()
-    logging.info(f'Parameter use_cuda={use_cuda}')
-    torch.manual_seed(args.seed)
-    device = torch.device("cuda" if use_cuda else "cpu")
+    #use_cuda = not args.no_cuda and torch.cuda.is_available()
+    #logging.info(f'Parameter use_cuda={use_cuda}')
+    #torch.manual_seed(args.seed)
+    device = torch.device("cpu")
 
     params = {'batch_size': 1, 'shuffle': True, 'num_workers': 4}
-
-    loaders = get_dataloaders(args.indir, args.n_train, args.n_test,
-                              n_val=args.n_val, shuffle=False,
-                              params=params)
 
     model = EdgeClassifier(3, 4).to(device)
     total_trainable_params = sum(p.numel() for p in model.parameters())

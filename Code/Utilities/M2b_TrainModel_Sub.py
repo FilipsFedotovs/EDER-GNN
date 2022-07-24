@@ -256,7 +256,7 @@ def main(args):
     total_trainable_params = sum(p.numel() for p in model.parameters())
     logging.info(f'Trainable params in network: {total_trainable_params}')
 
-    optimizer = optim.Adam(model.parameters(), lr=args.lr)
+    optimizer = optim.Adam(model.parameters(), lr=args.LR)
     scheduler = StepLR(optimizer, step_size=args.step_size,
                        gamma=args.gamma)
 

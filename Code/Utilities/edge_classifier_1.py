@@ -1,32 +1,40 @@
-#This is the list of parameters that EDER-GNN uses for reconstruction, model training etc. There have been collated here in one place for the user convenience
-# Part of EDER-GNN package
-#Made by Filips Fedotovs
-#Current version 1.0
+import torch
+from torch import Tensor
+import torch.nn as nn
+import torch.nn.functional as F
+from torch.nn import Sequential as Seq, Linear, ReLU, Sigmoid
+import torch_geometric
+import torch_geometric.transforms as T
+from torch_geometric.nn import MessagePassing
+from models.interaction_network import InteractionNetwork
 
-######List of naming conventions
-Hit_ID='ID'
-x='x' #Column name x-coordinate of the track hit
-y='y' #Column name for y-coordinate of the track hit
-tx='TX' #Column name x-coordinate of the track hit
-ty='TY' #Column name for y-coordinate of the track hit
-z='z' #Column name for z-coordinate of the track hit
-FEDRA_Track_ID='FEDRATrackID' #Column nameActual track id for FEDRA (or other reconstruction software)
-FEDRA_Track_QUADRANT='quarter' #Quarter of the ECC where the track is reconstructed If not present in the data please put the Track ID (the same as above)
-MC_Track_ID='MCTrack'  #Column name for Track ID for MC Truth reconstruction data
-MC_Event_ID='MCEvent' #Column name for Event id for MC truth reconstruction data (If absent please enter the MCTrack as for above)
+class MLP(nn.Module):
+    def __init__(self, input_size, output_size, hidden_size):
+        super(MLP, self).__init__()
 
+        self.layers = nn.Sequential(
+            nn.Linear(input_size, hidden_size),
+            nn.ReLU(),
+            nn.Linear(hidden_size, hidden_size),
+            nn.ReLU(),
+            nn.Linear(hidden_size, hidden_size),
+            nn.ReLU(),
+            nn.Linear(hidden_size, output_size),
+        )
 
-######List of geometrical constain parameters
-stepX=3000
-stepY=3000
-stepZ=6000
-cut_dt=0.2
-cut_dr=60
-valRatio=0.1
-testRatio=0.05
+    def forward(self, C):
+        return self.layers(C)
 
-MinHitsTrack=2
+class EdgeClassifier(nn.Module):
+    def __init__(self, node_indim, edge_indim):
+        super(EdgeClassifier, self).__init__()
+        self.IN = InteractionNetwork(node_indim, edge_indim,
+                                     node_outdim=3, edge_outdim=4,
+                                     hidden_size=120)
+        self.W = MLP(4, 1, 40)
 
-ModelName='Model_Identity'
-ModelArchitecture=[[2], [1], [],[], [], [], [], [], [], [], [5]]
+    def forward(self, x: Tensor, edge_index: Tensor,
+                edge_attr: Tensor) -> Tensor:
 
+        x1, edge_attr_1 = self.IN(x, edge_index, edge_attr)
+        return torch.sigmoid(self.W(edge_attr))

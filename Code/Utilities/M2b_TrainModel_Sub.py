@@ -89,7 +89,7 @@ print(UF.TimeStamp(), bcolors.OKGREEN+"Modules Have been imported successfully..
 def train(args, model, device, sample, optimizer, epoch):
     model.train()
     losses, t0, N = [], time(), len(sample)
-    for HC in enumerate(sample):
+    for HC in sample:
         data = HC.ClusterGraph.to(device)
         if (len(data.x)==0): continue
         optimizer.zero_grad()

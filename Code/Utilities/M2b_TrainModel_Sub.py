@@ -257,7 +257,7 @@ def main(args):
     logging.info(f'Trainable params in network: {total_trainable_params}')
 
     optimizer = optim.Adam(model.parameters(), lr=LR)
-    scheduler = StepLR(optimizer, step_size=args.step_size,
+    scheduler = StepLR(optimizer, step_size=5,
                        gamma=args.gamma)
 
     output = {'train_loss': [], 'test_loss': [], 'test_acc': []}

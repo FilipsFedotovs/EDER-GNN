@@ -97,6 +97,8 @@ def train(args, model, device, sample, optimizer, epoch):
         print(data.edge_index)
         print(data.edge_attr)
         output = model(data.x, data.edge_index, data.edge_attr)
+        print(output)
+        exit()
         y, output = data.y, output.squeeze(1)
         loss = F.binary_cross_entropy(output, y, reduction='mean')
         loss.backward()
@@ -152,11 +154,11 @@ def test(model, device, test_loader, thld=0.5):
     logging.info(f'Test loss: {np.nanmean(losses):.4f}')
     logging.info(f'Test accuracy: {np.nanmean(accs):.4f}')
     return np.nanmean(losses), np.nanmean(accs)
-if Mode!='Test':
-    print(UF.TimeStamp(),'Loading data from ',bcolors.OKBLUE+flocation+bcolors.ENDC)
-    train_file=open(flocation,'rb')
-    TrainClusters=pickle.load(train_file)
-    train_file.close()
+#if Mode!='Test':
+print(UF.TimeStamp(),'Loading data from ',bcolors.OKBLUE+flocation+bcolors.ENDC)
+train_file=open(flocation,'rb')
+TrainClusters=pickle.load(train_file)
+train_file.close()
 
 
 print(UF.TimeStamp(), bcolors.OKGREEN+"Train data has been loaded successfully..."+bcolors.ENDC)
@@ -255,7 +257,7 @@ def main(args):
 
     params = {'batch_size': 1, 'shuffle': True, 'num_workers': 4}
 
-    model = EdgeClassifier(3, 4).to(device)
+    model = EdgeClassifier(5, 1).to(device)
     total_trainable_params = sum(p.numel() for p in model.parameters())
     logging.info(f'Trainable params in network: {total_trainable_params}')
 

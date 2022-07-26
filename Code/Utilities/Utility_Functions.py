@@ -40,7 +40,7 @@ class HitCluster:
            import torch
            import torch_geometric
            from torch_geometric.data import Data
-           self.ClusterGraph=Data(x=torch.Tensor(__ClusterHitsTemp), edge_index=None, y=None)
+           self.ClusterGraph=Data(x=torch.Tensor(__ClusterHitsTemp,dtype=torch.float64), edge_index=None, y=None)
            del __ClusterHitsTemp
 
       def GenerateTrainData(self, MCHits, val_ratio, test_ratio,cut_dt, cut_dr): #Decorate hit information
@@ -631,8 +631,8 @@ class HitCluster:
       def GenerateEdgeAttributes(_input):
           _EdgeAttr=[]
           for ip in _input:
-              _EdgeAttr.append(0.99)
-          return [_EdgeAttr]
+              _EdgeAttr.append([0.99])
+          return _EdgeAttr
 
 
 def CleanFolder(folder,key):

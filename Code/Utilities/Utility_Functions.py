@@ -33,7 +33,7 @@ class HitCluster:
                if s[1]>=self.ClusterID[0]*self.Step[0] and s[1]<((self.ClusterID[0]+1)*self.Step[0]):
                    if s[2]>=self.ClusterID[1]*self.Step[1] and s[2]<((self.ClusterID[1]+1)*self.Step[1]):
                        if s[3]>=self.ClusterID[2]*self.Step[2] and s[3]<((self.ClusterID[2]+1)*self.Step[2]):
-                          __ClusterHitsTemp.append([float(s[1]-(self.ClusterID[0]*self.Step[0])),float(s[2]-(self.ClusterID[1]*self.Step[1])), float(s[3]-(self.ClusterID[2]*self.Step[2])), float(s[4]), float(s[5])])
+                          __ClusterHitsTemp.append([(s[1]-(self.ClusterID[0]*self.Step[0])),(s[2]-(self.ClusterID[1]*self.Step[1])), (s[3]-(self.ClusterID[2]*self.Step[2])), (s[4]), (s[5])])
                           self.ClusterHitIDs.append(s[0])
                           self.ClusterHits.append(s)
            self.ClusterSize=len(__ClusterHitsTemp)

@@ -33,14 +33,14 @@ class HitCluster:
                if s[1]>=self.ClusterID[0]*self.Step[0] and s[1]<((self.ClusterID[0]+1)*self.Step[0]):
                    if s[2]>=self.ClusterID[1]*self.Step[1] and s[2]<((self.ClusterID[1]+1)*self.Step[1]):
                        if s[3]>=self.ClusterID[2]*self.Step[2] and s[3]<((self.ClusterID[2]+1)*self.Step[2]):
-                          __ClusterHitsTemp.append([(s[1]-(self.ClusterID[0]*self.Step[0])),(s[2]-(self.ClusterID[1]*self.Step[1])), (s[3]-(self.ClusterID[2]*self.Step[2])), s[4], s[5]])
+                          __ClusterHitsTemp.append([float(s[1]-(self.ClusterID[0]*self.Step[0])),float(s[2]-(self.ClusterID[1]*self.Step[1])), float(s[3]-(self.ClusterID[2]*self.Step[2])), float(s[4]), float(s[5])])
                           self.ClusterHitIDs.append(s[0])
                           self.ClusterHits.append(s)
            self.ClusterSize=len(__ClusterHitsTemp)
            import torch
            import torch_geometric
            from torch_geometric.data import Data
-           self.ClusterGraph=Data(x=torch.Tensor(__ClusterHitsTemp,dtype=torch.float64), edge_index=None, y=None)
+           self.ClusterGraph=Data(x=torch.Tensor(__ClusterHitsTemp), edge_index=None, y=None)
            del __ClusterHitsTemp
 
       def GenerateTrainData(self, MCHits, val_ratio, test_ratio,cut_dt, cut_dr): #Decorate hit information
@@ -161,9 +161,11 @@ class HitCluster:
            _FinalList=_FakeList+_GenuineList
            random.shuffle(_FinalList)
            import torch
-           self.ClusterGraph.edge_index=torch.tensor(np.array(HitCluster.GenerateLinks(_FinalList,self.ClusterHitIDs)))
-           self.ClusterGraph.edge_attr=torch.tensor(np.array(HitCluster.GenerateEdgeAttributes(_FinalList)))
-
+           self.ClusterGraph.edge_index=torch.tensor([(HitCluster.GenerateLinks(_FinalList,self.ClusterHitIDs))])
+           self.ClusterGraph.edge_attr=torch.tensor([(HitCluster.GenerateEdgeAttributes(_FinalList))])
+           print(self.ClusterGraph.x)
+           print(self.ClusterGraph.edge_index)
+           print(self.ClusterGraph.edge_attr)
       def GiveStats(self,MCHits,cut_dt, cut_dr): #Decorate hit information
            import pandas as pd
            _MCClusterHits=[]

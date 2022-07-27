@@ -139,9 +139,10 @@ def train(Predict, model, device, sample, optimizer, epoch):
 
 
             print(w)
-            exit()
 
-    #     y, w = data.y, w.squeeze(1)
+
+        y, w = data.y, w.squeeze(1)
+        print(y,w)
     #     particle_id = data.particle_id
     #     track_params = data.track_params
     #

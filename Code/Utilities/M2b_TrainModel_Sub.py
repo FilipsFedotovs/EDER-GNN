@@ -342,7 +342,6 @@ def main(args):
     params = {'batch_size': 1, 'shuffle': True, 'num_workers': 4}
 
     model = TCN(5, 4, 2, predict_track_params=False).to(device)
-    exit()
     total_trainable_params = sum(p.numel() for p in model.parameters())
     logging.info(f'Total Trainable Params: {total_trainable_params}')
 
@@ -355,10 +354,12 @@ def main(args):
     output = {'train_loss': [], 'test_loss': [], 'test_acc': [],
               'train_loss_w': [], 'train_loss_c': [], 'train_loss_b': [],
               'test_loss_w': [], 'test_loss_c': [], 'test_loss_b': []}
-    for epoch in range(1, args.n_epochs + 1):
+    for epoch in range(1, 2):
         logging.info(f"---- Epoch {epoch} ----")
         train_loss, tlw, tlc, tlb = train(args, model, device,
                                           train_loader, optimizer, epoch)
+        print(train_loss)
+        exit()
         thld = validate(model, device, val_loader)
         test_loss, te_lw, te_lc, te_lb, te_acc = test(args, model, device,
                                                       test_loader, thld=thld)

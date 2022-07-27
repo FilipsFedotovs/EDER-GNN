@@ -40,7 +40,7 @@ class ObjectModel(nn.Module):
 
 class InteractionNetwork(MessagePassing):
     def __init__(self, node_indim, edge_indim,
-                 node_outdim=3, edge_outdim=4,
+                 node_outdim=3, edge_outdim=1,
                  hidden_size=40, aggr='add'):
         super(InteractionNetwork, self).__init__(aggr=aggr,
                                                  flow='source_to_target')

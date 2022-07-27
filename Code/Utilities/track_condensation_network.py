@@ -56,8 +56,6 @@ class TCN(nn.Module):
                 edge_attr: Tensor) -> Tensor:
 
         # re-embed the graph twice with add aggregation
-        print(x,edge_index,edge_attr)
-        exit()
         x1, edge_attr_1 = self.in_w1(x, edge_index, edge_attr)
         x2, edge_attr_2 = self.in_w2(x1, edge_index, edge_attr_1)
 

@@ -62,11 +62,12 @@ class TCN(nn.Module):
         x1, edge_attr_1 = self.in_w1(x, edge_index, edge_attr)
 
         x2, edge_attr_2 = self.in_w2(x1, edge_index, edge_attr_1)
-        print(x2, edge_attr_2)
-        exit()
+
         # combine all edge features, use to predict edge weights
         initial_edge_attr = torch.cat([edge_attr, edge_attr_1,
                                        edge_attr_2], dim=1)
+        print(initial_edge_attr)
+        exit()
         edge_weights = torch.sigmoid(self.W(initial_edge_attr))
 
         # combine edge weights with original edge features

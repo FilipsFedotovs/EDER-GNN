@@ -115,7 +115,7 @@ print(UF.TimeStamp(), bcolors.OKGREEN+"Modules Have been imported successfully..
 #
 #
 
-def train(args, model, device, sample, optimizer, epoch):
+def train(Predict, model, device, sample, optimizer, epoch):
     """ train routine, loss and accumulated gradients used to update
         the model via the ADAM optimizer externally
     """
@@ -132,7 +132,7 @@ def train(args, model, device, sample, optimizer, epoch):
         print(data.x)
         print(data.edge_index)
         print(data.edge_attr)
-        if args.predict_track_params:
+        if Predict:
             w, xc, beta, p = model(data.x, data.edge_index, data.edge_attr)
         else:
             w, xc, beta = model(data.x, data.edge_index, data.edge_attr)
@@ -141,63 +141,63 @@ def train(args, model, device, sample, optimizer, epoch):
             print(w, xc, beta)
             exit()
 
-        y, w = data.y, w.squeeze(1)
-        particle_id = data.particle_id
-        track_params = data.track_params
-
-        # edge weight loss
-        loss_w = F.binary_cross_entropy(w, y, reduction='mean')
-        loss = loss_w
-
-        # condensation loss
-        loss_c = condensation_loss(beta, xc, particle_id,
-                                   device=device, q_min=args.q_min)
-        loss_c *= args.loss_c_scale
-
-        # background loss
-        loss_b = background_loss(beta, xc, particle_id,
-                                 device=device, q_min=args.q_min,
-                                 sb=args.sb)
-        loss_b *= args.loss_b_scale
-
-        # object loss
-        if args.predict_track_params:
-            loss_o = object_loss(p, beta,
-                                 track_params, particle_id,
-                                 device=device)
-            loss_o *= args.loss_o_scale
-            loss += loss_o
-            losses_o.append(loss_o.item())
-
-        # optimize total loss
-        loss += (loss_c + loss_b)
-        loss.backward()
-        optimizer.step()
-
-        if batch_idx % args.log_interval == 0:
-            logging.info('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'
-                        .format(epoch, batch_idx, len(train_loader.dataset),
-                                100. * batch_idx / len(train_loader),
-                                loss.item()))
-            logging.info(f'...losses: w={loss_w.item()}, c={loss_c.item()}' +
-                         f'           b={loss_b.item()}, o={loss_o.item()}')
-
-        # store losses
-        losses.append(loss.item())
-        losses_w.append(loss_w.item())
-        losses_c.append(loss_c.item())
-        losses_b.append(loss_b.item())
-
-    logging.info(f"Epoch {epoch} Time: {(time()-epoch_t0):.4f}s")
-    loss = np.nanmean(losses)
-    loss_w = np.nanmean(losses_w)
-    loss_c = np.nanmean(losses_c)
-    loss_b = np.nanmean(losses_b)
-    logging.info(f"Epoch {epoch} Train Loss: {loss:.6f}")
-    logging.info(f"Epoch {epoch}: Edge Weight Loss: {loss_w:.6f}")
-    logging.info(f"Epoch {epoch}: Condensation Loss: {loss_c:.6f}")
-    logging.info(f"Epoch {epoch}: Background Loss: {loss_b:.6f}")
-    return loss, loss_w, loss_c, loss_b
+    #     y, w = data.y, w.squeeze(1)
+    #     particle_id = data.particle_id
+    #     track_params = data.track_params
+    #
+    #     # edge weight loss
+    #     loss_w = F.binary_cross_entropy(w, y, reduction='mean')
+    #     loss = loss_w
+    #
+    #     # condensation loss
+    #     loss_c = condensation_loss(beta, xc, particle_id,
+    #                                device=device, q_min=args.q_min)
+    #     loss_c *= args.loss_c_scale
+    #
+    #     # background loss
+    #     loss_b = background_loss(beta, xc, particle_id,
+    #                              device=device, q_min=args.q_min,
+    #                              sb=args.sb)
+    #     loss_b *= args.loss_b_scale
+    #
+    #     # object loss
+    #     if args.predict_track_params:
+    #         loss_o = object_loss(p, beta,
+    #                              track_params, particle_id,
+    #                              device=device)
+    #         loss_o *= args.loss_o_scale
+    #         loss += loss_o
+    #         losses_o.append(loss_o.item())
+    #
+    #     # optimize total loss
+    #     loss += (loss_c + loss_b)
+    #     loss.backward()
+    #     optimizer.step()
+    #
+    #     if batch_idx % args.log_interval == 0:
+    #         logging.info('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'
+    #                     .format(epoch, batch_idx, len(train_loader.dataset),
+    #                             100. * batch_idx / len(train_loader),
+    #                             loss.item()))
+    #         logging.info(f'...losses: w={loss_w.item()}, c={loss_c.item()}' +
+    #                      f'           b={loss_b.item()}, o={loss_o.item()}')
+    #
+    #     # store losses
+    #     losses.append(loss.item())
+    #     losses_w.append(loss_w.item())
+    #     losses_c.append(loss_c.item())
+    #     losses_b.append(loss_b.item())
+    #
+    # logging.info(f"Epoch {epoch} Time: {(time()-epoch_t0):.4f}s")
+    # loss = np.nanmean(losses)
+    # loss_w = np.nanmean(losses_w)
+    # loss_c = np.nanmean(losses_c)
+    # loss_b = np.nanmean(losses_b)
+    # logging.info(f"Epoch {epoch} Train Loss: {loss:.6f}")
+    # logging.info(f"Epoch {epoch}: Edge Weight Loss: {loss_w:.6f}")
+    # logging.info(f"Epoch {epoch}: Condensation Loss: {loss_c:.6f}")
+    # logging.info(f"Epoch {epoch}: Background Loss: {loss_b:.6f}")
+    # return loss, loss_w, loss_c, loss_b
 
 def validate(model, device, val_loader):
     model.eval()
@@ -331,7 +331,7 @@ print(UF.TimeStamp(), bcolors.OKGREEN+"Train data has been loaded successfully..
 #             #  exit()
 
 
-def main(args):
+def main():
     print(UF.TimeStamp(),'Starting the training process... ')
 
     #use_cuda = not args.no_cuda and torch.cuda.is_available()
@@ -357,7 +357,7 @@ def main(args):
 
     for epoch in range(1, 2):
         logging.info(f"---- Epoch {epoch} ----")
-        train_loss, tlw, tlc, tlb = train(args, model, device,
+        train_loss, tlw, tlc, tlb = train(False, model, device,
                                           TrainClusters, optimizer, epoch)
         print(train_loss)
         exit()

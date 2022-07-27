@@ -30,10 +30,10 @@ class TCN(nn.Module):
                  predict_track_params=False):
         super(TCN, self).__init__()
         self.in_w1 = IN(node_indim, edge_indim,
-                        node_outdim=5, edge_outdim=4,
+                        node_outdim=5, edge_outdim=1,
                         hidden_size=80)
-        self.in_w2 = IN(5, 4,
-                        node_outdim=5, edge_outdim=4,
+        self.in_w2 = IN(5, 1,
+                        node_outdim=5, edge_outdim=1,
                         hidden_size=80)
         self.in_c1 = IN(5, 13,
                         node_outdim=5, edge_outdim=8,

@@ -341,7 +341,7 @@ def main(self):
 
     params = {'batch_size': 1, 'shuffle': True, 'num_workers': 4}
 
-    model = TCN(5, 4, 2, predict_track_params=False).to(device)
+    model = TCN(5, 1, 2, predict_track_params=False).to(device)
     total_trainable_params = sum(p.numel() for p in model.parameters())
     logging.info(f'Total Trainable Params: {total_trainable_params}')
 

@@ -346,9 +346,9 @@ def main(args):
     logging.info(f'Total Trainable Params: {total_trainable_params}')
 
     # instantiate optimizer with scheduled learning rate decay
-    optimizer = optim.Adam(model.parameters(), lr=args.learning_rate)
-    scheduler = StepLR(optimizer, step_size=args.step_size,
-                       gamma=args.gamma)
+    optimizer = optim.Adam(model.parameters(), lr=LR)
+    scheduler = StepLR(optimizer, step_size=0.1,
+                       gamma=0.1)
 
     # epoch loop
     output = {'train_loss': [], 'test_loss': [], 'test_acc': [],

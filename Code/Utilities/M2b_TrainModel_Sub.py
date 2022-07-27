@@ -135,10 +135,10 @@ def train(Predict, model, device, sample, optimizer, epoch):
         if Predict:
             w, xc, beta, p = model(data.x, data.edge_index, data.edge_attr)
         else:
-            w, xc, beta = model(data.x, data.edge_index, data.edge_attr)
+            w = model(data.x, data.edge_index, data.edge_attr)
 
 
-            print(w, xc, beta)
+            print(w)
             exit()
 
     #     y, w = data.y, w.squeeze(1)
@@ -207,6 +207,8 @@ def validate(model, device, val_loader):
         if (len(data.x)==0): continue
         output = model(data.x, data.edge_index, data.edge_attr)
         y, output = data.y, output.squeeze()
+        print(y,output)
+        exit()
         loss = F.binary_cross_entropy(output, y, reduction='mean').item()
         diff, opt_thld, opt_acc = 100, 0, 0
         best_tpr, best_tnr = 0, 0

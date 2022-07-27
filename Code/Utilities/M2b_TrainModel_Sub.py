@@ -127,7 +127,7 @@ def train(args, model, device, sample, optimizer, epoch):
     losses_b = [] # background loss
     losses_o = [] # object loss
     for HC in sample:
-        data = HC.to(device)
+        data = HC.ClusterGraph.to(device)
         optimizer.zero_grad()
         print(data.x)
         print(data.edge_index)
@@ -354,10 +354,11 @@ def main(args):
     output = {'train_loss': [], 'test_loss': [], 'test_acc': [],
               'train_loss_w': [], 'train_loss_c': [], 'train_loss_b': [],
               'test_loss_w': [], 'test_loss_c': [], 'test_loss_b': []}
+
     for epoch in range(1, 2):
         logging.info(f"---- Epoch {epoch} ----")
         train_loss, tlw, tlc, tlb = train(args, model, device,
-                                          train_loader, optimizer, epoch)
+                                          TrainClusters, optimizer, epoch)
         print(train_loss)
         exit()
         thld = validate(model, device, val_loader)

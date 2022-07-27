@@ -22,7 +22,7 @@ from torch import optim
 from time import time
 from torch.optim.lr_scheduler import StepLR
 import torch.nn.functional as F
-from edge_classifier_1 import EdgeClassifier
+from track_condensation_network import TCN
 from sklearn.metrics import roc_auc_score
 from torch_geometric.utils import negative_sampling
 from torch_geometric.nn import GCNConv
@@ -86,34 +86,118 @@ print(bcolors.HEADER+"#########################                 PhD Student at U
 print(bcolors.HEADER+"########################################################################################################"+bcolors.ENDC)
 print(UF.TimeStamp(), bcolors.OKGREEN+"Modules Have been imported successfully..."+bcolors.ENDC)
 
+# def train(args, model, device, sample, optimizer, epoch):
+#     model.train()
+#     losses, t0, N = [], time(), len(sample)
+#     for HC in sample:
+#         data = HC.ClusterGraph.to(device)
+#         if (len(data.x)==0): continue
+#         optimizer.zero_grad()
+#         print(data.x)
+#         print(data.edge_index)
+#         print(data.edge_attr)
+#         output = model(data.x, data.edge_index, data.edge_attr)
+#         print(output)
+#         exit()
+#         y, output = data.y, output.squeeze(1)
+#         loss = F.binary_cross_entropy(output, y, reduction='mean')
+#         loss.backward()
+#         optimizer.step()
+#         if batch_idx % args.log_interval == 0:
+#             percent_complete = 100. * batch_idx / N
+#             logging.info(f'Train Epoch: {epoch} [{batch_idx}/{N}' +
+#                          f'({percent_complete:.0f}%)]\tLoss: {loss.item():.6f}')
+#             if args.dry_run: break
+#         losses.append(loss.item())
+#     logging.info(f'Epoch completed in {time()-t0}s')
+#     logging.info(f'Train Loss: {np.nanmean(losses)}')
+#     return np.nanmean(losses)
+#
+#
+
 def train(args, model, device, sample, optimizer, epoch):
+    """ train routine, loss and accumulated gradients used to update
+        the model via the ADAM optimizer externally
+    """
     model.train()
-    losses, t0, N = [], time(), len(sample)
+    epoch_t0 = time()
+    losses = []   # total loss
+    losses_w = [] # edge weight loss
+    losses_c = [] # condensation loss
+    losses_b = [] # background loss
+    losses_o = [] # object loss
     for HC in sample:
-        data = HC.ClusterGraph.to(device)
-        if (len(data.x)==0): continue
+        data = HC.to(device)
         optimizer.zero_grad()
         print(data.x)
         print(data.edge_index)
         print(data.edge_attr)
-        output = model(data.x, data.edge_index, data.edge_attr)
-        print(output)
-        exit()
-        y, output = data.y, output.squeeze(1)
-        loss = F.binary_cross_entropy(output, y, reduction='mean')
+        if args.predict_track_params:
+            w, xc, beta, p = model(data.x, data.edge_index, data.edge_attr)
+        else:
+            w, xc, beta = model(data.x, data.edge_index, data.edge_attr)
+
+
+            print(w, xc, beta)
+            exit()
+
+        y, w = data.y, w.squeeze(1)
+        particle_id = data.particle_id
+        track_params = data.track_params
+
+        # edge weight loss
+        loss_w = F.binary_cross_entropy(w, y, reduction='mean')
+        loss = loss_w
+
+        # condensation loss
+        loss_c = condensation_loss(beta, xc, particle_id,
+                                   device=device, q_min=args.q_min)
+        loss_c *= args.loss_c_scale
+
+        # background loss
+        loss_b = background_loss(beta, xc, particle_id,
+                                 device=device, q_min=args.q_min,
+                                 sb=args.sb)
+        loss_b *= args.loss_b_scale
+
+        # object loss
+        if args.predict_track_params:
+            loss_o = object_loss(p, beta,
+                                 track_params, particle_id,
+                                 device=device)
+            loss_o *= args.loss_o_scale
+            loss += loss_o
+            losses_o.append(loss_o.item())
+
+        # optimize total loss
+        loss += (loss_c + loss_b)
         loss.backward()
         optimizer.step()
+
         if batch_idx % args.log_interval == 0:
-            percent_complete = 100. * batch_idx / N
-            logging.info(f'Train Epoch: {epoch} [{batch_idx}/{N}' +
-                         f'({percent_complete:.0f}%)]\tLoss: {loss.item():.6f}')
-            if args.dry_run: break
+            logging.info('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'
+                        .format(epoch, batch_idx, len(train_loader.dataset),
+                                100. * batch_idx / len(train_loader),
+                                loss.item()))
+            logging.info(f'...losses: w={loss_w.item()}, c={loss_c.item()}' +
+                         f'           b={loss_b.item()}, o={loss_o.item()}')
+
+        # store losses
         losses.append(loss.item())
-    logging.info(f'Epoch completed in {time()-t0}s')
-    logging.info(f'Train Loss: {np.nanmean(losses)}')
-    return np.nanmean(losses)
-#
-#
+        losses_w.append(loss_w.item())
+        losses_c.append(loss_c.item())
+        losses_b.append(loss_b.item())
+
+    logging.info(f"Epoch {epoch} Time: {(time()-epoch_t0):.4f}s")
+    loss = np.nanmean(losses)
+    loss_w = np.nanmean(losses_w)
+    loss_c = np.nanmean(losses_c)
+    loss_b = np.nanmean(losses_b)
+    logging.info(f"Epoch {epoch} Train Loss: {loss:.6f}")
+    logging.info(f"Epoch {epoch}: Edge Weight Loss: {loss_w:.6f}")
+    logging.info(f"Epoch {epoch}: Condensation Loss: {loss_c:.6f}")
+    logging.info(f"Epoch {epoch}: Background Loss: {loss_b:.6f}")
+    return loss, loss_w, loss_c, loss_b
 
 def validate(model, device, val_loader):
     model.eval()
@@ -257,35 +341,48 @@ def main(args):
 
     params = {'batch_size': 1, 'shuffle': True, 'num_workers': 4}
 
-    model = EdgeClassifier(5, 1).to(device)
+    model = TCN(5, 4, 2, predict_track_params=True).to(device)
+    exit()
     total_trainable_params = sum(p.numel() for p in model.parameters())
-    logging.info(f'Trainable params in network: {total_trainable_params}')
+    logging.info(f'Total Trainable Params: {total_trainable_params}')
 
-    optimizer = optim.Adam(model.parameters(), lr=LR)
-    scheduler = StepLR(optimizer, step_size=5,
-                       gamma=0.99)
+    # instantiate optimizer with scheduled learning rate decay
+    optimizer = optim.Adam(model.parameters(), lr=args.learning_rate)
+    scheduler = StepLR(optimizer, step_size=args.step_size,
+                       gamma=args.gamma)
 
-    output = {'train_loss': [], 'test_loss': [], 'test_acc': []}
-    for epoch in range(1, 75 + 1):
-        logging.info(f'Entering epoch {epoch}')
-        print(TrainClusters)
-
-        train_loss = train(args, model, device, TrainClusters, optimizer, epoch)
-
-        print(train_loss)
-        exit()
-        thld = validate(model, device, loaders['val'])
-        logging.info(f'Sending thld={thld} to test routine.')
-        test_loss, test_acc = test(model, device, loaders['test'], thld=thld)
+    # epoch loop
+    output = {'train_loss': [], 'test_loss': [], 'test_acc': [],
+              'train_loss_w': [], 'train_loss_c': [], 'train_loss_b': [],
+              'test_loss_w': [], 'test_loss_c': [], 'test_loss_b': []}
+    for epoch in range(1, args.n_epochs + 1):
+        logging.info(f"---- Epoch {epoch} ----")
+        train_loss, tlw, tlc, tlb = train(args, model, device,
+                                          train_loader, optimizer, epoch)
+        thld = validate(model, device, val_loader)
+        test_loss, te_lw, te_lc, te_lb, te_acc = test(args, model, device,
+                                                      test_loader, thld=thld)
         scheduler.step()
-        if args.save_model:
-            model_name = join(args.model_outdir,
-                              job_name + f'_epoch{epoch}')
-            torch.save(model.state_dict(), model_name)
+
+        # save output
         output['train_loss'].append(train_loss)
+        output['train_loss_w'].append(tlw)
+        output['train_loss_c'].append(tlc)
+        output['train_loss_b'].append(tlb)
         output['test_loss'].append(test_loss)
-        output['test_acc'].append(test_acc)
-        np.save(join(args.stats_outdir, job_name), output)
+        output['test_loss_w'].append(te_lw)
+        output['test_loss_c'].append(te_lc)
+        output['test_loss_b'].append(te_lb)
+        output['test_acc'].append(te_acc)
+
+        if (args.save_models):
+            model_out = os.path.join(args.outdir,
+                                     f"{args.model_outfile}_epoch{epoch}.pt")
+            torch.save(model.state_dict(), model_out)
+
+        stat_out = os.path.join(args.outdir,
+                                f"{args.stat_outfile}.csv")
+        write_output_file(stat_out, args, pd.DataFrame(output))
 
 
 if __name__ == '__main__':

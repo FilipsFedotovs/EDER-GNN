@@ -60,6 +60,8 @@ class TCN(nn.Module):
         print(x.dim())
         print(edge_attr.dim())
         x1, edge_attr_1 = self.in_w1(x, edge_index, edge_attr)
+        print(x1, edge_attr_1)
+        exit()
         x2, edge_attr_2 = self.in_w2(x1, edge_index, edge_attr_1)
 
         # combine all edge features, use to predict edge weights

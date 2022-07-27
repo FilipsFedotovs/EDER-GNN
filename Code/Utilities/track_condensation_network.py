@@ -44,7 +44,7 @@ class TCN(nn.Module):
         self.in_c3 = IN(5, 8,
                         node_outdim=5, edge_outdim=8,
                         hidden_size=50)
-        self.W = MLP(12, 1, 80)
+        self.W = MLP(3, 1, 80)
         self.B = MLP(20, 1, 80)
         self.X = MLP(20, xc_outdim, 80)
         if predict_track_params:
@@ -66,10 +66,10 @@ class TCN(nn.Module):
         # combine all edge features, use to predict edge weights
         initial_edge_attr = torch.cat([edge_attr, edge_attr_1,
                                        edge_attr_2], dim=1)
-        print(initial_edge_attr)
-        exit()
-        edge_weights = torch.sigmoid(self.W(initial_edge_attr))
 
+        edge_weights = torch.sigmoid(self.W(initial_edge_attr))
+        print(edge_weights)
+        exit()
         # combine edge weights with original edge features
         edge_attr_w = torch.cat([edge_weights,
                                  initial_edge_attr], dim=1)

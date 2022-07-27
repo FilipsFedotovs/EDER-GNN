@@ -331,7 +331,7 @@ print(UF.TimeStamp(), bcolors.OKGREEN+"Train data has been loaded successfully..
 #             #  exit()
 
 
-def main():
+def main(self):
     print(UF.TimeStamp(),'Starting the training process... ')
 
     #use_cuda = not args.no_cuda and torch.cuda.is_available()

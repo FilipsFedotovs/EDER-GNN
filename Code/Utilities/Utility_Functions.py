@@ -161,7 +161,7 @@ class HitCluster:
            _FinalList=_FakeList+_GenuineList
            random.shuffle(_FinalList)
            import torch
-           self.ClusterGraph.edge_index=torch.tensor([(HitCluster.GenerateLinks(_FinalList,self.ClusterHitIDs))])
+           self.ClusterGraph.edge_index=torch.tensor((HitCluster.GenerateLinks(_FinalList,self.ClusterHitIDs)))
            self.ClusterGraph.edge_attr=torch.tensor([(HitCluster.GenerateEdgeAttributes(_FinalList))])
       def GiveStats(self,MCHits,cut_dt, cut_dr): #Decorate hit information
            import pandas as pd

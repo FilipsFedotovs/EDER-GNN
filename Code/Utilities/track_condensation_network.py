@@ -6,7 +6,7 @@ from torch.nn import Sequential as Seq, Linear, ReLU, Sigmoid
 import torch_geometric
 import torch_geometric.transforms as T
 from torch_geometric.nn import MessagePassing
-from models.interaction_network import InteractionNetwork as IN
+from interaction_network import InteractionNetwork as IN
 
 class MLP(nn.Module):
     def __init__(self, input_size, output_size, hidden_size):

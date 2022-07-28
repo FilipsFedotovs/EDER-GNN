@@ -163,6 +163,7 @@ class HitCluster:
            _Tot_Hits = _Tot_Hits.drop(['r_x','r_y','r_z','l_x','l_y','l_z','l_MC_ID','r_MC_ID'],axis=1)
            _Tot_Hits=_Tot_Hits.values.tolist()
            print(_Tot_Hits)
+           import torch
            self.ClusterGraph.edge_index=torch.tensor((HitCluster.GenerateLinks(_Tot_Hits,self.ClusterHitIDs)))
            print(self.ClusterGraph.x)
            print(self.ClusterGraph.edge_index)

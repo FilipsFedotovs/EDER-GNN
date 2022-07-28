@@ -33,7 +33,8 @@ class HitCluster:
                if s[1]>=self.ClusterID[0]*self.Step[0] and s[1]<((self.ClusterID[0]+1)*self.Step[0]):
                    if s[2]>=self.ClusterID[1]*self.Step[1] and s[2]<((self.ClusterID[1]+1)*self.Step[1]):
                        if s[3]>=self.ClusterID[2]*self.Step[2] and s[3]<((self.ClusterID[2]+1)*self.Step[2]):
-                          __ClusterHitsTemp.append([(s[1]-(self.ClusterID[0]*self.Step[0])),(s[2]-(self.ClusterID[1]*self.Step[1])), (s[3]-(self.ClusterID[2]*self.Step[2])), (s[4]), (s[5])])
+                          #__ClusterHitsTemp.append([(s[1]-(self.ClusterID[0]*self.Step[0])),(s[2]-(self.ClusterID[1]*self.Step[1])), (s[3]-(self.ClusterID[2]*self.Step[2])), (s[4]), (s[5])])
+                          __ClusterHitsTemp.append([(s[1]-(self.ClusterID[0]*self.Step[0]))/self.Step[2],(s[2]-(self.ClusterID[1]*self.Step[1]))/self.Step[2], (s[3]-(self.ClusterID[2]*self.Step[2]))/self.Step[2]])
                           self.ClusterHitIDs.append(s[0])
                           self.ClusterHits.append(s)
            self.ClusterSize=len(__ClusterHitsTemp)
@@ -169,7 +170,9 @@ class HitCluster:
            print(self.ClusterGraph.x)
            print(self.ClusterGraph.edge_index)
            self.ClusterGraph.edge_attr=torch.tensor((HitCluster.GenerateEdgeAttributes(_Tot_Hits)))
+           self.ClusterGraph.y=torch.tensor((HitCluster.GenerateEdgeLabels(_Tot_Hits)))
            print(self.ClusterGraph.edge_attr)
+           print(self.ClusterGraph.y)
            exit()
       def GiveStats(self,MCHits,cut_dt, cut_dr): #Decorate hit information
            import pandas as pd
@@ -640,6 +643,11 @@ class HitCluster:
           for ip in _input:
               _EdgeAttr.append(ip[3:])
           return _EdgeAttr
+      def GenerateEdgeLabels(_input):
+          _EdgeLbl=[]
+          for ip in _input:
+              _EdgeLbl.append(ip[2])
+          return _EdgeLbl
 
 
 def CleanFolder(folder,key):

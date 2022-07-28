@@ -154,6 +154,7 @@ class HitCluster:
            _Tot_Hits['d_t'] = np.sqrt(((_Tot_Hits['r_y']-_Tot_Hits['l_y'])**2) + ((_Tot_Hits['r_x']-_Tot_Hits['l_x'])**2))
            _Tot_Hits['d_z'] = (_Tot_Hits['r_z']-_Tot_Hits['l_z']).abs()
            print(_Tot_Hits)
+           print(self.Step)
            exit()
            _Genuine=_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']])
            _Fakes=_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] == _Tot_Hits['r_MC_ID']])

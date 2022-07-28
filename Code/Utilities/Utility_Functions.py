@@ -169,6 +169,8 @@ class HitCluster:
            print(self.ClusterGraph.x)
            print(self.ClusterGraph.edge_index)
            self.ClusterGraph.edge_attr=torch.tensor((HitCluster.GenerateEdgeAttributes(_Tot_Hits)))
+           print(self.ClusterGraph.edge_attr)
+           exit()
       def GiveStats(self,MCHits,cut_dt, cut_dr): #Decorate hit information
            import pandas as pd
            _MCClusterHits=[]
@@ -636,7 +638,7 @@ class HitCluster:
       def GenerateEdgeAttributes(_input):
           _EdgeAttr=[]
           for ip in _input:
-              _EdgeAttr.append([0.99])
+              _EdgeAttr.append(ip[3:])
           return _EdgeAttr
 
 

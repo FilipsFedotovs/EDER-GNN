@@ -152,10 +152,10 @@ class HitCluster:
            _Tot_Hits['label']=(_Tot_Hits['l_MC_ID']==_Tot_Hits['r_MC_ID']).astype('int8')
            _Tot_Hits['l_x']=_Tot_Hits['l_x']/self.Step[2]
            _Tot_Hits['l_y']=_Tot_Hits['l_y']/self.Step[2]
-           _Tot_Hits['l_z']=_Tot_Hits['l_y']/self.Step[2]
+           _Tot_Hits['l_z']=_Tot_Hits['l_z']/self.Step[2]
            _Tot_Hits['r_x']=_Tot_Hits['r_x']/self.Step[2]
            _Tot_Hits['r_y']=_Tot_Hits['r_y']/self.Step[2]
-           _Tot_Hits['r_z']=_Tot_Hits['r_y']/self.Step[2]
+           _Tot_Hits['r_z']=_Tot_Hits['r_z']/self.Step[2]
            _Tot_Hits['d_l'] = (np.sqrt(((_Tot_Hits['r_y']-_Tot_Hits['l_y'])**2) + ((_Tot_Hits['r_x']-_Tot_Hits['l_x'])**2) + ((_Tot_Hits['r_z']-_Tot_Hits['l_z'])**2)))
            _Tot_Hits['d_t'] = np.sqrt(((_Tot_Hits['r_y']-_Tot_Hits['l_y'])**2) + ((_Tot_Hits['r_x']-_Tot_Hits['l_x'])**2))
            _Tot_Hits['d_z'] = (_Tot_Hits['r_z']-_Tot_Hits['l_z']).abs()

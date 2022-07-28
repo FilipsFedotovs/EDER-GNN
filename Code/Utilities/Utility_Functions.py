@@ -37,10 +37,10 @@ class HitCluster:
                           self.ClusterHitIDs.append(s[0])
                           self.ClusterHits.append(s)
            self.ClusterSize=len(__ClusterHitsTemp)
-           # import torch
-           # import torch_geometric
-           # from torch_geometric.data import Data
-           # self.ClusterGraph=Data(x=torch.Tensor(__ClusterHitsTemp), edge_index=None, y=None)
+           import torch
+           import torch_geometric
+           from torch_geometric.data import Data
+           self.ClusterGraph=Data(x=torch.Tensor(__ClusterHitsTemp), edge_index=None, y=None)
            del __ClusterHitsTemp
 
       def GenerateTrainData(self, MCHits, val_ratio, test_ratio,cut_dt, cut_dr): #Decorate hit information
@@ -161,14 +161,12 @@ class HitCluster:
            _Tot_Hits['d_z'] = (_Tot_Hits['r_z']-_Tot_Hits['l_z']).abs()
            _Tot_Hits['label']=(_Tot_Hits['l_MC_ID']==_Tot_Hits['r_MC_ID']).astype('int8')
            _Tot_Hits = _Tot_Hits.drop(['r_x','r_y','r_z','l_x','l_y','l_z','l_MC_ID','r_MC_ID'],axis=1)
-
+           _Tot_Hits=_Tot_Hits.values.tolist()
            print(_Tot_Hits)
+           self.ClusterGraph.edge_index=torch.tensor((HitCluster.GenerateLinks(_Tot_Hits,self.ClusterHitIDs)))
+           print(self.ClusterGraph.x)
+           print(self.ClusterGraph.edge_index)
            exit()
-           _FakeList=_Fakes.values.tolist()
-           _GenuineList=_Genuine.values.tolist()
-           random.shuffle(_FinalList)
-           import torch
-           self.ClusterGraph.edge_index=torch.tensor((HitCluster.GenerateLinks(_FinalList,self.ClusterHitIDs)))
            self.ClusterGraph.edge_attr=torch.tensor((HitCluster.GenerateEdgeAttributes(_FinalList)))
       def GiveStats(self,MCHits,cut_dt, cut_dr): #Decorate hit information
            import pandas as pd

@@ -150,6 +150,7 @@ class HitCluster:
            _Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['d_y'] >= cut_dr], inplace = True)
            _Tot_Hits = _Tot_Hits.drop(['d_tx','d_ty','d_x','d_y','join_key','l_tx','l_ty','r_tx','r_ty'],axis=1)
            _Tot_Hits['label']=(_Tot_Hits['l_MC_ID']==_Tot_Hits['r_MC_ID']).astype('int8')
+           _Tot_Hits['d_l'] = math.sqrt((_Tot_Hits['r_y']-_Tot_Hits['l_y'])**2 + (_Tot_Hits['r_x']-_Tot_Hits['l_x'])**2 + (_Tot_Hits['r_z']-_Tot_Hits['l_z'])**2)
            print(_Tot_Hits)
            exit()
            _Genuine=_Tot_Hits.drop(_Tot_Hits.index[_Tot_Hits['l_MC_ID'] != _Tot_Hits['r_MC_ID']])
@@ -158,11 +159,8 @@ class HitCluster:
 
            _Genuine = _Genuine.drop(['d_tx','d_ty','d_x','d_y','join_key','r_x','r_y','r_z','l_x','l_y','l_z','l_tx','l_ty','r_tx','r_ty','l_MC_ID','r_MC_ID'],axis=1)
            _Fakes = _Fakes.drop(['d_tx','d_ty','d_x','d_y','join_key','r_x','r_y','r_z','l_x','l_y','l_z','l_tx','l_ty','r_tx','r_ty','l_MC_ID','r_MC_ID'],axis=1)
-           _Genuine['Connection']=1
-           _Fakes['Connection']=0
            _FakeList=_Fakes.values.tolist()
            _GenuineList=_Genuine.values.tolist()
-           _FinalList=_FakeList+_GenuineList
            random.shuffle(_FinalList)
            import torch
            self.ClusterGraph.edge_index=torch.tensor((HitCluster.GenerateLinks(_FinalList,self.ClusterHitIDs)))

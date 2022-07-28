@@ -156,10 +156,11 @@ class HitCluster:
            _Tot_Hits['r_x']=_Tot_Hits['r_x']/self.Step[2]
            _Tot_Hits['r_y']=_Tot_Hits['r_y']/self.Step[2]
            _Tot_Hits['r_z']=_Tot_Hits['r_z']/self.Step[2]
+           _Tot_Hits['label']=(_Tot_Hits['l_MC_ID']==_Tot_Hits['r_MC_ID']).astype('int8')
            _Tot_Hits['d_l'] = (np.sqrt(((_Tot_Hits['r_y']-_Tot_Hits['l_y'])**2) + ((_Tot_Hits['r_x']-_Tot_Hits['l_x'])**2) + ((_Tot_Hits['r_z']-_Tot_Hits['l_z'])**2)))
            _Tot_Hits['d_t'] = np.sqrt(((_Tot_Hits['r_y']-_Tot_Hits['l_y'])**2) + ((_Tot_Hits['r_x']-_Tot_Hits['l_x'])**2))
            _Tot_Hits['d_z'] = (_Tot_Hits['r_z']-_Tot_Hits['l_z']).abs()
-           _Tot_Hits['label']=(_Tot_Hits['l_MC_ID']==_Tot_Hits['r_MC_ID']).astype('int8')
+
            _Tot_Hits = _Tot_Hits.drop(['r_x','r_y','r_z','l_x','l_y','l_z','l_MC_ID','r_MC_ID'],axis=1)
            _Tot_Hits=_Tot_Hits.values.tolist()
            print(_Tot_Hits)
@@ -167,8 +168,7 @@ class HitCluster:
            self.ClusterGraph.edge_index=torch.tensor((HitCluster.GenerateLinks(_Tot_Hits,self.ClusterHitIDs)))
            print(self.ClusterGraph.x)
            print(self.ClusterGraph.edge_index)
-           exit()
-           self.ClusterGraph.edge_attr=torch.tensor((HitCluster.GenerateEdgeAttributes(_FinalList)))
+           self.ClusterGraph.edge_attr=torch.tensor((HitCluster.GenerateEdgeAttributes(_Tot_Hits)))
       def GiveStats(self,MCHits,cut_dt, cut_dr): #Decorate hit information
            import pandas as pd
            _MCClusterHits=[]

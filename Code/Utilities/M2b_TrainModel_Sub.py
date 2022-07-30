@@ -171,7 +171,7 @@ while DataItrStatus:
         print(UF.TimeStamp(),'Analysing data ...')
         TrainClusters=pickle.load(train_file)
         TrainFraction=int(math.floor(len(TrainClusters)*0.85))
-        ValFraction=int(math.floor(len(TrainClusters)*0.1))
+        ValFraction=int(math.ceil(len(TrainClusters)*0.1))
         for smpl in range(0,TrainFraction):
              TrainSamples.append(TrainClusters[smpl].ClusterGraph)
         for smpl in range(TrainFraction,TrainFraction+ValFraction):

@@ -104,7 +104,7 @@ def train(model, device, sample, optimizer,):
     model.train()
     losses_w = [] # edge weight loss
     iterator=0
-    for HC in sample[:10]:
+    for HC in sample[:2]:
         iterator+=1
         data = HC.to(device)
         if (len(data.x)==0 or len(data.edge_index)==0): continue
@@ -137,8 +137,13 @@ def validate(model, device, sample):
         except:
             print(data.x, data.edge_index, data.edge_attr)
             continue
+
         y, output = data.y.float(), output.squeeze()
-        loss = F.binary_cross_entropy(output, y, reduction='mean').item()
+        try:
+          loss = F.binary_cross_entropy(output, y, reduction='mean').item()
+        except:
+            print(output, y)
+            exit()
         diff, opt_thld, opt_acc = 100, 0, 0
         best_tpr, best_tnr = 0, 0
         for thld in np.arange(0.01, 0.6, 0.01):

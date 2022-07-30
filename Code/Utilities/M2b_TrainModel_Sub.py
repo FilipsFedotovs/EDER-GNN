@@ -179,7 +179,7 @@ while DataItrStatus:
         break
 print(len(TrainSamples),len(ValSamples),len(TestSamples))
 num_nodes_ftr=TrainSamples[0].num_node_features
-num_edge_ftr=TrainSamples[0].ClusterGraph.num_edge_features
+num_edge_ftr=TrainSamples[0].num_edge_features
 print(UF.TimeStamp(), bcolors.OKGREEN+"Train data has loaded and analysed successfully..."+bcolors.ENDC)
 
 # if Mode=='Train':

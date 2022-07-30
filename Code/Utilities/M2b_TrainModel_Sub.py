@@ -102,8 +102,8 @@ def train(model, device, sample, optimizer,):
           w = model(data.x, data.edge_index, data.edge_attr)
           y, w = data.y.float(), w.squeeze(1)
         except:
-            print(data.x, data.edge_index, data.edge_attr)
-            exit()
+            print('Eroneus data set: ',data.x, data.edge_index, data.edge_attr, 'skipping this samples...')
+            continue
         #edge weight loss
         loss_w = F.binary_cross_entropy(w, y, reduction='mean')
         # optimize total loss

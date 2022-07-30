@@ -244,12 +244,15 @@ def test(model, device, test_loader, thld=0.5):
 #if Mode!='Test':
 print(UF.TimeStamp(),'Loading data from ',bcolors.OKBLUE+flocation+bcolors.ENDC)
 train_file=open(flocation,'rb')
+print(UF.TimeStamp(),'Analysing data ...')
 TrainClusters=pickle.load(train_file)
+
 train_file.close()
-
-
-print(UF.TimeStamp(), bcolors.OKGREEN+"Train data has been loaded successfully..."+bcolors.ENDC)
-
+num_nodes_ftr=TrainClusters[0].ClusterGraph.num_node_features
+num_edge_ftr=TrainClusters[0].ClusterGraph.num_edge_features
+print(num_nodes_ftr,num_edge_ftr)
+print(UF.TimeStamp(), bcolors.OKGREEN+"Train data has loaded and analysed successfully..."+bcolors.ENDC)
+exit()
 # if Mode=='Train':
 #             class Net(torch.nn.Module):
 #                     def __init__(self):

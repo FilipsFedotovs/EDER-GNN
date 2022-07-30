@@ -640,7 +640,7 @@ class HitCluster:
       def GenerateEdgeLabels(_input):
           _EdgeLbl=[]
           for ip in _input:
-              _EdgeLbl.append([ip[2]])
+              _EdgeLbl.append(ip[2])
           return _EdgeLbl
 
 

@@ -86,18 +86,17 @@ print(bcolors.HEADER+"##########################################################
 print(UF.TimeStamp(), bcolors.OKGREEN+"Modules Have been imported successfully..."+bcolors.ENDC)
 
 
-def train(model, device, sample, optimizer, sample_no, epoch):
+def train(model, device, sample, optimizer,):
     """ train routine, loss and accumulated gradients used to update
         the model via the ADAM optimizer externally
     """
     model.train()
     losses_w = [] # edge weight loss
-    losses=[]
     iterator=0
     for HC in sample:
         iterator+=1
         data = HC.to(device)
-        if (len(data.x)==0): continue
+        if (len(data.x)==0 or len(data.edge_index)==0): continue
         optimizer.zero_grad()
         try:
           w = model(data.x, data.edge_index, data.edge_attr)
@@ -107,24 +106,21 @@ def train(model, device, sample, optimizer, sample_no, epoch):
             exit()
         #edge weight loss
         loss_w = F.binary_cross_entropy(w, y, reduction='mean')
-        loss = loss_w
-
         # optimize total loss
-        loss.backward()
+        loss_w.backward()
         optimizer.step()
         # store losses
-        losses.append(loss.item())
         losses_w.append(loss_w.item())
-    loss = np.nanmean(losses)
+        print('Sample:', iterator, '| loss:', loss_w,)
     loss_w = np.nanmean(losses_w)
-    return loss,loss_w,iterator
+    return loss_w,iterator
 
 def validate(model, device, sample):
     model.eval()
     opt_thlds, accs = [], []
     for HC in sample:
         data = HC.to(device)
-        if (len(data.x)==0): continue
+        if (len(data.x)==0 or len(data.edge_index)==0): continue
         output = model(data.x, data.edge_index, data.edge_attr)
         y, output = data.y, output.squeeze()
         loss = F.binary_cross_entropy(output, y, reduction='mean').item()
@@ -137,17 +133,15 @@ def validate(model, device, sample):
                 diff, opt_thld, opt_acc = delta.item(), thld, acc.item()
         opt_thlds.append(opt_thld)
         accs.append(opt_acc)
-    logging.info(f'Validation set accuracy (where TPR=TNR): {np.nanmean(accs)}')
-    logging.info(f'Validation set optimal edge weight thld: {np.nanmean(opt_thld)}')
     return np.nanmean(opt_thlds)
 
-def test(model, device, test_loader, thld):
+def test(model, device, sample, thld):
     model.eval()
     losses, accs = [], []
     with torch.no_grad():
-        for batch_idx, (data, fname) in enumerate(test_loader):
-            data = data.to(device)
-            if (len(data.x)==0): continue
+        for HC in sample:
+            data = HC.to(device)
+            if (len(data.x)==0 or len(data.edge_index)==0): continue
             output = model(data.x, data.edge_index, data.edge_attr)
             y, output = data.y, output.squeeze()
             acc, TPR, TNR = binary_classification_stats(output, y, thld)
@@ -281,12 +275,10 @@ def main(self):
 
     for epoch in range(1, 2):
         logging.info(f"---- Epoch {epoch} ----")
-        train_loss, tlw, itr= train(model, device,
-                                          TrainSamples, optimizer,1, epoch)
-        print(train_loss,tlw,itr)
+        train_loss, itr= train(model, device,TrainSamples, optimizer,)
+        print(train_loss,itr)
         thld = validate(model, device, ValSamples)
-        test_loss, te_lw, te_lc, te_lb, te_acc = test(args, model, device,
-                                                      test_loader, thld=thld)
+        test_loss, te_lw, te_lc, te_lb, te_acc = test(args, model, device,TestSamples, thld=thld)
         scheduler.step()
         print(test_loss, te_lw, te_lc, te_lb, te_acc)
         exit()

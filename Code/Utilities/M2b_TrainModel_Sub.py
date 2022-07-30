@@ -296,7 +296,7 @@ def main(self):
         train_loss, itr= train(model, device,TrainSamples, optimizer)
         thld = validate(model, device, ValSamples)
         print(thld)
-        print('output',test(args, model, device,TestSamples, thld))
+        print('output',test(model, device,TestSamples, thld))
         test_loss, te_lw, te_lc, te_lb, te_acc = test(args, model, device,TestSamples, thld)
         scheduler.step()
         print(test_loss, te_lw, te_lc, te_lb, te_acc)

@@ -164,13 +164,14 @@ def test(model, device, sample, thld):
             output = model(data.x, data.edge_index, data.edge_attr)
             y, output = data.y.float(), output.squeeze()
             acc, TPR, TNR = binary_classification_stats(output, y, thld)
+            print('Input',y, output)
             try:
                 loss = F.binary_cross_entropy(output, y,reduction='mean')
             except:
-                print(y, output)
+                print('error',y, output)
                 exit()
-            print(acc.item())
-            print(loss.item())
+            print('acc',acc.item())
+            print('loss',loss.item())
             accs.append(acc.item())
             losses.append(loss.item())
     return np.nanmean(losses), np.nanmean(accs)

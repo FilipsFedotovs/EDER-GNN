@@ -99,8 +99,12 @@ def train(model, device, sample, optimizer, sample_no, epoch):
         data = HC.to(device)
         if (len(data.x)==0): continue
         optimizer.zero_grad()
-        w = model(data.x, data.edge_index, data.edge_attr)
-        y, w = data.y.float(), w.squeeze(1)
+        try:
+          w = model(data.x, data.edge_index, data.edge_attr)
+          y, w = data.y.float(), w.squeeze(1)
+        except:
+            print(data.x, data.edge_index, data.edge_attr)
+            exit()
         #edge weight loss
         loss_w = F.binary_cross_entropy(w, y, reduction='mean')
         loss = loss_w

@@ -136,11 +136,9 @@ def train(Predict, model, device, sample, optimizer, epoch):
             w = model(data.x, data.edge_index, data.edge_attr)
 
 
-            print(w)
 
 
         y, w = data.y, w.squeeze(1)
-        print(y,w)
     #     particle_id = data.particle_id
     #     track_params = data.track_params
     #
@@ -207,7 +205,6 @@ def validate(model, device, val_loader):
         output = model(data.x, data.edge_index, data.edge_attr)
         y, output = data.y, output.squeeze()
         print(y,output)
-        exit()
         loss = F.binary_cross_entropy(output, y, reduction='mean').item()
         diff, opt_thld, opt_acc = 100, 0, 0
         best_tpr, best_tnr = 0, 0

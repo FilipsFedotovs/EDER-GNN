@@ -132,7 +132,11 @@ def validate(model, device, sample):
     for HC in sample:
         data = HC.to(device)
         if (len(data.x)==0 or len(data.edge_index)==0): continue
-        output = model(data.x, data.edge_index, data.edge_attr)
+        try:
+            output = model(data.x, data.edge_index, data.edge_attr)
+        except:
+            print(data.x, data.edge_index, data.edge_attr)
+            exit()
         y, output = data.y.float(), output.squeeze()
         loss = F.binary_cross_entropy(output, y, reduction='mean').item()
         diff, opt_thld, opt_acc = 100, 0, 0

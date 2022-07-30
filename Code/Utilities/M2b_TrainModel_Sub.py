@@ -291,7 +291,7 @@ def main(self):
 
     for epoch in range(1, 2):
         logging.info(f"---- Epoch {epoch} ----")
-        train_loss, tlw, itr= train(False, model, device,
+        train_loss, tlw, itr= train(model, device,
                                           TrainClusters, optimizer,1, epoch)
         print(train_loss,tlw,itr)
         exit()

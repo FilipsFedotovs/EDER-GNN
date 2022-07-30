@@ -95,7 +95,7 @@ def binary_classification_stats(output, y, thld):
     acc = zero_divide(TP+TN, TP+TN+FP+FN)
     TPR = zero_divide(TP, TP+FN)
     TNR = zero_divide(TN, TN+FP)
-    return acc, TPR,
+    return acc, TPR, TNR
 
 def train(model, device, sample, optimizer,):
     """ train routine, loss and accumulated gradients used to update

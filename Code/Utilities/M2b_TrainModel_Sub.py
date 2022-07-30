@@ -293,9 +293,9 @@ def main(self):
 
     for epoch in range(1, 2):
         logging.info(f"---- Epoch {epoch} ----")
-        train_loss, tlw, ittr= train(False, model, device,
+        train_loss, tlw, itr= train(False, model, device,
                                           TrainClusters, optimizer,1, epoch)
-        print(train_loss)
+        print(train_loss,tlw,itr)
         exit()
         thld = validate(model, device, val_loader)
         test_loss, te_lw, te_lc, te_lb, te_acc = test(args, model, device,

@@ -164,21 +164,23 @@ ValSamples=[]
 TestSamples=[]
 while DataItrStatus:
     SampleCounter+=1
-    flocation=EOS_DIR+'/EDER-GNN/Data/TRAIN_SET/M1_M2_SelectedTrainClusters_'+str(SampleCounter)+'.pkl'
-    print(UF.TimeStamp(),'Loading data from ',bcolors.OKBLUE+flocation+bcolors.ENDC)
-    train_file=open(flocation,'rb')
-    print(UF.TimeStamp(),'Analysing data ...')
-    TrainClusters=pickle.load(train_file)
-    print(TrainClusters)
-    TrainFraction=int(math.ceil(len(TrainClusters)*0.85))
-    ValFraction=int(math.ceil(len(TrainClusters)*0.1))
-    for smpl in range(0,TrainFraction):
-         TrainSamples.append(TrainClusters[smpl].ClusterGraph)
-    for smpl in range(TrainFraction,TrainFraction+ValFraction):
-         ValSamples.append(TrainClusters[smpl].ClusterGraph)
-    for smpl in range(TrainFraction+ValFraction,len(TrainClusters)):
-         TestSamples.append(TrainClusters[smpl].ClusterGraph)
-    train_file.close()
+    try:
+        flocation=EOS_DIR+'/EDER-GNN/Data/TRAIN_SET/M1_M2_SelectedTrainClusters_'+str(SampleCounter)+'.pkl'
+        print(UF.TimeStamp(),'Loading data from ',bcolors.OKBLUE+flocation+bcolors.ENDC)
+        train_file=open(flocation,'rb')
+        print(UF.TimeStamp(),'Analysing data ...')
+        TrainClusters=pickle.load(train_file)
+        TrainFraction=int(math.ceil(len(TrainClusters)*0.85))
+        ValFraction=int(math.ceil(len(TrainClusters)*0.1))
+        for smpl in range(0,TrainFraction):
+             TrainSamples.append(TrainClusters[smpl].ClusterGraph)
+        for smpl in range(TrainFraction,TrainFraction+ValFraction):
+             ValSamples.append(TrainClusters[smpl].ClusterGraph)
+        for smpl in range(TrainFraction+ValFraction,len(TrainClusters)):
+             TestSamples.append(TrainClusters[smpl].ClusterGraph)
+        train_file.close()
+    except:
+        break
 print(len(TrainSamples),len(ValSamples),len(TestSamples))
 exit()
 num_nodes_ftr=TrainClusters[0].ClusterGraph.num_node_features

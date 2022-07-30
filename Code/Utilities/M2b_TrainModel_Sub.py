@@ -84,7 +84,9 @@ print(bcolors.HEADER+"#########################              Written by Filips F
 print(bcolors.HEADER+"#########################                 PhD Student at UCL                   #########################"+bcolors.ENDC)
 print(bcolors.HEADER+"########################################################################################################"+bcolors.ENDC)
 print(UF.TimeStamp(), bcolors.OKGREEN+"Modules Have been imported successfully..."+bcolors.ENDC)
-
+def zero_divide(a, b):
+    if (b==0): return 0
+    return a/b
 def binary_classification_stats(output, y, thld):
     TP = torch.sum((y==1) & (output>thld))
     TN = torch.sum((y==0) & (output<thld))

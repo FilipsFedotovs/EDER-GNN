@@ -135,10 +135,9 @@ def validate(model, device, sample):
         try:
             output = model(data.x, data.edge_index, data.edge_attr)
         except:
-            print(data.x, data.edge_index, data.edge_attr)
             continue
 
-        y, output = data.y.float(), output.squeeze()
+        y, output = data.y.float(), output.squeeze(1)
         try:
           loss = F.binary_cross_entropy(output, y, reduction='mean').item()
         except:

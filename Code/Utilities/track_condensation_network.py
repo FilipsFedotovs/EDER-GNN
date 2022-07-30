@@ -26,8 +26,7 @@ class MLP(nn.Module):
         return self.layers(C)
 
 class TCN(nn.Module):
-    def __init__(self, node_indim, edge_indim, xc_outdim,
-                 predict_track_params=False):
+    def __init__(self, node_indim, edge_indim):
         super(TCN, self).__init__()
         self.in_w1 = IN(node_indim, edge_indim,
                         node_outdim=node_indim, edge_outdim=edge_indim,
@@ -35,19 +34,8 @@ class TCN(nn.Module):
         self.in_w2 = IN(node_indim, edge_indim,
                         node_outdim=node_indim, edge_outdim=edge_indim,
                         hidden_size=80)
-        # self.in_c1 = IN(5, 13,
-        #                 node_outdim=5, edge_outdim=8,
-        #                 hidden_size=50)
-        # self.in_c2 = IN(5, 8,
-        #                 node_outdim=5, edge_outdim=8,
-        #                 hidden_size=50)
-        # self.in_c3 = IN(5, 8,
-        #                 node_outdim=5, edge_outdim=8,
-        #                 hidden_size=50)
-        self.W = MLP(edge_indim*3, 1, 80)
-        # self.B = MLP(20, 1, 80)
-        # self.X = MLP(20, xc_outdim, 80)
 
+        self.W = MLP(edge_indim*3, 1, 80)
 
     def forward(self, x: Tensor, edge_index: Tensor,
                 edge_attr: Tensor) -> Tensor:
@@ -64,23 +52,3 @@ class TCN(nn.Module):
         edge_weights = torch.sigmoid(self.W(initial_edge_attr))
         return edge_weights
 
-        # combine edge weights with original edge features
-        # edge_attr_w = torch.cat([edge_weights,
-        #                          initial_edge_attr], dim=1)
-        #
-        # xc1, edge_attr_c1 = self.in_c1(x, edge_index,
-        #                                edge_attr_w)
-        # xc2, edge_attr_c2 = self.in_c2(xc1, edge_index,
-        #                                edge_attr_c1)
-        # xc3, edge_attr_c3 = self.in_c3(xc2, edge_index,
-        #                                edge_attr_c2)
-        # all_xc = torch.cat([x,xc1,xc2,xc3], dim=1)
-        # beta = torch.sigmoid(self.B(all_xc))
-        # xc = self.X(all_xc)
-        # if self.predict_track_params:
-        #     p = self.P(all_xc)
-        #     q = 2 * torch.sigmoid(self.Q(all_xc)) - 1
-        #     p = torch.cat((p, q), dim=1)
-        #     return edge_weights, xc, beta, p
-        #
-        # return edge_weights, xc, beta

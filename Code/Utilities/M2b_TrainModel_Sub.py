@@ -115,18 +115,16 @@ print(UF.TimeStamp(), bcolors.OKGREEN+"Modules Have been imported successfully..
 #
 #
 
-def train(Predict, model, device, sample, optimizer, epoch):
+def train(Predict, model, device, sample, optimizer, sample_no, epoch):
     """ train routine, loss and accumulated gradients used to update
         the model via the ADAM optimizer externally
     """
     model.train()
-    epoch_t0 = time()
-    losses = []   # total loss
     losses_w = [] # edge weight loss
-    losses_c = [] # condensation loss
-    losses_b = [] # background loss
-    losses_o = [] # object loss
+    losses=[]
+    iterator=0
     for HC in sample:
+        iterator+=1
         data = HC.ClusterGraph.to(device)
         if (len(data.x)==0): continue
         optimizer.zero_grad()
@@ -134,42 +132,20 @@ def train(Predict, model, device, sample, optimizer, epoch):
             w, xc, beta, p = model(data.x, data.edge_index, data.edge_attr)
         else:
             w = model(data.x, data.edge_index, data.edge_attr)
-
-
-
-
         y, w = data.y.float(), w.squeeze(1)
-        print(y)
-        print(w)
-    #     particle_id = data.particle_id
-    #     track_params = data.track_params
-    #
         #edge weight loss
         loss_w = F.binary_cross_entropy(w, y, reduction='mean')
         loss = loss_w
 
-    #     # optimize total loss
+        # optimize total loss
         loss.backward()
         optimizer.step()
-
-        print('Loss',epoch,loss)
-    #
-    #     # store losses
-    #     losses.append(loss.item())
-    #     losses_w.append(loss_w.item())
-    #     losses_c.append(loss_c.item())
-    #     losses_b.append(loss_b.item())
-    #
-    # logging.info(f"Epoch {epoch} Time: {(time()-epoch_t0):.4f}s")
-    # loss = np.nanmean(losses)
-    # loss_w = np.nanmean(losses_w)
-    # loss_c = np.nanmean(losses_c)
-    # loss_b = np.nanmean(losses_b)
-    # logging.info(f"Epoch {epoch} Train Loss: {loss:.6f}")
-    # logging.info(f"Epoch {epoch}: Edge Weight Loss: {loss_w:.6f}")
-    # logging.info(f"Epoch {epoch}: Condensation Loss: {loss_c:.6f}")
-    # logging.info(f"Epoch {epoch}: Background Loss: {loss_b:.6f}")
-    # return loss, loss_w, loss_c, loss_b
+        # store losses
+        losses.append(loss.item())
+        losses_w.append(loss_w.item())
+    loss = np.nanmean(losses)
+    loss_w = np.nanmean(losses_w)
+    return loss,loss_w,iterator
 
 def validate(model, device, val_loader):
     model.eval()
@@ -308,32 +284,19 @@ print(UF.TimeStamp(), bcolors.OKGREEN+"Train data has loaded and analysed succes
 
 def main(self):
     print(UF.TimeStamp(),'Starting the training process... ')
-
-    #use_cuda = not args.no_cuda and torch.cuda.is_available()
-    #logging.info(f'Parameter use_cuda={use_cuda}')
-    #torch.manual_seed(args.seed)
     device = torch.device("cpu")
-
-    params = {'batch_size': 1, 'shuffle': True, 'num_workers': 4}
-
-    model = TCN(num_nodes_ftr, num_edge_ftr, 2, predict_track_params=False).to(device)
-    total_trainable_params = sum(p.numel() for p in model.parameters())
-    logging.info(f'Total Trainable Params: {total_trainable_params}')
-
+    model = TCN(num_nodes_ftr, num_edge_ftr).to(device)
     # instantiate optimizer with scheduled learning rate decay
     optimizer = optim.Adam(model.parameters(), lr=LR)
     scheduler = StepLR(optimizer, step_size=0.1,
                        gamma=0.1)
 
-    # epoch loop
-    output = {'train_loss': [], 'test_loss': [], 'test_acc': [],
-              'train_loss_w': [], 'train_loss_c': [], 'train_loss_b': [],
-              'test_loss_w': [], 'test_loss_c': [], 'test_loss_b': []}
-
     for epoch in range(1, 2):
         logging.info(f"---- Epoch {epoch} ----")
-        train_loss, tlw, tlc, tlb = train(False, model, device,
-                                          TrainClusters, optimizer, epoch)
+        train_loss, tlw, ittr= train(False, model, device,
+                                          TrainClusters, optimizer,1, epoch)
+        print(train_loss)
+        exit()
         thld = validate(model, device, val_loader)
         test_loss, te_lw, te_lc, te_lb, te_acc = test(args, model, device,
                                                       test_loader, thld=thld)

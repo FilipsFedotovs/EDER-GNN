@@ -107,10 +107,11 @@ for j in range(0,Ysteps):
         print(GraphStatus)
         if GraphStatus:
             LoadedClusters.append(HC)
+random.shuffle(LoadedClusters)
 print(LoadedClusters)
 output_file_location=EOS_DIR+'/EDER-GNN/Data/TRAIN_SET/M1_M1_SelectedTrainClusters_'+str(Set)+'_' +str(Subset)+'.pkl'
 open_file = open(output_file_location, "wb")
-pickle.dump(random.shuffle(LoadedClusters), open_file)
+pickle.dump(LoadedClusters, open_file)
 print(UF.TimeStamp(), "Cluster generation is finished...")
 #End of the script
 

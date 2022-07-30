@@ -165,6 +165,7 @@ def test(model, device, sample, thld):
             y, output = data.y.float(), output.squeeze()
             acc, TPR, TNR = binary_classification_stats(output, y, thld)
             print(acc.item())
+            print(output,data.y.float)
             loss = F.binary_cross_entropy(output, data.y.float,
                                           reduction='mean')
             print(acc.item())

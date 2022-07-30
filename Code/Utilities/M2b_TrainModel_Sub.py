@@ -161,7 +161,10 @@ def test(model, device, sample, thld):
         for HC in sample:
             data = HC.to(device)
             if (len(data.x)==0 or len(data.edge_index)==0): continue
-            output = model(data.x, data.edge_index, data.edge_attr)
+            try:
+               output = model(data.x, data.edge_index, data.edge_attr)
+            except:
+               continue
             y, output = data.y.float(), output.squeeze(1)
             acc, TPR, TNR = binary_classification_stats(output, y, thld)
             print('Input',y, output)

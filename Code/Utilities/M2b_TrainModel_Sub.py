@@ -115,7 +115,7 @@ print(UF.TimeStamp(), bcolors.OKGREEN+"Modules Have been imported successfully..
 #
 #
 
-def train(Predict, model, device, sample, optimizer, sample_no, epoch):
+def train(model, device, sample, optimizer, sample_no, epoch):
     """ train routine, loss and accumulated gradients used to update
         the model via the ADAM optimizer externally
     """
@@ -128,10 +128,7 @@ def train(Predict, model, device, sample, optimizer, sample_no, epoch):
         data = HC.ClusterGraph.to(device)
         if (len(data.x)==0): continue
         optimizer.zero_grad()
-        if Predict:
-            w, xc, beta, p = model(data.x, data.edge_index, data.edge_attr)
-        else:
-            w = model(data.x, data.edge_index, data.edge_attr)
+        w = model(data.x, data.edge_index, data.edge_attr)
         y, w = data.y.float(), w.squeeze(1)
         #edge weight loss
         loss_w = F.binary_cross_entropy(w, y, reduction='mean')
@@ -147,15 +144,16 @@ def train(Predict, model, device, sample, optimizer, sample_no, epoch):
     loss_w = np.nanmean(losses_w)
     return loss,loss_w,iterator
 
-def validate(model, device, val_loader):
+def validate(model, device, sample):
     model.eval()
     opt_thlds, accs = [], []
-    for batch_idx, (data, fname) in enumerate(val_loader):
-        data = data.to(device)
+    for HC in sample:
+        data = HC.ClusterGraph.to(device)
         if (len(data.x)==0): continue
         output = model(data.x, data.edge_index, data.edge_attr)
         y, output = data.y, output.squeeze()
         print(y,output)
+        exit()
         loss = F.binary_cross_entropy(output, y, reduction='mean').item()
         diff, opt_thld, opt_acc = 100, 0, 0
         best_tpr, best_tnr = 0, 0

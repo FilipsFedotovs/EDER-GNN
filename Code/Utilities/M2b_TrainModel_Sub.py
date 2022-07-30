@@ -166,6 +166,8 @@ def test(model, device, sample, thld):
             acc, TPR, TNR = binary_classification_stats(output, y, thld)
             loss = F.binary_cross_entropy(output, data.y.float,
                                           reduction='mean')
+            print(acc.item())
+            print(loss.item())
             accs.append(acc.item())
             losses.append(loss.item())
     return np.nanmean(losses), np.nanmean(accs)

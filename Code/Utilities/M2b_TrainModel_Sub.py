@@ -43,7 +43,6 @@ class bcolors:
 ########################## Setting the parser ################################################
 parser = argparse.ArgumentParser(description='select cut parameters')
 parser.add_argument('--Mode',help="Please enter the mode: Create/Test/Train", default='Test')
-parser.add_argument('--ClusterSet',help="Please enter the image set", default='1')
 parser.add_argument('--DNA',help="Please enter the model dna", default='[[4, 4, 1, 2, 2, 2, 2], [5, 4, 1, 1, 2, 2, 2], [5, 4, 2, 1, 2, 2, 2], [5, 4, 2, 1, 2, 2, 2], [], [3, 4, 2], [3, 4, 2], [2, 4, 2], [], [], [7, 1, 1, 4]]')
 parser.add_argument('--AFS',help="Please enter the user afs directory", default='.')
 parser.add_argument('--EOS',help="Please enter the user eos directory", default='.')
@@ -55,7 +54,6 @@ parser.add_argument('--no-cuda', action='store_true', default=False,
                         help='disables CUDA training')
 ########################################     Initialising Variables    #########################################
 args = parser.parse_args()
-ClusterSet=args.ClusterSet
 Mode=args.Mode
 Epoch=int(args.Epoch)
 DNA=ast.literal_eval(args.DNA)
@@ -76,7 +74,7 @@ import Utility_Functions as UF
 #Load data configuration
 EOSsubDIR=EOS_DIR+'/'+'EDER-GNN'
 EOSsubModelDIR=EOSsubDIR+'/'+'Models'
-flocation=EOS_DIR+'/EDER-GNN/Data/TRAIN_SET/M1_M2_SelectedTrainClusters_'+ClusterSet+'.pkl'
+
 
 ##############################################################################################################################
 ######################################### Starting the program ################################################################
@@ -87,34 +85,6 @@ print(bcolors.HEADER+"#########################                 PhD Student at U
 print(bcolors.HEADER+"########################################################################################################"+bcolors.ENDC)
 print(UF.TimeStamp(), bcolors.OKGREEN+"Modules Have been imported successfully..."+bcolors.ENDC)
 
-# def train(args, model, device, sample, optimizer, epoch):
-#     model.train()
-#     losses, t0, N = [], time(), len(sample)
-#     for HC in sample:
-#         data = HC.ClusterGraph.to(device)
-#         if (len(data.x)==0): continue
-#         optimizer.zero_grad()
-#         print(data.x)
-#         print(data.edge_index)
-#         print(data.edge_attr)
-#         output = model(data.x, data.edge_index, data.edge_attr)
-#         print(output)
-#         exit()
-#         y, output = data.y, output.squeeze(1)
-#         loss = F.binary_cross_entropy(output, y, reduction='mean')
-#         loss.backward()
-#         optimizer.step()
-#         if batch_idx % args.log_interval == 0:
-#             percent_complete = 100. * batch_idx / N
-#             logging.info(f'Train Epoch: {epoch} [{batch_idx}/{N}' +
-#                          f'({percent_complete:.0f}%)]\tLoss: {loss.item():.6f}')
-#             if args.dry_run: break
-#         losses.append(loss.item())
-#     logging.info(f'Epoch completed in {time()-t0}s')
-#     logging.info(f'Train Loss: {np.nanmean(losses)}')
-#     return np.nanmean(losses)
-#
-#
 
 def train(model, device, sample, optimizer, sample_no, epoch):
     """ train routine, loss and accumulated gradients used to update
@@ -187,12 +157,29 @@ def test(model, device, test_loader, thld=0.5):
     logging.info(f'Test accuracy: {np.nanmean(accs):.4f}')
     return np.nanmean(losses), np.nanmean(accs)
 #if Mode!='Test':
-print(UF.TimeStamp(),'Loading data from ',bcolors.OKBLUE+flocation+bcolors.ENDC)
-train_file=open(flocation,'rb')
-print(UF.TimeStamp(),'Analysing data ...')
-TrainClusters=pickle.load(train_file)
-
-train_file.close()
+DataItrStatus=True
+SampleCounter=0
+TrainSamples=[]
+ValSamples=[]
+TestSamples=[]
+while DataItrStatus:
+    SampleCounter+=1
+    flocation=EOS_DIR+'/EDER-GNN/Data/TRAIN_SET/M1_M2_SelectedTrainClusters_'+str(SampleCounter)+'.pkl'
+    print(UF.TimeStamp(),'Loading data from ',bcolors.OKBLUE+flocation+bcolors.ENDC)
+    train_file=open(flocation,'rb')
+    print(UF.TimeStamp(),'Analysing data ...')
+    TrainClusters=pickle.load(train_file)
+    TrainFraction=int(math.ceil(len(TrainClusters)*0.85))
+    ValFraction=int(math.ceil(len(TrainClusters)*0.1))
+    for smpl in range(0,TrainFraction):
+         TrainSamples.append(TrainClusters[smpl].ClusterGraph)
+    for smpl in range(TrainFraction,TrainFraction+ValFraction):
+         ValSamples.append(TrainClusters[smpl].ClusterGraph)
+    for smpl in range(TrainFraction+ValFraction,len(TrainClusters)):
+         TestSamples.append(TrainClusters[smpl].ClusterGraph)
+    train_file.close()
+print(len(TrainSamples),len(ValSamples),len(TestSamples))
+exit()
 num_nodes_ftr=TrainClusters[0].ClusterGraph.num_node_features
 num_edge_ftr=TrainClusters[0].ClusterGraph.num_edge_features
 print(UF.TimeStamp(), bcolors.OKGREEN+"Train data has loaded and analysed successfully..."+bcolors.ENDC)

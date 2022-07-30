@@ -164,6 +164,7 @@ def test(model, device, sample, thld):
             output = model(data.x, data.edge_index, data.edge_attr)
             y, output = data.y.float(), output.squeeze()
             acc, TPR, TNR = binary_classification_stats(output, y, thld)
+            print(acc.item())
             loss = F.binary_cross_entropy(output, data.y.float,
                                           reduction='mean')
             print(acc.item())

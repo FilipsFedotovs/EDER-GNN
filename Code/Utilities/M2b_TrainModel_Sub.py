@@ -129,7 +129,7 @@ def train(model, device, sample, optimizer,):
 def validate(model, device, sample):
     model.eval()
     opt_thlds, accs = [], []
-    for HC in sample:
+    for HC in sample[:5]:
         data = HC.to(device)
         if (len(data.x)==0 or len(data.edge_index)==0): continue
         try:
@@ -151,7 +151,6 @@ def validate(model, device, sample):
             if (delta.item() < diff):
                 diff, opt_thld, opt_acc = delta.item(), thld, acc.item()
         opt_thlds.append(opt_thld)
-        print(opt_thlds)
         accs.append(opt_acc)
     return np.nanmean(opt_thlds)
 

@@ -93,7 +93,7 @@ def train(model, device, sample, optimizer,):
     model.train()
     losses_w = [] # edge weight loss
     iterator=0
-    for HC in sample:
+    for HC in sample[:10]:
         iterator+=1
         data = HC.to(device)
         if (len(data.x)==0 or len(data.edge_index)==0): continue
@@ -102,7 +102,7 @@ def train(model, device, sample, optimizer,):
           w = model(data.x, data.edge_index, data.edge_attr)
           y, w = data.y.float(), w.squeeze(1)
         except:
-            print('Eroneus data set: ',data.x, data.edge_index, data.edge_attr, 'skipping this samples...')
+            print('Erroneus data set: ',data.x, data.edge_index, data.edge_attr, 'skipping this samples...')
             continue
         #edge weight loss
         loss_w = F.binary_cross_entropy(w, y, reduction='mean')
@@ -122,7 +122,7 @@ def validate(model, device, sample):
         data = HC.to(device)
         if (len(data.x)==0 or len(data.edge_index)==0): continue
         output = model(data.x, data.edge_index, data.edge_attr)
-        y, output = data.y, output.squeeze()
+        y, output = data.y.float(), output.squeeze()
         loss = F.binary_cross_entropy(output, y, reduction='mean').item()
         diff, opt_thld, opt_acc = 100, 0, 0
         best_tpr, best_tnr = 0, 0
@@ -273,8 +273,7 @@ def main(self):
     scheduler = StepLR(optimizer, step_size=0.1,
                        gamma=0.1)
 
-    for epoch in range(1, 2):
-        logging.info(f"---- Epoch {epoch} ----")
+    for batch in range(1, 2):
         train_loss, itr= train(model, device,TrainSamples, optimizer,)
         print(train_loss,itr)
         thld = validate(model, device, ValSamples)

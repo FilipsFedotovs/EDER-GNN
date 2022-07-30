@@ -107,6 +107,7 @@ for j in range(0,Ysteps):
         print(GraphStatus)
         if GraphStatus:
             LoadedClusters.append(HC)
+print(random.shuffle(LoadedClusters))
 output_file_location=EOS_DIR+'/EDER-GNN/Data/TRAIN_SET/M1_M1_SelectedTrainClusters_'+str(Set)+'_' +str(Subset)+'.pkl'
 open_file = open(output_file_location, "wb")
 pickle.dump(random.shuffle(LoadedClusters), open_file)

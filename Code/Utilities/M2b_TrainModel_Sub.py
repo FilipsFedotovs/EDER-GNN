@@ -250,9 +250,8 @@ TrainClusters=pickle.load(train_file)
 train_file.close()
 num_nodes_ftr=TrainClusters[0].ClusterGraph.num_node_features
 num_edge_ftr=TrainClusters[0].ClusterGraph.num_edge_features
-print(num_nodes_ftr,num_edge_ftr)
 print(UF.TimeStamp(), bcolors.OKGREEN+"Train data has loaded and analysed successfully..."+bcolors.ENDC)
-exit()
+
 # if Mode=='Train':
 #             class Net(torch.nn.Module):
 #                     def __init__(self):

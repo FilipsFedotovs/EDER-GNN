@@ -30,10 +30,10 @@ class TCN(nn.Module):
                  predict_track_params=False):
         super(TCN, self).__init__()
         self.in_w1 = IN(node_indim, edge_indim,
-                        node_outdim=5, edge_outdim=1,
+                        node_outdim=node_indim, edge_outdim=edge_indim,
                         hidden_size=80)
-        self.in_w2 = IN(5, 1,
-                        node_outdim=5, edge_outdim=1,
+        self.in_w2 = IN(node_indim, edge_indim,
+                        node_outdim=node_indim, edge_outdim=edge_indim,
                         hidden_size=80)
         # self.in_c1 = IN(5, 13,
         #                 node_outdim=5, edge_outdim=8,
@@ -44,7 +44,7 @@ class TCN(nn.Module):
         # self.in_c3 = IN(5, 8,
         #                 node_outdim=5, edge_outdim=8,
         #                 hidden_size=50)
-        self.W = MLP(3, 1, 80)
+        self.W = MLP(node_indim, edge_indim, 80)
         # self.B = MLP(20, 1, 80)
         # self.X = MLP(20, xc_outdim, 80)
 

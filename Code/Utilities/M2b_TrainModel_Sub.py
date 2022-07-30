@@ -85,6 +85,15 @@ print(bcolors.HEADER+"#########################                 PhD Student at U
 print(bcolors.HEADER+"########################################################################################################"+bcolors.ENDC)
 print(UF.TimeStamp(), bcolors.OKGREEN+"Modules Have been imported successfully..."+bcolors.ENDC)
 
+def binary_classification_stats(output, y, thld):
+    TP = torch.sum((y==1) & (output>thld))
+    TN = torch.sum((y==0) & (output<thld))
+    FP = torch.sum((y==0) & (output>thld))
+    FN = torch.sum((y==1) & (output<thld))
+    acc = zero_divide(TP+TN, TP+TN+FP+FN)
+    TPR = zero_divide(TP, TP+FN)
+    TNR = zero_divide(TN, TN+FP)
+    return acc, TPR,
 
 def train(model, device, sample, optimizer,):
     """ train routine, loss and accumulated gradients used to update

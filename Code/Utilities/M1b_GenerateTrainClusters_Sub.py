@@ -104,11 +104,9 @@ for j in range(0,Ysteps):
         HC=UF.HitCluster([Subset,j,Set],[stepX,stepY,stepZ])
         HC.LoadClusterHits(data_list)
         GraphStatus = HC.GenerateTrainDatav2(MCdata_list,cut_dt, cut_dr)
-        print(GraphStatus)
         if GraphStatus:
             LoadedClusters.append(HC)
 random.shuffle(LoadedClusters)
-print(LoadedClusters)
 output_file_location=EOS_DIR+'/EDER-GNN/Data/TRAIN_SET/M1_M1_SelectedTrainClusters_'+str(Set)+'_' +str(Subset)+'.pkl'
 open_file = open(output_file_location, "wb")
 pickle.dump(LoadedClusters, open_file)

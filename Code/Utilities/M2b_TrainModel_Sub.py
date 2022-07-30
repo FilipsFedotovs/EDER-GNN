@@ -97,7 +97,7 @@ def binary_classification_stats(output, y, thld):
     TNR = zero_divide(TN, TN+FP)
     return acc, TPR, TNR
 
-def train(model, device, sample, optimizer,):
+def train(model, device, sample, optimizer):
     """ train routine, loss and accumulated gradients used to update
         the model via the ADAM optimizer externally
     """
@@ -162,7 +162,7 @@ def test(model, device, sample, thld):
             data = HC.to(device)
             if (len(data.x)==0 or len(data.edge_index)==0): continue
             output = model(data.x, data.edge_index, data.edge_attr)
-            y, output = data.y, output.squeeze()
+            y, output = data.y.float(), output.squeeze(1)
             acc, TPR, TNR = binary_classification_stats(output, y, thld)
             loss = F.binary_cross_entropy(output, data.y,
                                           reduction='mean')
@@ -293,8 +293,7 @@ def main(self):
                        gamma=0.1)
 
     for batch in range(1, 2):
-        train_loss, itr= train(model, device,TrainSamples, optimizer,)
-        print(train_loss,itr)
+        train_loss, itr= train(model, device,TrainSamples, optimizer)
         thld = validate(model, device, ValSamples)
         print(thld)
         print('output',test(args, model, device,TestSamples, thld))

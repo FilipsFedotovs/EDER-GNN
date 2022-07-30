@@ -138,7 +138,7 @@ def train(Predict, model, device, sample, optimizer, epoch):
 
 
 
-        y, w = data.y, w.squeeze(1)
+        y, w = data.y.float(), w.squeeze(1)
         print(y)
         print(w)
     #     particle_id = data.particle_id

@@ -44,7 +44,7 @@ class TCN(nn.Module):
         # self.in_c3 = IN(5, 8,
         #                 node_outdim=5, edge_outdim=8,
         #                 hidden_size=50)
-        self.W = MLP(node_indim, edge_indim, 80)
+        self.W = MLP(edge_indim*3, 1, 80)
         # self.B = MLP(20, 1, 80)
         # self.X = MLP(20, xc_outdim, 80)
 

@@ -294,8 +294,9 @@ def main(self):
         train_loss, tlw, itr= train(model, device,
                                           TrainClusters, optimizer,1, epoch)
         print(train_loss,tlw,itr)
+        thld = validate(model, device, TrainClusters)
+        print(thld)
         exit()
-        thld = validate(model, device, val_loader)
         test_loss, te_lw, te_lc, te_lb, te_acc = test(args, model, device,
                                                       test_loader, thld=thld)
         scheduler.step()

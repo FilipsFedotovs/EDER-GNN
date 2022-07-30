@@ -142,42 +142,15 @@ def train(Predict, model, device, sample, optimizer, epoch):
     #     particle_id = data.particle_id
     #     track_params = data.track_params
     #
-    #     # edge weight loss
-    #     loss_w = F.binary_cross_entropy(w, y, reduction='mean')
-    #     loss = loss_w
-    #
-    #     # condensation loss
-    #     loss_c = condensation_loss(beta, xc, particle_id,
-    #                                device=device, q_min=args.q_min)
-    #     loss_c *= args.loss_c_scale
-    #
-    #     # background loss
-    #     loss_b = background_loss(beta, xc, particle_id,
-    #                              device=device, q_min=args.q_min,
-    #                              sb=args.sb)
-    #     loss_b *= args.loss_b_scale
-    #
-    #     # object loss
-    #     if args.predict_track_params:
-    #         loss_o = object_loss(p, beta,
-    #                              track_params, particle_id,
-    #                              device=device)
-    #         loss_o *= args.loss_o_scale
-    #         loss += loss_o
-    #         losses_o.append(loss_o.item())
-    #
+        #edge weight loss
+        loss_w = F.binary_cross_entropy(w, y, reduction='mean')
+        loss = loss_w
+
     #     # optimize total loss
-    #     loss += (loss_c + loss_b)
-    #     loss.backward()
-    #     optimizer.step()
-    #
-    #     if batch_idx % args.log_interval == 0:
-    #         logging.info('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'
-    #                     .format(epoch, batch_idx, len(train_loader.dataset),
-    #                             100. * batch_idx / len(train_loader),
-    #                             loss.item()))
-    #         logging.info(f'...losses: w={loss_w.item()}, c={loss_c.item()}' +
-    #                      f'           b={loss_b.item()}, o={loss_o.item()}')
+        loss.backward()
+        optimizer.step()
+
+        print('Loss',epoch,loss)
     #
     #     # store losses
     #     losses.append(loss.item())
@@ -387,7 +360,7 @@ def main(self):
 
 if __name__ == '__main__':
     main(sys.argv[1:])
-model_name=EOSsubModelDIR+'/'+args.ModelNewName
-torch.save(model.state_dict(), model_name)
-UF.LogOperations(EOSsubModelDIR+'/'+'M2_M2_model_train_log_'+ClusterSet+'.csv','StartLog', records)
+# model_name=EOSsubModelDIR+'/'+args.ModelNewName
+# torch.save(model.state_dict(), model_name)
+# UF.LogOperations(EOSsubModelDIR+'/'+'M2_M2_model_train_log_'+ClusterSet+'.csv','StartLog', records)
 

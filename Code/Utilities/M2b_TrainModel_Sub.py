@@ -10,6 +10,7 @@ import argparse
 import math
 import ast
 import numpy as np
+import random
 import logging
 import os
 import copy
@@ -295,8 +296,6 @@ def main(self):
                                           TrainClusters, optimizer,1, epoch)
         print(train_loss,tlw,itr)
         thld = validate(model, device, TrainClusters)
-        print(thld)
-        exit()
         test_loss, te_lw, te_lc, te_lb, te_acc = test(args, model, device,
                                                       test_loader, thld=thld)
         scheduler.step()

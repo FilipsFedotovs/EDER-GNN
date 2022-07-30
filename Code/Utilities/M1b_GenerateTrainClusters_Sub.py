@@ -13,6 +13,7 @@ import os, psutil #helps to monitor the memory
 import gc  #Helps to clear memory
 import numpy as np
 import pickle
+import random
 
 #Setting the parser - this script is usually not run directly, but is used by a Master version Counterpart that passes the required arguments
 parser = argparse.ArgumentParser(description='select cut parameters')
@@ -102,11 +103,12 @@ for j in range(0,Ysteps):
         print(UF.TimeStamp(),"progress is ",progress,' %') #Progress display
         HC=UF.HitCluster([Subset,j,Set],[stepX,stepY,stepZ])
         HC.LoadClusterHits(data_list)
-        HC.GenerateTrainDatav2(MCdata_list,cut_dt, cut_dr)
-        LoadedClusters.append(HC)
+        GraphStatus = HC.GenerateTrainDatav2(MCdata_list,cut_dt, cut_dr)
+        if GraphStatus:
+            LoadedClusters.append(HC)
 output_file_location=EOS_DIR+'/EDER-GNN/Data/TRAIN_SET/M1_M1_SelectedTrainClusters_'+str(Set)+'_' +str(Subset)+'.pkl'
 open_file = open(output_file_location, "wb")
-pickle.dump(LoadedClusters, open_file)
+pickle.dump(random.shuffle(LoadedClusters), open_file)
 print(UF.TimeStamp(), "Cluster generation is finished...")
 #End of the script
 

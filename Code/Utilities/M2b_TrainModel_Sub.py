@@ -96,7 +96,7 @@ def train(model, device, sample, optimizer, sample_no, epoch):
     iterator=0
     for HC in sample:
         iterator+=1
-        data = HC.ClusterGraph.to(device)
+        data = HC.to(device)
         if (len(data.x)==0): continue
         optimizer.zero_grad()
         w = model(data.x, data.edge_index, data.edge_attr)
@@ -119,7 +119,7 @@ def validate(model, device, sample):
     model.eval()
     opt_thlds, accs = [], []
     for HC in sample:
-        data = HC.ClusterGraph.to(device)
+        data = HC.to(device)
         if (len(data.x)==0): continue
         output = model(data.x, data.edge_index, data.edge_attr)
         y, output = data.y, output.squeeze()

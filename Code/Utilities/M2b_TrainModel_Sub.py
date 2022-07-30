@@ -169,6 +169,7 @@ while DataItrStatus:
     train_file=open(flocation,'rb')
     print(UF.TimeStamp(),'Analysing data ...')
     TrainClusters=pickle.load(train_file)
+    print(TrainCluster)
     TrainFraction=int(math.ceil(len(TrainClusters)*0.85))
     ValFraction=int(math.ceil(len(TrainClusters)*0.1))
     for smpl in range(0,TrainFraction):

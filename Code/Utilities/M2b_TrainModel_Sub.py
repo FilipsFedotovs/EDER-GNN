@@ -151,6 +151,7 @@ def validate(model, device, sample):
             if (delta.item() < diff):
                 diff, opt_thld, opt_acc = delta.item(), thld, acc.item()
         opt_thlds.append(opt_thld)
+        print(opt_thlds)
         accs.append(opt_acc)
     return np.nanmean(opt_thlds)
 

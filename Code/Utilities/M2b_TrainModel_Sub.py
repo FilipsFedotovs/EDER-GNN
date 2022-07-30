@@ -123,8 +123,6 @@ def validate(model, device, sample):
         if (len(data.x)==0): continue
         output = model(data.x, data.edge_index, data.edge_attr)
         y, output = data.y, output.squeeze()
-        print(y,output)
-        exit()
         loss = F.binary_cross_entropy(output, y, reduction='mean').item()
         diff, opt_thld, opt_acc = 100, 0, 0
         best_tpr, best_tnr = 0, 0
@@ -139,7 +137,7 @@ def validate(model, device, sample):
     logging.info(f'Validation set optimal edge weight thld: {np.nanmean(opt_thld)}')
     return np.nanmean(opt_thlds)
 
-def test(model, device, test_loader, thld=0.5):
+def test(model, device, test_loader, thld):
     model.eval()
     losses, accs = [], []
     with torch.no_grad():
@@ -153,8 +151,6 @@ def test(model, device, test_loader, thld=0.5):
                                           reduction='mean')
             accs.append(acc.item())
             losses.append(loss.item())
-    logging.info(f'Test loss: {np.nanmean(losses):.4f}')
-    logging.info(f'Test accuracy: {np.nanmean(accs):.4f}')
     return np.nanmean(losses), np.nanmean(accs)
 #if Mode!='Test':
 DataItrStatus=True
@@ -182,9 +178,8 @@ while DataItrStatus:
     except:
         break
 print(len(TrainSamples),len(ValSamples),len(TestSamples))
-exit()
-num_nodes_ftr=TrainClusters[0].ClusterGraph.num_node_features
-num_edge_ftr=TrainClusters[0].ClusterGraph.num_edge_features
+num_nodes_ftr=TrainSamples[0].num_node_features
+num_edge_ftr=TrainSamples[0].ClusterGraph.num_edge_features
 print(UF.TimeStamp(), bcolors.OKGREEN+"Train data has loaded and analysed successfully..."+bcolors.ENDC)
 
 # if Mode=='Train':
@@ -283,13 +278,14 @@ def main(self):
     for epoch in range(1, 2):
         logging.info(f"---- Epoch {epoch} ----")
         train_loss, tlw, itr= train(model, device,
-                                          TrainClusters, optimizer,1, epoch)
+                                          TrainSamples, optimizer,1, epoch)
         print(train_loss,tlw,itr)
-        thld = validate(model, device, TrainClusters)
+        thld = validate(model, device, ValSamples)
         test_loss, te_lw, te_lc, te_lb, te_acc = test(args, model, device,
                                                       test_loader, thld=thld)
         scheduler.step()
-
+        print(test_loss, te_lw, te_lc, te_lb, te_acc)
+        exit()
         # save output
         output['train_loss'].append(train_loss)
         output['train_loss_w'].append(tlw)

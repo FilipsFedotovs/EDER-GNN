@@ -128,10 +128,8 @@ def train(Predict, model, device, sample, optimizer, epoch):
     losses_o = [] # object loss
     for HC in sample:
         data = HC.ClusterGraph.to(device)
+        if (len(data.x)==0): continue
         optimizer.zero_grad()
-        print(data.x)
-        print(data.edge_index)
-        print(data.edge_attr)
         if Predict:
             w, xc, beta, p = model(data.x, data.edge_index, data.edge_attr)
         else:
@@ -364,8 +362,6 @@ def main(self):
         logging.info(f"---- Epoch {epoch} ----")
         train_loss, tlw, tlc, tlb = train(False, model, device,
                                           TrainClusters, optimizer, epoch)
-        print(train_loss)
-        exit()
         thld = validate(model, device, val_loader)
         test_loss, te_lw, te_lc, te_lb, te_acc = test(args, model, device,
                                                       test_loader, thld=thld)

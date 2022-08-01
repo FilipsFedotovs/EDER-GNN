@@ -87,15 +87,14 @@ if mode=='R' and args.ModelName=='N':
  ScriptName = AFS_DIR + '/Code/Utilities/M2_TrainModel_Sub.py '
  [OptionHeader, OptionLine, SHName, SUBName, MSGName, ScriptName, 1, 'EDER-GNN-M2b', True,
       False]
- print([OptionHeader, OptionLine, SHName, SUBName, MSGName, ScriptName, 1, 'EDER-GNN-M2b', True,
-      False])
- print(job)
- exit()
+
  UF.SubmitJobs2Condor(
      [OptionHeader, OptionLine, SHName, SUBName, MSGName, ScriptName, 1, 'EDER-GNN-M2b', True,
       False])
  job[3]=job[4]
- UF.LogOperations(EOSsubModelDIR+'/M2_M2_JobTask.csv','StartLog',[job])
+ UF.LogOperations(EOSsubModelDIR+'/M2b_M2b_JobTask.csv','StartLog',[job])
+ print(job)
+ exit()
  print(bcolors.BOLD+"Please the job completion in few hours by running this script with the option C"+bcolors.ENDC)
 elif mode=='R':
  UF.TrainCleanUp(AFS_DIR, EOS_DIR, 'M2', ['M2_M2','M2_PERFORMANCE_'], "SoftUsed == \"EDER-GNN-M2\"")

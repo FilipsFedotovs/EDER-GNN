@@ -77,7 +77,7 @@ if mode=='R' and args.ModelName=='N':
        LR=float(args.LR)
        job.append(args.ModelNewName)
        DNA = '"' + str(PM.ModelArchitecture) + '"'
-       OptionLine = ['Create', EOS_DIR, AFS_DIR, DNA, args.LR, Epoch, ModelName, args.ModelNewName]
+       OptionLine = ['Create', EOS_DIR, AFS_DIR, DNA, args.LR, 1, ModelName, args.ModelNewName]
  print(UF.TimeStamp(),bcolors.OKGREEN+'Job description has been created'+bcolors.ENDC)
  OptionHeader = [' --Mode ', ' --EOS ', " --AFS ", " --DNA ",
                  " --LR ", " --Epoch ", " --ModelName ", " --ModelNewName "]

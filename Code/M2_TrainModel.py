@@ -24,11 +24,9 @@ parser.add_argument('--Mode',help="Please enter the running mode: 'R' for reset,
 parser.add_argument('--ModelName',help="Which model would you like to use as a base for training (please enter N if you want to train a new model from scratch)", default='Default')
 parser.add_argument('--ModelNewName',help="Would you like to save your pretrained model as a separate one", default='Default')
 parser.add_argument('--LR',help="Would you like enter the models starting Learning Rate, If yes please enter it here eg: 0.01 ", default='0.01')
-parser.add_argument('--Epoch',help="How many epochs per cluster? ", default='10')
 args = parser.parse_args()
 #setting main learning parameters
 mode=args.Mode
-Epoch=int(args.Epoch)
 _=0
 #Loading Directory locations
 csv_reader=open('../config',"r")
@@ -65,14 +63,13 @@ if mode=='R' and args.ModelName=='N':
 # UF.TrainCleanUp(AFS_DIR, EOS_DIR, 'M2', ['M2_M2','M2_PERFORMANCE_'], "SoftUsed == \"EDER-GNN-M2\"")
  job=[]
  job.append(1)
- job.append(Epoch)
  job.append(PM.ModelArchitecture)
  job.append(args.LR)
  job.append(ModelName)
  DNA=PM.ModelArchitecture
  if args.ModelNewName=='Default':
        job.append(ModelName)
-       OptionLine = ['Create', 1, EOS_DIR, AFS_DIR, DNA, args.LR, 1, ModelName, ModelName]
+       OptionLine = ['Create', EOS_DIR, AFS_DIR, DNA, args.LR, 1, ModelName, ModelName]
  else:
        HiddenLayerDNA=[]
        FullyConnectedDNA=[]
@@ -80,18 +77,16 @@ if mode=='R' and args.ModelName=='N':
        LR=float(args.LR)
        job.append(args.ModelNewName)
        DNA = '"' + str(PM.ModelArchitecture) + '"'
-       OptionLine = ['Create', 1, EOS_DIR, AFS_DIR, DNA, args.LR, Epoch, ModelName, args.ModelNewName]
+       OptionLine = ['Create', EOS_DIR, AFS_DIR, DNA, args.LR, Epoch, ModelName, args.ModelNewName]
  print(UF.TimeStamp(),bcolors.OKGREEN+'Job description has been created'+bcolors.ENDC)
- PerformanceHeader=[['Epochs','Set','Training Samples','Train Loss','Validation Accuracy','Test Accuracy']]
- UF.LogOperations(EOSsubModelDIR+'/M2_PERFORMANCE_'+job[5]+'.csv','StartLog',PerformanceHeader)
- OptionHeader = [' --Mode ', ' --ClusterSet ', ' --EOS ', " --AFS ", " --DNA ",
+ OptionHeader = [' --Mode ', ' --EOS ', " --AFS ", " --DNA ",
                  " --LR ", " --Epoch ", " --ModelName ", " --ModelNewName "]
- SHName = AFS_DIR + '/HTCondor/SH/SH_M2.sh'
- SUBName = AFS_DIR + '/HTCondor/SUB/SUB_M2.sub'
+ SHName = AFS_DIR + '/HTCondor/SH/SH_M2b.sh'
+ SUBName = AFS_DIR + '/HTCondor/SUB/SUB_M2b.sub'
  MSGName = AFS_DIR + '/HTCondor/MSG/MSG_M2'
  ScriptName = AFS_DIR + '/Code/Utilities/M2_TrainModel_Sub.py '
  UF.SubmitJobs2Condor(
-     [OptionHeader, OptionLine, SHName, SUBName, MSGName, ScriptName, 1, 'EDER-GNN-M2', True,
+     [OptionHeader, OptionLine, SHName, SUBName, MSGName, ScriptName, 1, 'EDER-GNN-M2b', True,
       True])
  job[4]=job[5]
  UF.LogOperations(EOSsubModelDIR+'/M2_M2_JobTask.csv','StartLog',[job])

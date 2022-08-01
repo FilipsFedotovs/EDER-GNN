@@ -104,7 +104,7 @@ def train(model, device, sample, optimizer):
     model.train()
     losses_w = [] # edge weight loss
     iterator=0
-    for HC in sample[:12]:
+    for HC in sample:
         iterator+=1
         data = HC.to(device)
         if (len(data.x)==0 or len(data.edge_index)==0): continue

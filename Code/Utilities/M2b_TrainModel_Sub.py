@@ -128,7 +128,7 @@ def train(model, device, sample, optimizer):
 
 def validate(model, device, sample):
     model.eval()
-    opt_thlds, accs = [], []
+    opt_thlds, accs, losses = [], [], []
     for HC in sample[:5]:
         data = HC.to(device)
         if (len(data.x)==0 or len(data.edge_index)==0): continue
@@ -152,7 +152,8 @@ def validate(model, device, sample):
                 diff, opt_thld, opt_acc = delta.item(), thld, acc.item()
         opt_thlds.append(opt_thld)
         accs.append(opt_acc)
-    return np.nanmean(opt_thlds)
+        losses.append(loss.item())
+    return np.nanmean(opt_thlds),np.nanmean(losses),np.nanmean(accs)
 
 def test(model, device, sample, thld):
     model.eval()
@@ -212,6 +213,8 @@ def main(self):
         optimizer = optim.Adam(model.parameters(), lr=LR)
         scheduler = StepLR(optimizer, step_size=0.1,
                        gamma=0.1)
+        StEpoch=1
+        FinEpoch=11
     if Mode=='Train':
         model_name=EOSsubModelDIR+'/'+args.ModelName
         model = TCN(num_nodes_ftr, num_edge_ftr).to(device)
@@ -222,17 +225,19 @@ def main(self):
         checkpoint = torch.load(State_Save_Path)
         optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
         scheduler.load_state_dict(checkpoint['scheduler'])
+        StEpoch=Epoch
+        FinEpoch=Epoch+10
     # instantiate optimizer with scheduled learning rate decay
 
 
     records=[]
-    for epoch in range(1, 2):
+    for epoch in range(StEpoch, FinEpoch):
         train_loss, itr= train(model, device,TrainSamples, optimizer)
-        thld = validate(model, device, ValSamples)
+        thld, val_loss,val_acc = validate(model, device, ValSamples)
         test_loss, test_acc = test(model, device,TestSamples, thld)
         scheduler.step()
-        print([epoch,itr,train_loss,thld,test_loss,test_acc])
-        records.append([train_loss,itr,thld,test_loss,test_acc])
+        print([epoch,itr,train_loss,thld,val_loss,val_acc,test_loss,test_acc])
+        records.append([epoch,itr,train_loss,thld,val_loss,val_acc,test_loss,test_acc])
 
     torch.save({    'epoch': epoch,
                     'optimizer_state_dict': optimizer.state_dict(),
@@ -241,7 +246,7 @@ def main(self):
     model_name=EOSsubModelDIR+'/'+args.ModelNewName
     torch.save(model.state_dict(), model_name)
     if Mode=='Create':
-       Header=[['Epoch','Iterations','Train Loss','Optimal Threshold','Test Loss','Test Accuracy']]
+       Header=[['Epoch','# Samples','Train Loss','Optimal Threshold','Validation Loss','Validation Accuracy','Test Loss','Test Accuracy']]
        Header+=records
        UF.LogOperations(EOSsubModelDIR+'/'+'M2b_M2b_Train_Log_'+args.ModelNewName+'.csv','StartLog', Header)
     elif Mode=='Train':

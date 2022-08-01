@@ -105,15 +105,16 @@ def train(model, device, sample, optimizer):
     losses_w = [] # edge weight loss
     iterator=0
     for HC in sample:
-        iterator+=1
+
         data = HC.to(device)
         if (len(data.x)==0 or len(data.edge_index)==0): continue
 
         try:
+          iterator+=1
           w = model(data.x, data.edge_index, data.edge_attr)
           y, w = data.y.float(), w.squeeze(1)
         except:
-            print('Erroneus data set: ',data.x, data.edge_index, data.edge_attr, 'skipping this samples...')
+            print('Erroneus data set: ',data.x, data.edge_index, data.edge_attr, 'skipping these samples...')
             continue
         #edge weight loss
         loss_w = F.binary_cross_entropy(w, y, reduction='mean')
@@ -143,8 +144,8 @@ def validate(model, device, sample):
         try:
           loss = F.binary_cross_entropy(output, y, reduction='mean').item()
         except:
-            print(output, y)
-            exit()
+            print('Erroneus data set: ',data.x, data.edge_index, data.edge_attr, 'skipping these samples...')
+            continue
         diff, opt_thld, opt_acc = 100, 0, 0
         best_tpr, best_tnr = 0, 0
         for thld in np.arange(0.01, 0.6, 0.01):
@@ -173,8 +174,8 @@ def test(model, device, sample, thld):
             try:
                 loss = F.binary_cross_entropy(output, y,reduction='mean')
             except:
-                print('error',y, output)
-                exit()
+                print('Erroneus data set: ',data.x, data.edge_index, data.edge_attr, 'skipping these samples...')
+                continue
             accs.append(acc.item())
             losses.append(loss.item())
     return np.nanmean(losses), np.nanmean(accs)

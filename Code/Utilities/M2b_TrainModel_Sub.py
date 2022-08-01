@@ -108,7 +108,7 @@ def train(model, device, sample, optimizer):
         iterator+=1
         data = HC.to(device)
         if (len(data.x)==0 or len(data.edge_index)==0): continue
-        optimizer.zero_grad()
+
         try:
           w = model(data.x, data.edge_index, data.edge_attr)
           y, w = data.y.float(), w.squeeze(1)
@@ -119,8 +119,10 @@ def train(model, device, sample, optimizer):
         loss_w = F.binary_cross_entropy(w, y, reduction='mean')
         # optimize total loss
         if iterator%4==0:
+           optimizer.zero_grad()
            loss_w.backward()
            optimizer.step()
+
         # store losses
         losses_w.append(loss_w.item())
     loss_w = np.nanmean(losses_w)
@@ -236,7 +238,7 @@ def main(self):
         thld, val_loss,val_acc = validate(model, device, ValSamples)
         test_loss, test_acc = test(model, device,TestSamples, thld)
         scheduler.step()
-        print([epoch,itr,train_loss,thld,val_loss,val_acc,test_loss,test_acc])
+        print('Epoch ',epoch, ' is completed')
         records.append([epoch,itr,train_loss,thld,val_loss,val_acc,test_loss,test_acc])
 
     torch.save({    'epoch': epoch,

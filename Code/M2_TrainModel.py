@@ -60,7 +60,7 @@ print(bcolors.HEADER+"##########################################################
 print(UF.TimeStamp(), bcolors.OKGREEN+"Modules Have been imported successfully..."+bcolors.ENDC)
 #This code fragment covers the Algorithm logic on the first run
 if mode=='R' and args.ModelName=='N':
-# UF.TrainCleanUp(AFS_DIR, EOS_DIR, 'M2', ['M2_M2','M2_PERFORMANCE_'], "SoftUsed == \"EDER-GNN-M2\"")
+ UF.TrainCleanUp(AFS_DIR, EOS_DIR, 'M2b', ['M2b_M2b','M2b_PERFORMANCE_'], "SoftUsed == \"EDER-GNN-M2b\"")
  job=[]
  job.append(1)
  job.append(PM.ModelArchitecture)

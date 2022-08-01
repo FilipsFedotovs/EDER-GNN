@@ -251,9 +251,9 @@ def main(self):
     if Mode=='Create':
        Header=[['Epoch','# Samples','Train Loss','Optimal Threshold','Validation Loss','Validation Accuracy','Test Loss','Test Accuracy']]
        Header+=records
-       UF.LogOperations(EOSsubModelDIR+'/'+'M2b_M2b_Train_Log_'+args.ModelNewName+'.csv','StartLog', Header)
+       UF.LogOperations(EOSsubModelDIR+'/'+'Train_Log_'+args.ModelNewName+'.csv','StartLog', Header)
     elif Mode=='Train':
-       UF.LogOperations(EOSsubModelDIR+'/'+'M2b_M2b_Train_Log_'+args.ModelNewName+'.csv','UpdateLog', records)
+       UF.LogOperations(EOSsubModelDIR+'/'+'Train_Log_'+args.ModelNewName+'.csv','UpdateLog', records)
 if __name__ == '__main__':
     main(sys.argv[1:])
 

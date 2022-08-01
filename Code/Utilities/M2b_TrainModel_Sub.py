@@ -104,7 +104,7 @@ def train(model, device, sample, optimizer):
     model.train()
     losses_w = [] # edge weight loss
     iterator=0
-    for HC in sample[:2]:
+    for HC in sample[:12]:
         iterator+=1
         data = HC.to(device)
         if (len(data.x)==0 or len(data.edge_index)==0): continue
@@ -118,11 +118,11 @@ def train(model, device, sample, optimizer):
         #edge weight loss
         loss_w = F.binary_cross_entropy(w, y, reduction='mean')
         # optimize total loss
-        loss_w.backward()
-        optimizer.step()
+        if iterator%4==0:
+           loss_w.backward()
+           optimizer.step()
         # store losses
         losses_w.append(loss_w.item())
-        print('Sample:', iterator, '| loss:', loss_w,)
     loss_w = np.nanmean(losses_w)
     return loss_w,iterator
 
@@ -167,14 +167,11 @@ def test(model, device, sample, thld):
                continue
             y, output = data.y.float(), output.squeeze(1)
             acc, TPR, TNR = binary_classification_stats(output, y, thld)
-            print('Input',y, output)
             try:
                 loss = F.binary_cross_entropy(output, y,reduction='mean')
             except:
                 print('error',y, output)
                 exit()
-            print('acc',acc.item())
-            print('loss',loss.item())
             accs.append(acc.item())
             losses.append(loss.item())
     return np.nanmean(losses), np.nanmean(accs)
@@ -190,7 +187,6 @@ while DataItrStatus:
         flocation=EOS_DIR+'/EDER-GNN/Data/TRAIN_SET/M1_M2_SelectedTrainClusters_'+str(SampleCounter)+'.pkl'
         print(UF.TimeStamp(),'Loading data from ',bcolors.OKBLUE+flocation+bcolors.ENDC)
         train_file=open(flocation,'rb')
-        print(UF.TimeStamp(),'Analysing data ...')
         TrainClusters=pickle.load(train_file)
         TrainFraction=int(math.floor(len(TrainClusters)*0.85))
         ValFraction=int(math.ceil(len(TrainClusters)*0.1))
@@ -203,137 +199,54 @@ while DataItrStatus:
         train_file.close()
     except:
         break
-print(len(TrainSamples),len(ValSamples),len(TestSamples))
 num_nodes_ftr=TrainSamples[0].num_node_features
 num_edge_ftr=TrainSamples[0].num_edge_features
 print(UF.TimeStamp(), bcolors.OKGREEN+"Train data has loaded and analysed successfully..."+bcolors.ENDC)
 
-# if Mode=='Train':
-#             class Net(torch.nn.Module):
-#                     def __init__(self):
-#                         super(Net, self).__init__()
-#                         for el in range(0,len(HiddenLayerDNA)):
-#                             if el==0:
-#                                 Nodes=32*HiddenLayerDNA[el][0]
-#                                 NoF=OutputDNA[0][0]
-#                                 self.conv1 = GCNConv(NoF, Nodes)
-#                             if el==1:
-#                                 Nodes=32*HiddenLayerDNA[el][0]
-#                                 PNodes=32*HiddenLayerDNA[el-1][0]
-#                                 self.conv2 = GCNConv(PNodes, Nodes)
-#                             if el==2:
-#                                 Nodes=32*HiddenLayerDNA[el][0]
-#                                 PNodes=32*HiddenLayerDNA[el-1][0]
-#                                 self.conv3 = GCNConv(PNodes, Nodes)
-#                             if el==3:
-#                                 Nodes=32*HiddenLayerDNA[el][0]
-#                                 PNodes=32*HiddenLayerDNA[el-1][0]
-#                                 self.conv4 = GCNConv(PNodes, Nodes)
-#                             if el==4:
-#                                 Nodes=32*HiddenLayerDNA[el][0]
-#                                 PNodes=32*HiddenLayerDNA[el-1][0]
-#                                 self.conv5 = GCNConv(PNodes, Nodes)
-#                     def encode(self,sample):
-#                          x = self.conv1(sample.x, sample.train_pos_edge_index) # convolution 1
-#                          x = x.relu()
-#                          return self.conv2(x, sample.train_pos_edge_index) # convolution 2
-#
-#                     def decode(self, z, pos_edge_index, neg_edge_index): # only pos and neg edges
-#                          edge_index = torch.cat([pos_edge_index, neg_edge_index], dim=-1) # concatenate pos and neg edges
-#                          logits = (z[edge_index[0]] * z[edge_index[1]]).sum(dim=-1)  # dot product
-#                          return logits
-#
-#                     def decode_all(self, z):
-#                          prob_adj = z @ z.t() # get adj NxN
-#                          return (prob_adj > 0).nonzero(as_tuple=False).t() # get predicted edge_list
-#             model_name=EOSsubModelDIR+'/'+args.ModelName
-#             model = Net().to(device)
-#             optimizer = torch.optim.Adam(params=model.parameters(), lr=LR)
-#             model.load_state_dict(torch.load(model_name))
-# if Mode!='Train' and Mode!='Test':
-#                class MLP(nn.Module):
-#                     def __init__(self, input_size, output_size, hidden_size):
-#                         super(MLP, self).__init__()
-#
-#                         self.layers = nn.Sequential(
-#                             nn.Linear(input_size, hidden_size),
-#                             nn.ReLU(),
-#                             nn.Linear(hidden_size, hidden_size),
-#                             nn.ReLU(),
-#                             nn.Linear(hidden_size, hidden_size),
-#                             nn.ReLU(),
-#                             nn.Linear(hidden_size, output_size),
-#                         )
-#
-#                     def forward(self, C):
-#                         return self.layers(C)
-#
-#                class EdgeClassifier(nn.Module):
-#                     def __init__(self, node_indim, edge_indim):
-#                         super(EdgeClassifier, self).__init__()
-#                         self.IN = InteractionNetwork(node_indim, edge_indim,
-#                                      node_outdim=3, edge_outdim=4,
-#                                      hidden_size=120)
-#                         self.W = MLP(4, 1, 40)
-#
-#                     def forward(self, x: Tensor, edge_index: Tensor,
-#                         edge_attr: Tensor) -> Tensor:
-#
-#                         x1, edge_attr_1 = self.IN(x, edge_index, edge_attr)
-#                         return torch.sigmoid(self.W(edge_attr))
-#
-# # Compile the model
-#                model = Net().to(device)
-#                optimizer = torch.optim.Adam(params=model.parameters(), lr=LR)
-
-#            #except:
-#            #   print(UF.TimeStamp(), bcolors.FAIL+"Invalid model, aborting the training..."+bcolors.ENDC)
-#            #   ValidModel=False
-#             #  exit()
-
-
 def main(self):
     print(UF.TimeStamp(),'Starting the training process... ')
+    State_Save_Path=EOSsubModelDIR+'/'+args.ModelNewName+'_State_Save'
     device = torch.device("cpu")
-    model = TCN(num_nodes_ftr, num_edge_ftr).to(device)
-    # instantiate optimizer with scheduled learning rate decay
-    optimizer = optim.Adam(model.parameters(), lr=LR)
-    scheduler = StepLR(optimizer, step_size=0.1,
+    if Mode!='Train' and Mode!='Test':
+        model = TCN(num_nodes_ftr, num_edge_ftr).to(device)
+        optimizer = optim.Adam(model.parameters(), lr=LR)
+        scheduler = StepLR(optimizer, step_size=0.1,
                        gamma=0.1)
+    if Mode=='Train':
+        model_name=EOSsubModelDIR+'/'+args.ModelName
+        model = TCN(num_nodes_ftr, num_edge_ftr).to(device)
+        model.load_state_dict(torch.load(model_name))
+        optimizer = optim.Adam(model.parameters(), lr=LR)
+        scheduler = StepLR(optimizer, step_size=0.1,
+                       gamma=0.1)
+        checkpoint = torch.load(State_Save_Path)
+        optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+        scheduler.load_state_dict(checkpoint['scheduler'])
+    # instantiate optimizer with scheduled learning rate decay
 
-    for batch in range(1, 2):
+
+    records=[]
+    for epoch in range(1, 2):
         train_loss, itr= train(model, device,TrainSamples, optimizer)
         thld = validate(model, device, ValSamples)
-        print(thld)
-        print('output',test(model, device,TestSamples, thld))
-        test_loss, te_lw, te_lc, te_lb, te_acc = test(model, device,TestSamples, thld)
+        test_loss, test_acc = test(model, device,TestSamples, thld)
         scheduler.step()
-        print(test_loss, te_lw, te_lc, te_lb, te_acc)
-        exit()
-        # save output
-        output['train_loss'].append(train_loss)
-        output['train_loss_w'].append(tlw)
-        output['train_loss_c'].append(tlc)
-        output['train_loss_b'].append(tlb)
-        output['test_loss'].append(test_loss)
-        output['test_loss_w'].append(te_lw)
-        output['test_loss_c'].append(te_lc)
-        output['test_loss_b'].append(te_lb)
-        output['test_acc'].append(te_acc)
+        print([epoch,itr,train_loss,thld,test_loss,test_acc])
+        records.append([train_loss,itr,thld,test_loss,test_acc])
 
-        if (args.save_models):
-            model_out = os.path.join(args.outdir,
-                                     f"{args.model_outfile}_epoch{epoch}.pt")
-            torch.save(model.state_dict(), model_out)
-
-        stat_out = os.path.join(args.outdir,
-                                f"{args.stat_outfile}.csv")
-        write_output_file(stat_out, args, pd.DataFrame(output))
-
-
+    torch.save({    'epoch': epoch,
+                    'optimizer_state_dict': optimizer.state_dict(),
+                    'scheduler': scheduler.state_dict(),    # HERE IS THE CHANGE
+                    }, State_Save_Path)
+    model_name=EOSsubModelDIR+'/'+args.ModelNewName
+    torch.save(model.state_dict(), model_name)
+    if Mode=='Create':
+       Header=[['Epoch','Iterations','Train Loss','Optimal Threshold','Test Loss','Test Accuracy']]
+       Header+=records
+       UF.LogOperations(EOSsubModelDIR+'/'+'M2b_M2b_Train_Log_'+args.ModelNewName+'.csv','StartLog', records)
+    elif Mode=='Train':
+       UF.LogOperations(EOSsubModelDIR+'/'+'M2b_M2b_Train_Log_'+args.ModelNewName+'.csv','UpdateLog', records)
 if __name__ == '__main__':
     main(sys.argv[1:])
-# model_name=EOSsubModelDIR+'/'+args.ModelNewName
-# torch.save(model.state_dict(), model_name)
-# UF.LogOperations(EOSsubModelDIR+'/'+'M2_M2_model_train_log_'+ClusterSet+'.csv','StartLog', records)
+
 

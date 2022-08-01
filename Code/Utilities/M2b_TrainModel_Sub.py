@@ -152,7 +152,7 @@ def validate(model, device, sample):
                 diff, opt_thld, opt_acc = delta.item(), thld, acc.item()
         opt_thlds.append(opt_thld)
         accs.append(opt_acc)
-        losses.append(loss.item())
+        losses.append(loss)
     return np.nanmean(opt_thlds),np.nanmean(losses),np.nanmean(accs)
 
 def test(model, device, sample, thld):

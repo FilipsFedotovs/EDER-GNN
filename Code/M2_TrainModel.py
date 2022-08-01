@@ -84,7 +84,7 @@ if mode=='R' and args.ModelName=='N':
  SHName = AFS_DIR + '/HTCondor/SH/SH_M2b.sh'
  SUBName = AFS_DIR + '/HTCondor/SUB/SUB_M2b.sub'
  MSGName = AFS_DIR + '/HTCondor/MSG/MSG_M2'
- ScriptName = AFS_DIR + '/Code/Utilities/M2_TrainModel_Sub.py '
+ ScriptName = AFS_DIR + '/Code/Utilities/M2b_TrainModel_Sub.py '
  [OptionHeader, OptionLine, SHName, SUBName, MSGName, ScriptName, 1, 'EDER-GNN-M2b', True,
       False]
 
